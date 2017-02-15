@@ -11,7 +11,7 @@ Route::group(['prefix' => 'v1'], function () {
 	Route::group(['middleware'=>['cors','log']], function(){
 	Route::post('/dataset/save',['as'=>'dataset.save','uses'=>'Services\SaveServeController@saveDataset']);
 
-	
+		Route::get('/dashboard',					['as' => 'dashboard' , 'uses' => 'Services\dashboardController@DashboardData']);
 
 		Route::post('/logs_filter','Services\LogApiController@logFilter');
 		Route::post('/auth','Services\ApiauthController@Authenicates');

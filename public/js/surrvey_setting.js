@@ -1,11 +1,29 @@
 $(function(){
 $("#expire_time").attr('checked', 'checked');
+
+
+
+
+
 	$('.dates').datepicker({
           dateFormat: 'yy-mm-dd',
           autoclose: true,
     });
-	$("#role_based , #individual_based ").slideUp();
+	$("#role_based , #individual_based ,#auth_req").slideUp();
 	$(".SCHenable ,#timer_types, #durnation , #res_lmt").hide();
+
+	$(document).on('click','.auth_req',function(e)
+	{
+		$("#auth_req").slideUp();
+			vReq = $(this).val();
+			if(vReq=="enable")
+			{
+			$("#auth_req").slideDown();
+			}
+			else{
+							$("#auth_req").slideUp();
+			}
+	});
 	$(document).on('click','.auth_type',function(e)
 	{
 		$("#role_based , #individual_based").slideUp();
@@ -52,5 +70,16 @@ $("#expire_time").attr('checked', 'checked');
 				$(".SCHenable").hide(1000);
 			}
 	});
+	//ERROR MESSAGE
+	$(document).on('click','.error_messages',function(e){
+			val = $(this).val();
+			if(val=='enable')
+			{
+				$(".mess").slideDown(1000);
+			}else{
+				$(".mess").slideUp(1000);
+			}
+	});
+	
 
 });

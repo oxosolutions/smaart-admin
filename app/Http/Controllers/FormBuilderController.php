@@ -15,6 +15,7 @@ class FormBuilderController extends Controller
 
 
     $model = Surrvey::where('id',$id)->first();
+ 
     $plugins = [
                     'js' => ['custom'=>['surrvey_setting']],
                     'model'=>$model
@@ -25,12 +26,37 @@ class FormBuilderController extends Controller
 
   public function save_setting(Request $request,$id)
   {
-      foreach ($request->request as $key => $value) {
-          if($key != '_token' && $key !='role' &&  $key !='individual')
+     if($request->error_messages=="enable")
+     {
+      foreach ($request->mess as $key => $value) {
+              $er_msg[$key] = $value;
+      }
+    }
+
+     foreach ($request->request as $key => $value) {
+          if($key != '_token' && $key !='role' &&  $key !='individual' && $key!="mess" )
           {
+            if($key == 'error_messages' && $value =="enable" )
+            {
+                $array['error_message_value'] = json_encode($er_msg);
+            }else{
+               $array['error_message_value'] = NULL;
+            }
             $array[$key] = $value;
           }
       }
+       if($request->authentication_required ="enable")
+        {
+              if($request->authentication_type=="individual_based")
+              {
+                $array['authorize'] = $request->individual;
+              }
+              elseif($request->authentication_type=="role_based")
+              {
+                  $array['authorize'] = json_encode($request->role);
+              }
+
+        }
       Surrvey::where('id',$id)->update($array);
       dd($request->request);
   }
@@ -123,16 +149,14 @@ class FormBuilderController extends Controller
         return view('formbuilder/create',$plugins);
     }
     public function save(Request $request)
-     {
+     {  
          $sid = $request->surrvey_id;
          $SQ =  SQ::where('surrvey_id',$sid);
-      
-          if($SQ->count() > 0)
+        if($SQ->count() > 0)
           {
             $SQ->delete();
           }
-
-    	foreach ($request->ques as $key => $ques)
+      foreach ($request->ques as $key => $ques)
     	{  if(isset($array['option']))
             {
                 unset($array['option']);

@@ -23,13 +23,13 @@
                         {!!Form::label('status','Authentication Required :',['class'=>' control-label']) !!}
                   </td>
                   <td>
-                      {!!Form::radio('authentication_required','enable', ['class'=>'form-control']) !!}
+                      {!!Form::radio('authentication_required','enable',null, ['class'=>'auth_req']) !!}
                       {!!Form::label('enable','Enable') !!}
-                      {!!Form::radio('authentication_required','disable', ['class'=>'form-control']) !!}
+                      {!!Form::radio('authentication_required','disable',true, ['class'=>'auth_req ']) !!}
                       {!!Form::label('enable','Disable',['class'=>' control-label']) !!}
                   </td>
                 </tr>
-                <tr>
+                <tr id="auth_req">
                   <td>3.</td>
                   <td> 
                     {!!Form::label('status','Authentication Type :',['class'=>'control-label']) !!}
@@ -47,7 +47,7 @@
                       {!!Form::label('individual','Individual List') !!}
                   </td>
                   <td>
-                       {!!Form::select('individual',App\User::userList(),@$individual, ['class'=>'form-control select2 multi','multiple']) !!}
+                       {!!Form::select('individual',App\User::userList(),@$model->authorize, ['class'=>'form-control select2 multi','multiple']) !!}
 
                   </td>
                 </tr>
@@ -143,9 +143,9 @@
      
                    </td>
                   <td>
-                    {!!Form::radio('response_limit_status','enable', ['class'=>'res_lmt form-control']) !!}
-                    {!!Form::label('enable','Survey Expire Time') !!}
-                    {!!Form::radio('response_limit_status','disable', ['class'=>'res_lmt form-control']) !!}
+                    {!!Form::radio('response_limit_status','enable',null, ['class'=>'res_lmt ']) !!}
+                    {!!Form::label('enable','Enable') !!}
+                    {!!Form::radio('response_limit_status','disable',true, ['class'=>'res_lmt ']) !!}
                     {!!Form::label('enable','Disable',['class'=>' control-label']) !!}
                   </td>
                  
@@ -180,19 +180,83 @@
 
                    </td>
                   <td>
-                    {!!Form::radio('error_messages','enable', ['class'=>'form-control']) !!}
+                    {!!Form::radio('error_messages','enable', null, ['class'=>'error_messages']) !!}
                     {!!Form::label('enable','Enable') !!}
-                    {!!Form::radio('error_messages','disable', ['class'=>'form-control']) !!}
+                    {!!Form::radio('error_messages','disable',true, ['class'=>'error_messages']) !!}
                     {!!Form::label('enable','Disable',['class'=>' control-label']) !!}               
                    </td>
                  
                 </tr>
+                <tr class="mess" >
+                      <td style="width:60px;">Mno 1</td>
+                      <td><label class="form-field-heading">Survey is Disabled </label></td> 
+                       <td >       
+                        <input type="text" id="survey_messages_disabled" class="form-control" name="mess[survey_messages_disabled]" value="Survey is disabled1" placeholder="eg. Survey is disabled">
+                    </td>
+                </tr>
+                  <tr  class="mess" >
+                    <td style="width:60px;">Mno 2</td>
+                    <td >
+                      <label class="form-field-heading">Survey Authorization Required </label>
+                      <!-- <h3 class="form-field-subheading">title</h3> -->
+                    </td>
+                    <td class="aione-input-field-wrapper">       
+                      <input type="text" id="survey_messages_authorization_required" class="form-control" name="mess[survey_messages_authorization_required]" value="You need to be logged in to access the survey1" placeholder="eg. You need to be logged in to access the survey">
+                    </td>
+                  </tr>
+                <tr class="mess">
+                      <td style="width:60px;">Mno 3</td>
+                      <td><label class="form-field-heading">Survey Un-authorization Role </label></td> 
+                       <td >       
+                        <input type="text" id="survey_messages_disabled" class="form-control" name="mess[survey_messages_unauthorized_role]" value="Survey is disabled1" placeholder="eg. Survey is disabled">
+                    </td>
+                </tr>
+
+                <tr class="mess">
+                      <td style="width:60px;">Mno 4</td>
+                      <td><label class="form-field-heading">Survey Un-authorization User </label></td> 
+                       <td >       
+                        <input type="text" id="survey_messages_disabled" class="form-control" name="mess[survey_messages_unauthorized_user]" value="Survey is disabled1" placeholder="eg. Survey is disabled">
+                    </td>
+                </tr>
+                <tr class="mess">
+                      <td style="width:60px;">Mno 5</td>
+                      <td><label class="form-field-heading">Invalid Survey Id </label></td> 
+                       <td >       
+                        <input type="text" id="survey_messages_disabled" class="form-control" name="mess[survey_messages_invalid_id]" value="Survey is disabled1" placeholder="eg. Survey is disabled">
+                    </td>
+                </tr>
+                <tr class="mess">
+                      <td style="width:60px;">Mno 6</td>
+                      <td><label class="form-field-heading">Empty Survey Id  </label></td> 
+                       <td >       
+                        <input type="text" id="survey_messages_disabled" class="form-control" name="mess[survey_messages_empty_id]" value="Survey is disabled1" placeholder="eg. Survey is disabled">
+                    </td>
+                </tr>
+                <tr class="mess">
+                      <td style="width:60px;">Mno 7</td>
+                      <td><label class="form-field-heading">Survey Not Started </label></td> 
+                       <td >       
+                        <input type="text" id="" class="form-control" name="mess[survey_messages_not_started]" value="Survey is disabled1" placeholder="eg. Survey is disabled">
+                    </td>
+                </tr>
+                <tr class="mess">
+                      <td style="width:60px;">Mno 8</td>
+                      <td><label class="form-field-heading">Survey is Expired </label></td> 
+                       <td >       
+                        <input type="text" id="" class="form-control" name="mess[survey_messages_expired]" value="Survey is disabled1" placeholder="eg. Survey is disabled">
+                    </td>
+                </tr>
    
               </table>
+
             </div>
             <!-- /.box-body -->
           </div>
-   
+       
+
+       
+     
 
 {{-- <div class="box-body">
 

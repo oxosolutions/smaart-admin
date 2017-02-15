@@ -228,7 +228,10 @@ class VisualApiController extends Controller
             $chartsArray[$key] = $columnData;
         }
 
-        if(!empty(json_decode($visual->filter_columns))){
+        // if(!empty(json_decode($visual->filter_columns))){
+        $filter_chk = json_decode($visual->filter_columns,true);
+     
+        if(!empty($filter_chk) && !empty($filter_chk["filter_1"]["column"]) && !empty($filter_chk["filter_1"]["type"]) ){
             $filtersArray = $this->getFIlters($datatableName->dataset_table, json_decode($visual->filter_columns, true), $datasetColumns);
         }else{
             $filtersArray = [];
@@ -404,7 +407,6 @@ class VisualApiController extends Controller
         return ['status'=>'success','data'=>$returnArray,'map_list'=> $mapData];
     }
     public function saveVisualData(Request $request){
-
         $validate = $this->validateRequest($request);
         if($validate['status'] == 'false'){
             return ['status'=>'error','message'=>$validate['message']];
