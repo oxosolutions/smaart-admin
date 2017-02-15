@@ -1,0 +1,28 @@
+19 Child,,,
+No of Ineligible children ,,,
+Formula used : Count all the records from database where date of vaccination in not given(empty) and age at the time of calculation(30.12.2016) is less than the last date for vaccination  ,,,
+,,,
+,,,
+column,Vaccination,Due,No of Ineligible Children
+45,BCG,Birth,2
+49,OPV0,Birth,2
+53,OPV1,6 Weeks,2
+57,OPV2,10 Weeks,2
+61,OPV3,14 Weeks,115
+65,OPVBOOSTERDATE,16 to 24 months,95597
+69,DPT1,6 Weeks,2
+73,DPT2,10 Weeks,2
+77,DPT3,14 Weeks,115
+81,DPTBOOSTERONE,16 to 24 months,105108
+94,DPTBOOSTERTWO,5 to 6 years,369099
+98,HepatitisB0,Birth,2
+102,HepatitisB1,6weeks,2
+106,HepatitisB2,10weeks,2
+110,HepatitisB3,14weeks,115
+114,Penta1,6weeks,2
+118,Penta2,10weeks,2
+122,Penta3,14weeks,115
+126,Measles1,9to12months,38311
+139,Measles2,16to24months,105096
+143,JE1,9to12months,38447
+147,JE2,16to24months,105099

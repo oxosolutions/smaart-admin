@@ -1,0 +1,23 @@
+column,Vaccination,Due,Negative Value Count
+45,BCG,Birth,112
+49,OPV0,Birth,87
+53,OPV1,6 Weeks,84
+57,OPV2,10 Weeks,37
+61,OPV3,14 Weeks,35
+65,OPVBOOSTERDATE,16 to 24 months,0
+69,DPT1,6 Weeks,50
+73,DPT2,10 Weeks,34
+77,DPT3,14 Weeks,27
+81,DPTBOOSTERONE,16 to 24 months,0
+94,DPTBOOSTERTWO,5 to 6 years,0
+98,HepatitisB0,Birth,32
+102,HepatitisB1,6weeks,51
+106,HepatitisB2,10weeks,35
+110,HepatitisB3,14weeks,26
+114,Penta1,6weeks,0
+118,Penta2,10weeks,1
+122,Penta3,14weeks,0
+126,Measles1,9to12months,39
+139,Measles2,16to24months,0
+143,JE1,9to12months,12
+147,JE2,16to24months,0

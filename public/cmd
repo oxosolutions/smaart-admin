@@ -1,0 +1,11 @@
+	
+
+	perl -i -pe 's/\|/,/g' filename
+
+	1)  PIPE TO COmma seperated
+	|gfhgf hgj hgjhj juh, uyuyuy|
+|"gfhgf hgj hgjhj juh, uyuyuy"|
+
+
+sed 's/|/\|"/g' < pipeseparted.csv >n13.csv
+

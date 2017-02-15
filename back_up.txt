@@ -1,0 +1,18 @@
+foreach ($request->ministry as $key => $value){
+
+                   
+                    $ministryMetaVal[]  = $value;
+                 
+                }
+
+                // dump(json_encode($ministryMetaVal));
+                // die;
+                 $ministryMeta = new UM();
+                 $ministryMeta->key = "ministry";
+                 $ministryMeta->user_id = $request->user_list;
+                 $ministryMeta->val = $ministryMetaVal;
+                 $ministryMeta->save();
+
+                 echo "save ministery";
+
+                 die;

@@ -1,0 +1,14 @@
+{
+    "name": "phpmysqlwrapper/mysqlwrapper",
+    "description": "This is phpMySQL Wrapper for create table from the CSV file.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rahul Sharma",
+            "email": "rahulsharma841990@outlook.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

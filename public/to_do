@@ -1,0 +1,53 @@
+
+
+	After staying long time on page Mismatch token  Error;
+
+	1) (Auth vendor) we can change on vendor->laravel->framework->src->Foundation->Auth->AuthenticatesUsers.php
+
+		code: 
+				compare then redirect
+				 // dump( $request->_token);
+        		// dump( Session::token());
+
+    2) (verify csrf token)  make change on vendor->laravel->framework->src->Foundation->Http->VerifyCsrfToken.php
+
+            //return redirect('/login');
+
+    3) Middleware   VerifyCsrfToem
+    		protected $except = ['login'];
+
+
+
+IMPORT SQL FILE
+
+
+   $script = getcwd().'/database/seeds/localhost.sql';
+        $sql =   "sql/designations.sql";
+
+    echo   $script = getcwd().'/sql/designations.sql'; 
+
+
+     $username = "local";//Config::get('database.connections.mysql.username');
+    $password = "local";//Config::get('database.connections.mysql.password');
+     $database = "webapp_api";//Config::get('database.connections.mysql.database');
+
+     $command = "mysql -u $username -p$password $database < $script";
+
+mysql -u local -plocal webapp_api < /var/www/html/smaart-angular/public/sql/designations.sql
+     exec($command);
+
+
+    die;
+
+        $sql =   file_get_contents("sql/designations.sql");
+
+        DB::unprepared($sql);
+        echo "<pre>";
+        print_r(explode("\n", $sql));
+
+        die;
+
+
+
+
+       		
