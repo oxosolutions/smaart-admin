@@ -13,12 +13,13 @@
      
       <ul class="sidebar-menu filtered" style="padding-bottom: 50px">
         <li class="header">MAIN NAVIGATION</li>
-    
+      
         <?php
          $index = 0;
         ?>
-    @if(Auth::user()->role_id ==null)
 
+    @if(Auth::user()->role_id ==null)
+        
         @foreach(App\Permisson::allRoute() as $route)
           @if($route->name =='Dashboard')
                 <li class="{{{(Request::is('/')?'active':'')}}}">

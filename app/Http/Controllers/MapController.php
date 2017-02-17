@@ -26,7 +26,7 @@ class MapController extends Controller
     {
     	$plugins = [
         			'css' => ['datatables'],
-        			'js' => ['datatables','custom'=>['gen-datatables']]
+        			'js' => ['datatables','custom'=>['gen-datatables','map']]
         	       ];
     	return view('map.index',$plugins);
     }
@@ -87,6 +87,19 @@ class MapController extends Controller
         Map::where('id',$id)->delete();
         Session::flash('success','Delete Successfully.');
             return redirect()->route('map.list');
+    }
+
+    public function loadSVG($id){
+        $model = Map::find($id);
+        $mapData = $model->map_data;
+        return view('map.editor',['mapData'=>$mapData]);
+    }
+
+    public function saveSVG(Request $request){
+        $svgData = $request->svg;
+        $model = Map::find($request->id);
+        $model->map_data = $svgData;
+        $model->save();
     }
 
 

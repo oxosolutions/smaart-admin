@@ -145,7 +145,7 @@ class VisualController extends Controller
         $columnData = json_decode($model->columns,true);
 
        // dd( $columnData);
-        $selectedFilterCol = json_decode($model->filter_columns);
+        $selectedFilterCol = json_decode($model->filter_columns,true);
         $plugins = [
             'js'  => ['select2','custom'=>['visual-create']],
             'css' => ['select2'],
@@ -170,6 +170,7 @@ class VisualController extends Controller
                                             'visual_settings'=>$request->visual_settings,
                                             'count'=> @$request->count
                                         ]);
+      
         $model->filter_columns = json_encode(@$request->filter_cols);
         $model->chart_type = json_encode($request->chartType);
         $model->created_by = Auth::user()->id;

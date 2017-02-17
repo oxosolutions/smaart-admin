@@ -8,45 +8,69 @@ use App\Surrvey;
 use App\SurrveyQuestion as SQ;
 USE Auth;
 use Session;
+use Carbon\Carbon as tm;
 class FormBuilderController extends Controller
 {
-  public function surrvey_setting($id)
-  {
+      public function surrvey_setting($id)
+      {
 
 
-    $model = Surrvey::where('id',$id)->first();
- 
-    $plugins = [
-                    'js' => ['custom'=>['surrvey_setting']],
-                    'model'=>$model
-        ];
-    return view('formbuilder.surrvey_setting', $plugins);
+        $model = Surrvey::where('id',$id)->first();
 
-  }
+        $plugins = [
+                        'js' => ['custom'=>['surrvey_setting']],
+                        'model'=>$model
+            ];
+        return view('formbuilder.surrvey_setting', $plugins);
 
-  public function save_setting(Request $request,$id)
-  {
-     if($request->error_messages=="enable")
-     {
-      foreach ($request->mess as $key => $value) {
-              $er_msg[$key] = $value;
       }
-    }
 
-     foreach ($request->request as $key => $value) {
-          if($key != '_token' && $key !='role' &&  $key !='individual' && $key!="mess" )
+      public function save_setting(Request $request,$id)
+      {
+          if($request->error_messages=="enable")
           {
-            if($key == 'error_messages' && $value =="enable" )
-            {
-                $array['error_message_value'] = json_encode($er_msg);
-            }else{
-               $array['error_message_value'] = NULL;
+            foreach ($request->mess as $key => $value) {
+                    $er_msg[$key] = $value;
             }
-            $array[$key] = $value;
           }
-      }
-       if($request->authentication_required ="enable")
-        {
+          foreach ($request->request as $key => $value) {
+            
+            if($key != '_token' && $key !='role' &&  $key !='individual' && $key!="mess" )
+            {
+             if($key == 'error_messages' && $value =="enable" )
+              {
+                  $array['error_message_value'] = json_encode($er_msg);
+              }else{
+                  $array['error_message_value'] = NULL;
+              }
+              $array[$key] = $value;
+            }
+        }
+
+        if($request->response_limit_status =="disable")
+          {
+            $array['response_limit'] = Null;
+          }
+          if($request->timer_status =="disable")
+          {
+            $array['timer_type'] = Null;
+          }
+          if($request->timer_status =="disable" || $request->timer_type =="expire_time") 
+            {
+              $array['timer_durnation'] = Null;
+            }
+           
+          if($request->scheduling =='enable')
+            {
+                $array['start_date'] =  tm::parse( $request->start_date)->format('Y-m-d');
+                $array['expire_date'] =  tm::parse( $request->expire_date)->format('Y-m-d'); 
+
+            }else{
+                $array['start_date'] =  NUll;
+                $array['expire_date'] =  Null;
+            }
+          if($request->authentication_required =="enable")
+            {
               if($request->authentication_type=="individual_based")
               {
                 $array['authorize'] = $request->individual;
@@ -55,10 +79,13 @@ class FormBuilderController extends Controller
               {
                   $array['authorize'] = json_encode($request->role);
               }
-
-        }
+            }else{
+                    $array['authentication_type'] =Null;
+                    $array['authorize'] =Null;
+                  }
       Surrvey::where('id',$id)->update($array);
-      dd($request->request);
+      Session::flash('success','Setting Save  Successfully.');
+              return redirect()->route('surrvey.index');    
   }
     public function create_surrvey()
     {

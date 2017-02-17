@@ -1,27 +1,86 @@
 $(function(){
-$("#expire_time").attr('checked', 'checked');
+	 //iCheck for checkbox and radio inputs
+    // $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+    //   checkboxClass: 'icheckbox_minimal-blue',
+    //   radioClass: 'iradio_minimal-blue'
+    // });
+    // //Red color scheme for iCheck
+    // $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+    //   checkboxClass: 'icheckbox_minimal-red',
+    //   radioClass: 'iradio_minimal-red'
+    // });
+    // //Flat red color scheme for iCheck
+    // $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+    //   checkboxClass: 'icheckbox_flat-green',
+    //   radioClass: 'iradio_flat-green'
+     
+    // });
 
+	$("#role_based , #individual_based ").slideUp();
+	$(".SCHenable ,#timer_types, #durnation , #res_lmt").hide();
 
+//$("#expire_time").attr('checked', 'checked');
 
-
+		if($('input[name=authentication_required]:checked').val()=="enable")
+		{
+			$("#auth_req").slideDown();
+			if($('input[name=authentication_type]:checked').val()=="role_based")
+			{ 
+				$("#role_based").slideDown();
+			}else if($('input[name=authentication_type]:checked').val()=="individual_based")
+	 			$("#individual_based").slideDown();
+		}else{
+				$("#auth_req").slideUp();
+		}
+		if($('input[name=scheduling]:checked').val()=="enable")
+		{
+			$(".SCHenable").show();
+		}
+		if($('input[name=timer_status]:checked').val()=="enable")
+		{
+			$("#timer_types").show();
+		}
+		if($('input[name=timer_type]:checked').val()=="durnation")
+		{
+			$("#durnation").show();
+		}
+		if($('input[name=response_limit_status]:checked').val()=="enable")
+		{
+			$("#res_lmt").show();
+		}
+		if($('input[name=error_messages]:checked').val()=="enable")
+		{
+			$(".mess").show();
+		}else{
+			$(".mess").hide();
+		}
 
 	$('.dates').datepicker({
           dateFormat: 'yy-mm-dd',
           autoclose: true,
     });
-	$("#role_based , #individual_based ,#auth_req").slideUp();
-	$(".SCHenable ,#timer_types, #durnation , #res_lmt").hide();
-
+	
 	$(document).on('click','.auth_req',function(e)
 	{
+		
+		
 		$("#auth_req").slideUp();
 			vReq = $(this).val();
 			if(vReq=="enable")
 			{
 			$("#auth_req").slideDown();
+			if($('input[name=authentication_type]:checked').val()=="role_based")
+			{ 
+				$("#role_based").slideDown();
+			}else if($('input[name=authentication_type]:checked').val()=="individual_based")
+	 			{
+	 				$("#individual_based").slideDown();
+	 			}
+			
 			}
 			else{
-							$("#auth_req").slideUp();
+					$("#auth_req").slideUp();
+					$("#role_based , #individual_based").slideUp();
 			}
 	});
 	$(document).on('click','.auth_type',function(e)
@@ -50,6 +109,8 @@ $("#expire_time").attr('checked', 'checked');
 			$("#durnation").hide(1000)
 		}
 	});
+
+
 	$(document).on('click','.res_lmt',function(e){
 		timer_val = $(this).val();
 		if(timer_val=="enable")

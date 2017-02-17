@@ -1,6 +1,5 @@
-<div class="box">
-           
-            <!-- /.box-header -->
+
+       
             <div class="box-body no-padding">
               <table class="table table-striped">
                
@@ -10,9 +9,9 @@
                       {!!Form::label('status','Enable Surrvey ',['class'=>'control-label']) !!}
                   </td>
                   <td>
-                      {!!Form::radio('status','enable', ['class'=>'form-control']) !!}
+                      {!!Form::radio('status','enable',null, ['class'=>' cmn-toggle cmn-toggle-round']) !!}
                       {!!Form::label('enable','Enable') !!}
-                      {!!Form::radio('status','disable', ['class'=>'form-control']) !!}
+                      {!!Form::radio('status','disable',null, ['class'=>'']) !!}
                       {!!Form::label('enable','Disable',['class'=>' control-label']) !!}
                   </td>
                  
@@ -29,13 +28,16 @@
                       {!!Form::label('enable','Disable',['class'=>' control-label']) !!}
                   </td>
                 </tr>
+                @if($model->authentication_required =='enable')
+                   {{--  <script> $("#auth_req").slidedown(); </script> --}}
+                @endif
                 <tr id="auth_req">
                   <td>3.</td>
                   <td> 
                     {!!Form::label('status','Authentication Type :',['class'=>'control-label']) !!}
                   </td>
                   <td>
-                    {!!Form::radio('authentication_type','role_based', null, ['class'=>'auth_type']) !!}
+                    {!!Form::radio('authentication_type','role_based', null, ['id'=>'rol','class'=>'auth_type']) !!}
                     {!!Form::label('enable','Role Based') !!}
                     {!!Form::radio('authentication_type','individual_based', true, ['class'=>'auth_type']) !!}
                     {!!Form::label('enable','Individual Based',['class'=>' control-label']) !!}
@@ -58,12 +60,27 @@
                       {!!Form::label('role_list','Role list') !!}
                   </td>
                   <td>
-                      @foreach (App\Role::role_list() as $key => $val)
-                        {!!Form::checkbox('role[]',$key, ['class'=>'form-control']) !!}
-                        {!!Form::label('role', $val) !!}
+                    @if($model->authentication_type=='role_based' && $model->authorize!=null)
+                       <?php $roleData = json_decode($model->authorize,true); ?>
+                          @foreach (App\Role::role_list() as $key => $val)
+                             @if(in_array($key, $roleData))
+                                {!!Form::checkbox('role[]',$key,true, ['class'=>'']) !!}
+                                {!!Form::label('role', $val) !!}
+                            @else
+                              {!!Form::checkbox('role[]',$key,null, ['class'=>'']) !!}
+                                {!!Form::label('role', $val) !!}
+                             
+                          @endif
+                           
                           </br>
                         @endforeach
-
+                    @else
+                      @foreach (App\Role::role_list() as $key => $val)
+                        {!!Form::checkbox('role[]',$key,null, ['class'=>'']) !!}
+                        {!!Form::label('role', $val) !!}
+                         </br>
+                      @endforeach
+                    @endif
                   </td>
                 </tr>
                 
@@ -109,7 +126,7 @@
                       {!!Form::radio('timer_status','enable',null, ['class'=>'timer']) !!}
                       {!!Form::label('enable','Enable') !!}
                       {!!Form::radio('timer_status','disable',true, ['class'=>'timer ']) !!}
-                      {!!Form::label('enable','Disable',['class'=>' control-label']) !!}                  
+                      {!!Form::label('enable','Disable',['class'=>'control-label']) !!}                  
                   </td>
                 </tr>
                  <tr id="timer_types">
@@ -132,7 +149,7 @@
      
                    </td>
                   <td>
-                     {!!Form::text('timer_durnation',null, ['class'=>'form-control','placeholder'=>'HH:MM']) !!}
+                     {!!Form::text('timer_durnation',@$timer_durnation, ['class'=>'form-control','placeholder'=>'HH:MM']) !!}
                   </td>
                  
                 </tr>
@@ -156,7 +173,7 @@
                       {!!Form::label('response_limit_val','Survey Response Limit') !!}
                    </td>
                   <td>
-                    {!!Form::text('response_limit',null, ['class'=>'form-control','placeholder'=>'']) !!}     
+                    {!!Form::text('response_limit',@$response_limit, ['class'=>'form-control','placeholder'=>'']) !!}     
                   </td>
                  
                 </tr>
@@ -166,9 +183,9 @@
   
                    </td>
                   <td>
-                    {!!Form::radio('response_limit_type','per_user', ['class'=>'form-control']) !!}
+                    {!!Form::radio('response_limit_type','per_user',null, ['class'=>'']) !!}
                     {!!Form::label('enable',' Per User') !!}
-                    {!!Form::radio('response_limit_type','per_ip_address', ['class'=>'form-control']) !!}
+                    {!!Form::radio('response_limit_type','per_ip_address', null,['class'=>'']) !!}
                     {!!Form::label('enable','Per IP Address',['class'=>' control-label']) !!}                 
                    </td>
                  
@@ -187,11 +204,13 @@
                    </td>
                  
                 </tr>
+               <?php $mes_arry = json_decode($model->error_message_value,true); ?>
                 <tr class="mess" >
+                      
                       <td style="width:60px;">Mno 1</td>
                       <td><label class="form-field-heading">Survey is Disabled </label></td> 
                        <td >       
-                        <input type="text" id="survey_messages_disabled" class="form-control" name="mess[survey_messages_disabled]" value="Survey is disabled1" placeholder="eg. Survey is disabled">
+                        <input type="text" id="survey_messages_disabled" class="form-control" name="mess[survey_messages_disabled]" value="{{@$mes_arry['survey_messages_disabled']}}" placeholder="eg. Survey is disabled">
                     </td>
                 </tr>
                   <tr  class="mess" >
@@ -201,14 +220,14 @@
                       <!-- <h3 class="form-field-subheading">title</h3> -->
                     </td>
                     <td class="aione-input-field-wrapper">       
-                      <input type="text" id="survey_messages_authorization_required" class="form-control" name="mess[survey_messages_authorization_required]" value="You need to be logged in to access the survey1" placeholder="eg. You need to be logged in to access the survey">
+                      <input type="text" id="survey_messages_authorization_required" class="form-control" name="mess[survey_messages_authorization_required]" value="{{@$mes_arry['survey_messages_authorization_required']}}" placeholder="eg. You need to be logged in to access the survey">
                     </td>
                   </tr>
                 <tr class="mess">
                       <td style="width:60px;">Mno 3</td>
                       <td><label class="form-field-heading">Survey Un-authorization Role </label></td> 
                        <td >       
-                        <input type="text" id="survey_messages_disabled" class="form-control" name="mess[survey_messages_unauthorized_role]" value="Survey is disabled1" placeholder="eg. Survey is disabled">
+                        <input type="text" id="survey_messages_disabled" class="form-control" name="mess[survey_messages_unauthorized_role]" value="{{@$mes_arry['survey_messages_unauthorized_role']}}" placeholder="eg. Survey is disabled">
                     </td>
                 </tr>
 
@@ -216,35 +235,35 @@
                       <td style="width:60px;">Mno 4</td>
                       <td><label class="form-field-heading">Survey Un-authorization User </label></td> 
                        <td >       
-                        <input type="text" id="survey_messages_disabled" class="form-control" name="mess[survey_messages_unauthorized_user]" value="Survey is disabled1" placeholder="eg. Survey is disabled">
+                        <input type="text" id="survey_messages_disabled" class="form-control" name="mess[survey_messages_unauthorized_user]" value="{{@$mes_arry['survey_messages_unauthorized_user']}}" placeholder="eg. Survey is disabled">
                     </td>
                 </tr>
                 <tr class="mess">
                       <td style="width:60px;">Mno 5</td>
                       <td><label class="form-field-heading">Invalid Survey Id </label></td> 
                        <td >       
-                        <input type="text" id="survey_messages_disabled" class="form-control" name="mess[survey_messages_invalid_id]" value="Survey is disabled1" placeholder="eg. Survey is disabled">
+                        <input type="text" id="survey_messages_disabled" class="form-control" name="mess[survey_messages_invalid_id]" value="{{@$mes_arry['survey_messages_invalid_id']}}" placeholder="eg. Survey is disabled">
                     </td>
                 </tr>
                 <tr class="mess">
                       <td style="width:60px;">Mno 6</td>
                       <td><label class="form-field-heading">Empty Survey Id  </label></td> 
                        <td >       
-                        <input type="text" id="survey_messages_disabled" class="form-control" name="mess[survey_messages_empty_id]" value="Survey is disabled1" placeholder="eg. Survey is disabled">
+                        <input type="text" id="survey_messages_disabled" class="form-control" name="mess[survey_messages_empty_id]" value="{{@$mes_arry['survey_messages_empty_id']}}" placeholder="eg. Survey is disabled">
                     </td>
                 </tr>
                 <tr class="mess">
                       <td style="width:60px;">Mno 7</td>
                       <td><label class="form-field-heading">Survey Not Started </label></td> 
                        <td >       
-                        <input type="text" id="" class="form-control" name="mess[survey_messages_not_started]" value="Survey is disabled1" placeholder="eg. Survey is disabled">
+                        <input type="text" id="" class="form-control" name="mess[survey_messages_not_started]" value="{{@$mes_arry['survey_messages_not_started']}}" placeholder="eg. Survey is disabled">
                     </td>
                 </tr>
                 <tr class="mess">
                       <td style="width:60px;">Mno 8</td>
                       <td><label class="form-field-heading">Survey is Expired </label></td> 
                        <td >       
-                        <input type="text" id="" class="form-control" name="mess[survey_messages_expired]" value="Survey is disabled1" placeholder="eg. Survey is disabled">
+                        <input type="text" id="" class="form-control" name="mess[survey_messages_expired]" value="{{@$mes_arry['survey_messages_expired']}}" placeholder="eg. Survey is disabled">
                     </td>
                 </tr>
    

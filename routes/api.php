@@ -8,8 +8,16 @@ Route::get('/sql','Services\ImportdatasetController@runSqlFile');
 Route::group(['prefix' => 'v1'], function () {
 
 
+
+	//get organization list without api_token
+	route::get('organizationList',['as'=> 'organization' , 'uses' => 'Services\organization@allOrganization']);
+
+
 	Route::group(['middleware'=>['cors','log']], function(){
 	Route::post('/dataset/save',['as'=>'dataset.save','uses'=>'Services\SaveServeController@saveDataset']);
+
+
+
 
 		Route::get('/dashboard',					['as' => 'dashboard' , 'uses' => 'Services\dashboardController@DashboardData']);
 
@@ -43,6 +51,7 @@ Route::group(['prefix' => 'v1'], function () {
 
 	Route::group(['middleware'=>['auth:api','cors','log']], function(){
 
+	
 	//surrvey
 		
 

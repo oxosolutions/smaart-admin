@@ -8,9 +8,7 @@
 			['user_name' => 'SGS Sandhu']
 			); 
 		});
-
 		
-
 		Route::get('/correctCsv',['as'=>'datasets.list','uses'=>'DataSetsController@correctCsv']);
 
 
@@ -72,7 +70,13 @@
 		Route::get('/dataset/create',['as'=>'dataset.create','uses'=>'DataSetsController@create']);
 		Route::get('/dataset/delete/{id}',['as'=>'datasets.delete', 'uses'=>'DataSetsController@destroy']);
 	
-	
+	//organization
+		Route::get('organization',['as' => 'organization' ,'uses' => function(){
+			return view('organization.create');
+		} ]);
+		//organization	
+		Route::post('organization',['as'=> 'organization.store' , 'uses' => 'Services\organization@store']);
+
 	
 	//role
 		Route::get('/roles', ['as'=>'role.list', 'uses'=>'RoleController@index']);
@@ -86,6 +90,12 @@
 		Route::get('/visualisation',['as'=>'visualisation.list','uses'=>'VisualisationController@index']);
 		Route::get('/visualisation/create',['as'=>'visualisation.create','uses'=>'VisualisationController@create']);
 		Route::get('/visualisation/delete/{id}',['as'=>'visualisation.delete', 'uses'=>'VisualisationController@destroy']);
+
+		/*Routes For indicators resources*/
+		Route::get('/visualisation_list',['as'=>'visualisation.list.ajax','uses'=>'VisualisationController@indexData']);
+		Route::post('/visualisation/store',['as'=>'visualisation.store','uses'=>'VisualisationController@store']);
+		Route::get('/visualisation/edit/{id}',['as'=>'visualisation.edit', 'uses'=>'VisualisationController@edit']);
+		Route::patch('/visualisation/update/{id}',['as'=>'visualisation.update', 'uses'=>'VisualisationController@update']);
 
 	/*API Config Routes*/
 		Route::get('/config',['as'=>'api.config','uses'=>'ApiConfigController@index']);
@@ -180,6 +190,8 @@
 
 	//Ajax Routes
 		Route::get('survey/field',['as'=>'survey.fields','uses'=>'FormBuilderController@addField']);
+		Route::get('map/svg/{id}',['as'=>'map.svg','uses'=>'MapController@loadSVG']);
+		Route::post('map/saveSVG',['as'=>'save.svg','uses'=>'MapController@saveSVG']);
 	});
 
 Auth::routes();

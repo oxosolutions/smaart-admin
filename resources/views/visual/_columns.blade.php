@@ -1,3 +1,5 @@
+
+
 <div class="form-group {{ $errors->has('columns') ? ' has-error' : '' }}">
 	{!!Form::label('filter_cols','Select Columns For Filter') !!}
 	{!!Form::select('filter_cols[]',$columns,@$prefilledFilter, ['class'=>'form-control select2','multiple']) !!}
@@ -7,6 +9,8 @@
 	  </span>
 	@endif
 </div>
+
+
 <div id="visualCharts" class="panel panel-primary">
 	<div class="panel-heading">Add Visual Columns</div>
 	<div class="panel-body">

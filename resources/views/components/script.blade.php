@@ -35,9 +35,16 @@
 <script src="{{asset('/bower_components/admin-lte/plugins/datepicker/bootstrap-datepicker.js')}}"></script>
 
 <script src="{{asset('/bower_components/admin-lte/plugins/daterangepicker/daterangepicker.js')}}"></script>
+{{-- <script src="{{asset('/bower_components/admin-lte/plugins/iCheck/icheck.min.js')}}"></script>
+ --}}
+
 <!-- bootstrap datepicker -->
  <script type="text/javascript">
   	$(document).ready(function(){
+
+      
+
+
 
       $('#datepickerFrom').datepicker({
           dateFormat: 'yy-mm-dd',

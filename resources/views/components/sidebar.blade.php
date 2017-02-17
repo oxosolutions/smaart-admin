@@ -13,11 +13,17 @@
      
       <ul class="sidebar-menu filtered" style="padding-bottom: 50px">
         <li class="header">MAIN NAVIGATION</li>
+
         <li class="{{Request::is('/')?'active':''}}">
           <a href="{{url('/')}}">
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
           </a>
         </li> 
+         <li class="{{{(Request::is('organization')?'active':'')}}}">
+            <a href="{{url('organization')}}">
+              <i class="fa fa-sitemap"></i> <span>Organization</span>
+            </a>
+          </li> 
 
         <li class="treeview {{in_array(Request::path(),array('api_users/create','api_users','api_users_meta/create'))?'active':''}}">
           <a href="#">

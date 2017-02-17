@@ -5,14 +5,13 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-       Surrvey Setting Form
-        <small>Surrvey Setting
-        </small>
+        Edit Ministry
+        <small>Ministries</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Setting</a></li>
-        <li class="active">  Setting</li>
+        <li><a href="{{url('api_users')}}">Ministries</a></li>
+        <li class="active">Edit Ministry</li>
       </ol>
     </section>
 
@@ -24,25 +23,25 @@
           <!-- general form elements -->
           <div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title"> Setting</h3>
+              <h3 class="box-title">Edit Ministry</h3>
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-              {!! Form::model($model, ['method' => 'POST','route'=>['setting.save', $model->id], 'files'=>true]) !!}
-                @include('formbuilder._settingform')
+              {!! Form::model($model,['method'=>'PATCH', 'route' => ['ministries.update', $model->id], 'files'=>true]) !!}
+                @include('ministries._form')
               <div class="box-footer">
-                {!! Form::submit('Save Changes', ['class' => 'btn btn-primary']) !!}
+                {!! Form::submit('Save Ministry', ['class' => 'btn btn-primary']) !!}
               </div>
               {!! Form::close() !!}
 
           </div>
           <!-- /.box -->
 
-               
+
 
         </div>
         <!--/.col (left) -->
-        
+
       </div>
       <!-- /.row -->
     </section>

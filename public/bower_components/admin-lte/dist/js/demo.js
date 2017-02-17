@@ -324,6 +324,8 @@
       if (!$('body').hasClass('sidebar-collapse'))
         $("[data-layout='sidebar-collapse']").click();
     });
+    
+      
 
     // Reset options
     if ($('body').hasClass('fixed')) {
