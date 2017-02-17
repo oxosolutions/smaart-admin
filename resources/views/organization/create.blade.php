@@ -22,30 +22,14 @@
 
     <!-- Main content -->
     <section class="content">
-     @if ($message = Session::get('success'))
-                <div class="alert alert-success alert-dismissible">
-                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                 <i class="icon fa fa-check"></i> 
-                  {{$message}}
-                </div>
-              @endif
-      <div class="row">
-         <div class="col-md-12">
-         <button class="btn btn-primary org_list" style="margin-bottom: 15px">Created Organization</button>
-          <!-- general form elements -->
-          <div class="box box-primary box_org">
-            <div class="box-header with-border">
-              <h3 class="box-title">Create New Organization</h3>
-            </div>
-             <ul>
-            @foreach(App\organization::all() as $value)
-
-                <li style="margin-left: 15px;list-style: none;padding: 5px">{{$value->organization_name}}</li>
-              
-            @endforeach
-            </ul>
+        @if ($message = Session::get('success'))
+          <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+           <i class="icon fa fa-check"></i> 
+            {{$message}}
           </div>
-        </div>
+        @endif
+      <div class="row">
         <!-- left column -->
         <div class="col-md-12">
           <!-- general form elements -->
@@ -63,10 +47,7 @@
               {!! Form::close() !!}
 
           </div>
-          <!-- /.box -->
-
-              
-              
+          <!-- /.box --> 
         </div>
         <!--/.col (left) -->
         

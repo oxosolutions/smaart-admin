@@ -23,7 +23,8 @@
 		});
 
 		Route::group(['middleware'=>['auth','approve','log']], function(){
-
+		
+		Route::get('view_map/{id}',['as'=>'map.view' , 'uses'=>'MapController@view_map' ]);
 		Route::get('maps',['as'=>'map.list' , 'uses'=>'MapController@index' ]);
 		Route::get('mapData',['as'=>'map.data' , 'uses'=>'MapController@indexData' ]);
 		Route::get('map/edit/{id}',['as'=>'map.edit' , 'uses'=>'MapController@edit' ]);
@@ -70,14 +71,14 @@
 		Route::get('/dataset/create',['as'=>'dataset.create','uses'=>'DataSetsController@create']);
 		Route::get('/dataset/delete/{id}',['as'=>'datasets.delete', 'uses'=>'DataSetsController@destroy']);
 	
-	//organization
-		Route::get('organization',['as' => 'organization' ,'uses' => function(){
-			return view('organization.create');
-		} ]);
-		//organization	
-		Route::post('organization',['as'=> 'organization.store' , 'uses' => 'Services\organization@store']);
 
-	
+	//organization
+		Route::get('/organization',					['as'=>'organization.list',		'uses'=>'organizationController@index']);
+		Route::get('/organization_list',			['as'=>'organization.list.ajax',	'uses'=>'organizationController@indexData']);
+		Route::post('/organization/store',			['as'=>'organization.store',		'uses'=>'organizationController@store']);
+
+
+
 	//role
 		Route::get('/roles', ['as'=>'role.list', 'uses'=>'RoleController@index']);
 		Route::get('/role/create',['as'=>'role.create', 'uses'=>'RoleController@create']);
@@ -133,9 +134,6 @@
 		Route::POST('/updateProfile', ['as' => 'updateProfile' , 'uses' => 'ApiusersController@updateProfile']);
 
 
-	
-
-	
 	/*Routes For datasets resources*/
 		Route::get('/dataset_list',['as'=>'datasets.list.ajax','uses'=>'DataSetsController@indexData']);
 		Route::post('/dataset/store',['as'=>'dataset.store','uses'=>'DataSetsController@store']);

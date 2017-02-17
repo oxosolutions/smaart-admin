@@ -91,10 +91,9 @@ class DataSetsController extends Controller
     }
     public function apiExportDataset($dataset_id)
     {
-
-         $model = DL::find($dataset_id);
-         $table_name = $model->dataset_table; 
-         $name     =  str_replace(" ","-", $model->dataset_name); 
+        $model = DL::find($dataset_id);
+        $table_name = $model->dataset_table; 
+        $name     =  str_replace(" ","-", $model->dataset_name); 
         $datas =   DB::table($table_name)->get()->toArray();
         $model =   json_decode(json_encode($datas),true);
 

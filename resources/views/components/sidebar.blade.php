@@ -19,11 +19,21 @@
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
           </a>
         </li> 
-         <li class="{{{(Request::is('organization')?'active':'')}}}">
-            <a href="{{url('organization')}}">
-              <i class="fa fa-sitemap"></i> <span>Organization</span>
-            </a>
-          </li> 
+
+        <!-- //orgaization -->
+         <li class="treeview {{in_array(Request::path(),array('organization/create','organization'))?'active':''}}">
+          <a href="#">
+            <i class="fa fa-sitemap"></i>
+            <span>Organization</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="{{Request::is('organization')?'active':''}}"><a href="{{ route('organization') }}"><i class="fa fa-circle-o"></i> Add New</a></li>
+            <li class="{{Request::is('organization/index')?'active':''}}"><a href="{{route('organization.list.ajax')}}"><i class="fa fa-circle-o"></i> List Organization</a></li>
+          </ul>
+        </li> 
 
         <li class="treeview {{in_array(Request::path(),array('api_users/create','api_users','api_users_meta/create'))?'active':''}}">
           <a href="#">
@@ -38,6 +48,7 @@
             <li class="{{Request::is('api_users/create')?'active':''}}"><a href="{{route('api.create_users')}}"><i class="fa fa-circle-o"></i> Add New</a></li>
           </ul>
         </li>
+
         <li class="treeview {{in_array(Request::path(),array('pages/create','pages'))?'active':''}}">
           <a href="#">
             <i class="fa fa-file-o"></i>

@@ -133,6 +133,19 @@
             { data: 'actions', name: 'actions', orderable: false, searchable: false, "className": 'actions' },
       ]
     });
+    
+    $('#organization_name').DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: route()+'/organization_list',
+      order:[[0,'desc']],
+      columns: [
+            { data: 'id', name: 'id' },
+            { data: 'organization_name', name: 'organization_name' },
+            { data: 'created_at', name: 'created_at' },
+            { data: 'actions', name: 'actions', orderable: false, searchable: false, "className": 'actions' },
+      ]
+    });
 
     $('#surrvey').DataTable({
       processing:true,

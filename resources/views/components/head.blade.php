@@ -17,11 +17,17 @@
 {{--   <link rel="stylesheet" href="{{asset('/bower_components/admin-lte/plugins/iCheck/all.css')}}">
  --}}
 
-
+  
   @if(@$css)
-    @foreach(@$css as $key => $file)
-      @include('components.plugins.css.'.$file)
-    @endforeach
-  @endif
+	@foreach(@$css as $key => $file)
+    @if(is_array($file))
+      @foreach(@$file as $iKey => $iVal)
+        <link rel="stylesheet" href="{{asset('css/'.$iVal.'.css')}}?ref={{rand(8899,9999)}}">
+      @endforeach
+    @else
+		  @include('components.plugins.css.'.$file)
+    @endif
+	@endforeach
+@endif
 
 </head>

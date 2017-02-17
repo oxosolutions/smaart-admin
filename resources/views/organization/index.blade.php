@@ -6,13 +6,13 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Ministries
-        <small>list of ministries</small>
+        Organization
+        <small>list of Organization</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><a href="javascript:;">Ministries</a></li>
-        <li class="active">List Ministries</li>
+        <li><a href="javascript:;">Organization</a></li>
+        <li class="active">List Organization</li>
       </ol>
     </section>
     
@@ -31,45 +31,32 @@
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <i class="icon fa fa-ban"></i> {{$message}}
               </div>
-       <!--  <div class="alert alert-success alert-dismissible">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-         <i class="icon fa fa-check"></i> 
-         
-        </div> -->
       @endif
 
       <div class="row">
         <div class="col-xs-12">
           <div class="box-header">
-              <button class="btn btn-primary" onclick="window.location='{{route('ministries.create')}}'">Create New Ministry</button>
+              <button class="btn btn-primary" onclick="window.location='{{route('organization')}}'">Create New Organization</button>
           </div>
           <div class="box">
             <!-- /.box-header -->
             <div class="box-body">
-              <table id="ministry" class="table table-bordered table-striped">
+              <table id="organization_name" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Ministry ID</th>
-                  <th>Ministry Title</th>
-                  <th>Description</th>
-                  <th>Ministry Phone</th>
-                  <th>Ministry Ministers</th>
-                  <th>Created By</th>
+                  <th>Organization ID</th>
+                  <th>Organization Title</th>
                   <th>Created At</th>
                   <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                
+          
                 </tbody>
                 <tfoot>
                 <tr>
-                  <th>Ministry ID</th>
-                  <th>Ministry Title</th>
-                  <th>Description</th>
-                  <th>Ministry Phone</th>
-                  <th>Ministry Ministers</th>
-                  <th>Created By</th>
+                  <th>Organization ID</th>
+                  <th>Organization Title</th>
                   <th>Created At</th>
                   <th>Action</th>
                 </tr>

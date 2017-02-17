@@ -1,0 +1,36 @@
+/*
+Map View
+*/
+.map-info {
+    padding: 0 10px;
+	margin-bottom:30px;
+}
+.map-info-title{
+	text-align:center;
+	padding:6px 10px;
+	margin:0;
+	color:#168dc5;
+	border-bottom:1px solid #e8e8e8;
+}
+.map-info ul{
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+.map-info ul li{
+	margin:0;
+	padding:0;
+	list-style:none;
+	border-bottom:1px dotted #e8e8e8;
+}
+.map-info .map-info-label{
+	display:inline-block;
+	width:30%;
+	min-width:200px;
+	padding:4px 20px;
+	border-right:1px dotted #e8e8e8;
+}
+.map-info .map-info-value{
+	display:inline-block;
+	padding:4px 20px;
+}

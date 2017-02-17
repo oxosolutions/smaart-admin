@@ -22,6 +22,16 @@ class MapController extends Controller
     	return redirect()->route('map.list');
     }
 
+    public function view_map($id)
+    {
+		$map =  Map::find($id);
+		$plugins = [
+				'css' => ['custom'=>['custom']],
+				'svg' => $map
+		];
+       return view('map.viewmap',$plugins);
+    }
+
     public function index()
     {
     	$plugins = [
