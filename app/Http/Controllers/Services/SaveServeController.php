@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use Illuminate\Support\Facades\Schema;
+use App\Surrvey;
 
 class SaveServeController extends Controller
 {
@@ -43,6 +44,9 @@ class SaveServeController extends Controller
    			{
     		    DB::select("CREATE TABLE `{$surrveyTable}` ( " . implode(', ', $unique_column) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 		        DB::select("ALTER TABLE `{$surrveyTable}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
+                    $surrvey = new Surrvey();
+                    $surrvey->surrvey_table = $surrveyTable;
+                    $surrvey->save();
 		    }
         for($i=0; $i<count($newdata); $i++)
         {

@@ -15,7 +15,7 @@ class ExportDatasetController extends Controller
     public function export($dataset_id, $type){
      
         
-        try{
+        //try{
             $model = DL::find($dataset_id);
             $table_name = $model->dataset_table; 
             if(Schema::hasTable($table_name))
@@ -23,15 +23,18 @@ class ExportDatasetController extends Controller
                 $name  =  str_replace(" ","-", $model->dataset_name); 
                 $datas =   DB::table($table_name)->get()->toArray();
                 $model =   json_decode(json_encode($datas),true);
-           
+            //dump($model);
+                
                 $headers = $model[0];
+
                 foreach ($model as $key =>  $value) {
+
                       $model[$key] = array_combine($headers, $value);
                       unset($model[$key][1]);
                       unset($model[0]);
-                  
-                 }
-
+                 //dump($model[$key][4]);
+                  }
+                
                 Excel::create($name, function($excel) use($model) {
                     $excel->sheet('Sheetname', function($sheet) use($model) {
                     $sheet->fromArray($model);
@@ -42,10 +45,10 @@ class ExportDatasetController extends Controller
             }else{
                 return ['status'=>'error','message'=>'Something happen wrong Try Again..'];
             }
-         }catch(\Exception $e)
-        {
-           return ['status'=>'error','message'=>'Something happen wrong Try Again..'];
-        }
+        //  }catch(\Exception $e)
+        // {
+        //    return ['status'=>'error','message'=>'Something happen wrong Try Again..'];
+        // }
 
 
     }
