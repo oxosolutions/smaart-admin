@@ -212,11 +212,13 @@ class VisualApiController extends Controller
 
                 case'addition':
                     $additionData = $this->getDataforAddition($value, $key, $columns, $datatableName->dataset_table, $request);
-                    //$arrayData = array_column($datasetData, $value);
-                    //dd($key);
-                    $columnData[] = array_column($additionData,$value);
+                    $singleVal = array_column($additionData,$value);
+                    array_unshift($singleVal,$datasetColumns[$value]);
+                    $columnData[] = $singleVal;
                     foreach($columns['columns_two'][$key] as $k => $v){
-                        $columnData[] = array_column($additionData, $v);
+                        $singleVal = array_column($additionData, $v);
+                        array_unshift($singleVal,$datasetColumns[$v]);
+                        $columnData[] = $singleVal;
                     }
                 break;
 
@@ -247,7 +249,6 @@ class VisualApiController extends Controller
         foreach($chartsArray as $tKey => $tValue){
             $transposeArray[$tKey] = $this->transpose($tValue);
         }
-        dd($transposeArray);
         $globalVisualSettings = GS::where('meta_key','visual_setting')->first();
         $responseArray['maps']  =   $mapChartsArray;
         $responseArray['chart_data'] = $transposeArray;
