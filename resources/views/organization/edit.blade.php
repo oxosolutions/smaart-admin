@@ -5,13 +5,13 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Edit Ministry
-        <small>Ministries</small>
+        Edit Organization
+        <small>Organization</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{url('api_users')}}">Ministries</a></li>
-        <li class="active">Edit Ministry</li>
+        <li><a href="{{url('api_users')}}">Organization</a></li>
+        <li class="active">Edit Organization</li>
       </ol>
     </section>
 
@@ -23,14 +23,14 @@
           <!-- general form elements -->
           <div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title">Edit Ministry</h3>
+              <h3 class="box-title">Edit Organization</h3>
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-              {!! Form::model($model,['method'=>'PATCH', 'route' => ['ministries.update', $model->id], 'files'=>true]) !!}
-                @include('ministries._form')
+              {!! Form::model($model,['method'=>'PATCH', 'route' => ['organization.update', $model->id], 'files'=>true]) !!}
+                @include('organization._form')
               <div class="box-footer">
-                {!! Form::submit('Save Ministry', ['class' => 'btn btn-primary']) !!}
+                {!! Form::submit('Save Organization', ['class' => 'btn btn-primary']) !!}
               </div>
               {!! Form::close() !!}
 

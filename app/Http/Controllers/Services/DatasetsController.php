@@ -155,7 +155,7 @@ class DatasetsController extends Controller
     }
 
     public function SavevalidateColumns(Request $request){
-        
+  
         $result = $this->validateUpdateColumns($request);
         if($result['status'] == 'false'){
 
@@ -165,6 +165,7 @@ class DatasetsController extends Controller
         
         $newColumns = json_decode($request->create_columns);
         $orgColumns = (array)json_decode($request->columns);
+
         if(!empty($newColumns)){
             $orgColumns = $this->createNewColumns($request->create_columns, $model->dataset_table, $orgColumns);
             if($orgColumns == false){
@@ -184,22 +185,34 @@ class DatasetsController extends Controller
     }
 
     protected function createNewColumns($columns, $table, $orgColumns){
+     
         foreach(json_decode($columns) as $key => $value){
             $columnsList = DB::select('SHOW COLUMNS FROM `'.$table.'`');
             $colCount = rand(1000,2000);//count($columnsList)-1;
-            DB::select('ALTER TABLE `'.$table.'` ADD COLUMN column_'.$colCount.' TEXT NULL AFTER '.$value->col_after.';');
-            DB::table($table)->where(['id'=>1])->update(['column_'.$colCount => $value->col_name]);
-             $orgColumns['column_'.$colCount] = $value->col_type;
-            if($value->formula == true){
-                try{
-                    DB::select('UPDATE `'.$table.'` set column_'.$colCount.' = DATEDIFF(STR_TO_DATE(`'.$value->col_one.'`,"%m/%d/%Y"),STR_TO_DATE(`'.$value->col_two.'`,"%m/%d/%Y")) where id > 1 and '.$value->col_two.' REGEXP "[0-9]" and '.$value->col_one.' REGEXP "[0-9]"');
+            try{
+                DB::select('ALTER TABLE `'.$table.'` ADD COLUMN column_'.$colCount.' TEXT NULL AFTER '.$value->col_after.';');
+                DB::table($table)->update(['column_'.$colCount => $value->operation]);
+                DB::table($table)->where(['id'=>1])->update(['column_'.$colCount => $value->col_name]);
+                $orgColumns['column_'.$colCount] = $value->col_type;
                 }catch(\Exception $e){
                     return false;
-                }
-                
+               }
             }
-        }
-        return $orgColumns;
+            return $orgColumns;
+            //if($value->formula == true){
+                //try{
+
+                   // DB::select('UPDATE `'.$table.'` `set column_'.$colCount.'` = "'.$value->operation.'"  where id > 1');
+//die;
+                    // DB::select('UPDATE `'.$table.'` set column_'.$colCount.' = DATEDIFF(STR_TO_DATE(`'.$value->col_one.'`,"%m/%d/%Y"),STR_TO_DATE(`'.$value->col_two.'`,"%m/%d/%Y")) where id > 1 and '.$value->col_two.' REGEXP "[0-9]" and '.$value->col_one.' REGEXP "[0-9]"');
+               // }catch(\Exception $e){
+                    //return false;
+               // }
+                
+            //}
+            
+        //}
+        
     }
 
     protected function checkIfColumnExistinTable(){

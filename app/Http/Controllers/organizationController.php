@@ -42,30 +42,13 @@ class organizationController extends Controller
     }
 
     public function store(Request $request){
-
-        $this->modelValidate($request);
-
-        DB::beginTransaction();
-        try{
-            $model = new Page($request->except(['_token']));
-            $model->created_by = Auth::user()->id;
-            $path = 'pages_data';
-            if($request->hasFile('page_image')){
-
-                $filename = date('Y-m-d-H-i-s')."-".$request->file('page_image')->getClientOriginalName();
-
-                $request->file('page_image')->move($path, $filename);
-
-                $model->page_image = $filename;
-            }
-            $model->save();
-            DB::commit();
-            Session::flash('success','Successfully created!');
-            return redirect()->route('pages.list');
-        }catch(\Exception $e){
-
-            DB::rollback();
-            throw $e;
+      $data = array('organization_name' => $request->organization_name);  
+      $inserted = ORG::create($data);
+      if ($inserted){
+        Session::flash('success','Successfully created!');
+        return redirect()->route('organization.list'); // view('organization.create');
+      }else{
+        Session::flash('error','Some thing goes wrong Try again!');
       }
     }
 
@@ -83,14 +66,14 @@ class organizationController extends Controller
 
     public function edit($id){
           try{
-              $model = Page::findOrFail($id);
+              $model = ORG::findOrFail($id);
               $plugins = [
                           'css' => ['wysihtml5','fileupload'],
                           'js'  => ['wysihtml5','fileupload','ckeditor','custom'=>['page-create']],
                           'model' => $model
                         ];
 
-          return view('pages.edit',$plugins);
+          return view('organization.edit',$plugins);
         }catch(\Exception $e)
         {
               Session::flash('error','Data not found.');
@@ -100,46 +83,17 @@ class organizationController extends Controller
 
     public function update(Request $request, $id){
 
-        $model = Page::findOrFail($id);
-        $this->modelValidate($request);
-        DB::beginTransaction();
-        try{
-            $model->fill($request->except(['_token']));
-            $model->created_by = Auth::user()->id;
-            $path = 'pages_data';
-          if($request->hasFile('page_image')){
-
-              $filename = date('Y-m-d-H-i-s')."-".$request->file('page_image')->getClientOriginalName();
-              $request->file('page_image')->move($path, $filename);
-              $model->page_image = $filename;
-            }
-            $model->save();
-            DB::commit();
-            Session::flash('success','Successfully updated!');
-
-
-            $model = Page::findOrFail($id);
-              $plugins = [
-                          'css' => ['wysihtml5','fileupload'],
-                          'js'  => ['wysihtml5','fileupload','ckeditor','custom'=>['page-create']],
-                          'model' => $model
-                        ];
-
-          return view('pages.edit',$plugins);
-           // return redirect()->route('pages.edit');
-          }catch(\Exception $e){
-            DB::rollback(); 
-            throw $e;
-      }
+       $model = ORG::where('id',$id)->update(['organization_name'=>$request->organization_name]);
+      return redirect()->route('organization.list');  
     }
 
     public function destroy($id){
 
-        $model = Page::findOrFail($id);
+      $model = ORG::findOrFail($id);
       try{
           $model->delete();
           Session::flash('success','Successfully deleted!');
-          return redirect()->route('pages.list');
+          return redirect()->route('organization.list');
         }catch(\Exception $e){
             throw $e;
         }

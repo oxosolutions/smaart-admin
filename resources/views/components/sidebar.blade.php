@@ -30,8 +30,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="{{Request::is('organization')?'active':''}}"><a href="{{ route('organization') }}"><i class="fa fa-circle-o"></i> Add New</a></li>
-            <li class="{{Request::is('organization/index')?'active':''}}"><a href="{{route('organization.list.ajax')}}"><i class="fa fa-circle-o"></i> List Organization</a></li>
+            <li class="{{Request::is('organization')?'active':''}}"><a href="{{ route('organization.create') }}"><i class="fa fa-circle-o"></i> Add New</a></li>
+            <li class="{{Request::is('organization/index')?'active':''}}"><a href="{{route('organization.list')}}"><i class="fa fa-circle-o"></i> List Organization</a></li>
           </ul>
         </li> 
 

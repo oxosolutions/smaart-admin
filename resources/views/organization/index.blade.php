@@ -36,7 +36,7 @@
       <div class="row">
         <div class="col-xs-12">
           <div class="box-header">
-              <button class="btn btn-primary" onclick="window.location='{{route('organization')}}'">Create New Organization</button>
+              <button class="btn btn-primary" onclick="window.location='{{route('organization.create')}}'">Create New Organization</button>
           </div>
           <div class="box">
             <!-- /.box-header -->

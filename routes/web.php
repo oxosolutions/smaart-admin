@@ -73,12 +73,13 @@
 	
 
 	//organization
-		Route::get('/organization',					['as'=>'organization.list',		'uses'=>'organizationController@index']);
+		Route::get('/organization',					['as'=>'organization.list',			'uses'=>'organizationController@index']);
+		Route::get('/organization/create',			['as'=>'organization.create',		'uses'=>'organizationController@create']);
 		Route::get('/organization_list',			['as'=>'organization.list.ajax',	'uses'=>'organizationController@indexData']);
 		Route::post('/organization/store',			['as'=>'organization.store',		'uses'=>'organizationController@store']);
-
-
-
+		Route::get('/organization/delete/{id}',		['as'=>'organization.delete', 		'uses'=>'organizationController@destroy']);
+		Route::get('/organization/edit/{id}',		['as'=>'organization.edit', 		'uses'=>'organizationController@edit']);
+		Route::patch('/organization/update/{id}',	['as'=>'organization.update', 		'uses'=>'organizationController@update']);
 	//role
 		Route::get('/roles', ['as'=>'role.list', 'uses'=>'RoleController@index']);
 		Route::get('/role/create',['as'=>'role.create', 'uses'=>'RoleController@create']);

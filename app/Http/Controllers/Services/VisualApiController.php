@@ -146,9 +146,10 @@ class VisualApiController extends Controller
         if($columns == null){
             return ['status'=>'error','message'=>'No settings found!'];
         }
-        if(array_key_exists('count', $columns) && is_array(@$columns['count'])){
+        /*if(array_key_exists('count', $columns) && is_array(@$columns['count'])){
             $countCharts = $columns['count'];
-        }
+        }*/
+
         $responseArray['num_of_charts'] = count($columns['column_one']);
         $chartsArray = [];
         $datatableName = DL::find($dataset_id);
@@ -168,14 +169,6 @@ class VisualApiController extends Controller
                     $where = [];
                     $dbObj->where(function($query) use ($mValue, $key){
                         foreach($mValue as $vKey => $vVal){
-                            // $dbObj->orWhere(array($key=>$vVal));
-                            //$where[] = array($key=>$vVal);
-                            /*if($firstWhere == 0){
-                                $dbObj->Where($key,$vVal);
-                            }else{
-                                $dbObj->orWhere($key,$vVal);
-                            }
-                            $firstWhere++;*/
                             $query->orWhere($key, $vVal);
                         }
                     });
@@ -205,25 +198,39 @@ class VisualApiController extends Controller
                 $mapChartsArray[$key] = $this->createMaps($columns,$key);
             }
             $columnData = [];
-            if(@in_array($key,$countCharts)){//Chart name chart_1 exist in count array
-                $tempArray = [];
-                $resultData = [];
-                foreach($columns['columns_two'][$key] as $colKey => $colVal){
-                    $resultData[$colVal] = $this->generateCountColumns($colVal,$datatableName->dataset_table,$request->type == 'filter'?true:false,json_decode($request->filter_array,true),json_decode($request->filter_array_multi, true),json_decode($request->range_filters,true));
-                }
-                $resultCorrectData = $this->correctDataforCount($resultData,$datasetColumns);
-                $columnData = $resultCorrectData;
+            switch($columns['formula'][$key]){
 
-            }else{
-                $arrayData = array_column($datasetData, $value);
-                array_unshift($arrayData,$datasetColumns[$value]);
-                $columnData[] = $arrayData;
-                foreach($columns['columns_two'][$key] as $colKey => $colVal){
-                    $arrayData = array_column($datasetData, $colVal);
-                    array_unshift($arrayData,$datasetColumns[$colVal]);
-                    $arrayData = array_merge(array($arrayData[0]),array_map('intval', array_slice($arrayData, 1)));
+                case'count':
+                    $tempArray = [];
+                    $resultData = [];
+                    foreach($columns['columns_two'][$key] as $colKey => $colVal){
+                        $resultData[$colVal] = $this->generateCountColumns($colVal,$datatableName->dataset_table,$request->type == 'filter'?true:false,json_decode($request->filter_array,true),json_decode($request->filter_array_multi, true),json_decode($request->range_filters,true));
+                    }
+                    $resultCorrectData = $this->correctDataforCount($resultData,$datasetColumns);
+                    $columnData = $resultCorrectData;
+                break;
+
+                case'addition':
+                    $additionData = $this->getDataforAddition($value, $key, $columns, $datatableName->dataset_table, $request);
+                    //$arrayData = array_column($datasetData, $value);
+                    //dd($key);
+                    $columnData[] = array_column($additionData,$value);
+                    foreach($columns['columns_two'][$key] as $k => $v){
+                        $columnData[] = array_column($additionData, $v);
+                    }
+                break;
+
+                case'no':
+                    $arrayData = array_column($datasetData, $value);
+                    array_unshift($arrayData,$datasetColumns[$value]);
                     $columnData[] = $arrayData;
-                }
+                    foreach($columns['columns_two'][$key] as $colKey => $colVal){
+                        $arrayData = array_column($datasetData, $colVal);
+                        array_unshift($arrayData,$datasetColumns[$colVal]);
+                        $arrayData = array_merge(array($arrayData[0]),array_map('intval', array_slice($arrayData, 1)));
+                        $columnData[] = $arrayData;
+                    }
+                break;
             }
             $chartsArray[$key] = $columnData;
         }
@@ -240,6 +247,7 @@ class VisualApiController extends Controller
         foreach($chartsArray as $tKey => $tValue){
             $transposeArray[$tKey] = $this->transpose($tValue);
         }
+        dd($transposeArray);
         $globalVisualSettings = GS::where('meta_key','visual_setting')->first();
         $responseArray['maps']  =   $mapChartsArray;
         $responseArray['chart_data'] = $transposeArray;
@@ -250,6 +258,40 @@ class VisualApiController extends Controller
         $responseArray['titles'] = $columns['title'];
         $responseArray['status'] = 'success';
         return $responseArray;
+    }
+
+    protected function getDataforAddition($col_one, $key, $columns, $table, $request){
+
+        $result = DB::table($table);
+        $result->select($col_one);
+        foreach($columns['columns_two'][$key] as $iKey => $iVal){
+            $result->selectRaw('SUM('.$iVal.') as '.$iVal);
+        }
+        $result->groupBy($col_one);
+        $result->where('id','!=',1);
+        if($request->type == 'filter'){
+            $result->where(json_decode($request->filter_array, true));
+            if(json_decode($request->filter_array_multi, true) != null){
+                foreach(json_decode($request->filter_array_multi, true) as $key => $mValue){
+                    $firstWhere = 0;
+                    foreach($mValue as $vKey => $vVal){
+                        if($firstWhere == 0){
+                            $result->Where($key,$vVal);
+                        }else{
+                            $result->orWhere($key,$vVal);
+                        }
+                        $firstWhere++;
+                    }
+                }
+            }
+
+            if(json_decode($request->range_filters,true) != null){
+                foreach (json_decode($request->range_filters,true) as $key => $value) {
+                    $result->whereBetween($key,[$value['min'],$value['max']]);
+                }
+            }
+        }
+        return json_decode(json_encode($result->get()->toArray()), true);
     }
 
     protected function createMaps($columnsData, $chart){
@@ -401,12 +443,12 @@ class VisualApiController extends Controller
         $returnArray['visual_settings'] = @$settings->visual_settings;
         $returnArray['chart_types'] = $model->chart_type;
         $returnArray['visual_set'] = $vSettings;
-
-        $mapData  = Map::where('status','enable')->select(['id','title','code','parent','code_albha_2','code_albha_3','status'])->get();
+        $mapData  = Map::orderBy('title','ASC')->where('status','enable')->select(['id','title','code','parent','code_albha_2','code_albha_3','status'])->get();
 
         return ['status'=>'success','data'=>$returnArray,'map_list'=> $mapData];
     }
     public function saveVisualData(Request $request){
+
         $validate = $this->validateRequest($request);
         if($validate['status'] == 'false'){
             return ['status'=>'error','message'=>$validate['message']];
@@ -414,16 +456,8 @@ class VisualApiController extends Controller
 
         
         $columns = json_decode($request->columns, true);
-        $count = json_decode($request->count, true);
-        unset($columns['count']);
-        
-        $newCount = [];
-        foreach($count as $key => $value){
-            if($value == 'Yes'){
-                $newCount[] = $key;
-            }
-        }
-        $columns['count'] = $newCount;
+        //unset($columns['formula']);
+        //
         $filterCOlumns = json_decode($request->filter_cols, true);
         
         
