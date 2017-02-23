@@ -229,8 +229,15 @@ class VisualApiController extends Controller
                     foreach($columns['columns_two'][$key] as $colKey => $colVal){
                         $arrayData = array_column($datasetData, $colVal);
                         array_unshift($arrayData,$datasetColumns[$colVal]);
-                        $arrayData = array_merge(array($arrayData[0]),array_map('intval', array_slice($arrayData, 1)));
+                        if($chartType[$key] != 'CustomMap'){
+                            $arrayData = array_merge(array($arrayData[0]),array_map('intval', array_slice($arrayData, 1)));
+                        }
                         $columnData[] = $arrayData;
+                    }
+                    if($chartType[$key] == 'CustomMap'){
+                        
+                        $extraData = array_column($datasetData, $columns['viewData'][$key]);
+                        array_unshift($extraData,$datasetColumns[$columns['viewData'][$key]]);
                     }
                 break;
             }
@@ -251,6 +258,7 @@ class VisualApiController extends Controller
         }
         $globalVisualSettings = GS::where('meta_key','visual_setting')->first();
         $responseArray['maps']  =   $mapChartsArray;
+        $responseArray['map_display_val'] = $extraData;
         $responseArray['chart_data'] = $transposeArray;
         $responseArray['filters'] = $filtersArray;
         $responseArray['chart_types'] = $visual->chart_type;
@@ -468,7 +476,7 @@ class VisualApiController extends Controller
         $model->columns = json_encode($columns);
         $model->filter_columns = $request->filter_cols;
         $model->chart_type = $request->chartTypes;
-        $model->created_by = Auth::user()->id;
+        $model->created_by = 90;//Auth::user()->id;
         $model->save();
         return ['status'=>'success','message'=>'Visual update successfully!'];
     }

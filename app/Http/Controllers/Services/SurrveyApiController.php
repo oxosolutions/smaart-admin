@@ -6,10 +6,99 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Surrvey;
 use App\SurrveyQuestion as SQ;
+use Auth;
+use App\UserMeta as um;
+use DB;
 
 class SurrveyApiController extends Controller
 {
-    
+
+	
+
+	public function surrvey_save(Request $request)
+    {
+    	 	
+
+    	try{
+			$user_id =	Auth::user()->id;
+    	    $org = um::select('value')->where(['user_id'=>$user_id,'key'=>'organization'])->first(); 
+			$org_id = $org->value;
+            $surrvey = new Surrvey();
+            $surrvey->name = $request->name;
+            $surrvey->description = $request->description;
+            $surrvey->created_by = Auth::user()->id;
+            $surrvey->save();
+            	return ['status'=>'success', 'response'=>'successfully created surrvey'];
+            }catch(\Exception $e)
+            {
+                return ['status'=>'error', 'response'=>'Something goes wrong Try Again'];
+
+            }   
+    		
+    }
+    public function surrvey_list()
+    {
+           $model = Surrvey::select(['id','name','description','status','created_by'])->orderBy('id','desc')->get();
+           return ['status'=>"success", "response"=>$model];
+    }
+
+    public function enableDisable($id)
+	{
+		try
+		{
+			$status = Surrvey::select('status')->where('id',$id)->first();
+			if($status->status=="enable"){
+				Surrvey::select('status')->where('id',$id)->update(['status'=>'disable']);
+			}else if($status->status=="disable")
+			{
+				Surrvey::select('status')->where('id',$id)->update(['status'=>'enable']);
+
+			 }
+			return ['status'=>'success', 'message'=>"successfully change status"];
+
+		}catch(\Exception $e)
+		{
+			return ['status'=>'error', 'message'=>"Something goes wrong Try Again"];
+
+		}
+
+	}
+
+	public function delSurrvey($id)
+	{
+		try{
+			Surrvey::where('id',$id)->delete();
+			return ['status'=>'success', 'message'=>"successfully Delete Surrvey"];
+
+		}catch(\Exception $e)
+		{
+			return ['status'=>'error', 'message'=>"Something goes wrong Try Again"];
+		}
+
+	}
+
+	public function surrvey_edit($id)
+    	{
+        try{
+            Surrvey::findORfail($id);
+            $model =  Surrvey::select(['id','name','description','status','created_by'])->where('id',$id)->first();
+            	return['status'=>'success' ,'response'=>$model];  
+            }catch(\Exception $e)
+            {
+           		 return['status'=>'error' ,'response'=>"Something goes wrong Try Again"];  
+            }    
+    	}
+	public function surrvey_update(Request $request )
+	    {
+	        try{
+	            Surrvey::findORfail($request->id);
+	            Surrvey::where('id',$request->id)->update(['name'=>$request->name, 'description'=>$request->description,'status'=>$request->status]);
+            	return ['status'=>'success', 'response'=>'successfully created surrvey'];
+	        }catch(\Exception $e)
+	        {
+            	return ['status'=>'success', 'response'=>'Something goes wrong Try Again'];
+	        }
+	    }
     public function surrveyData($surrvey_id)
     {
     		$model = Surrvey::where('id',$surrvey_id)->first();

@@ -9,8 +9,10 @@ use App\SurrveyQuestion as SQ;
 USE Auth;
 use Session;
 use Carbon\Carbon as tm;
+use DB;
 class FormBuilderController extends Controller
 {
+   
       public function surrvey_setting($id)
       {
 
@@ -56,30 +58,30 @@ class FormBuilderController extends Controller
             $array['timer_type'] = Null;
           }
           if($request->timer_status =="disable" || $request->timer_type =="expire_time") 
-            {
-              $array['timer_durnation'] = Null;
-            }
+          {
+            $array['timer_durnation'] = Null;
+          }
            
           if($request->scheduling =='enable')
-            {
-                $array['start_date'] =  tm::parse( $request->start_date)->format('Y-m-d');
-                $array['expire_date'] =  tm::parse( $request->expire_date)->format('Y-m-d'); 
+          {
+              $array['start_date'] =  tm::parse( $request->start_date)->format('Y-m-d');
+              $array['expire_date'] =  tm::parse( $request->expire_date)->format('Y-m-d'); 
 
-            }else{
-                $array['start_date'] =  NUll;
-                $array['expire_date'] =  Null;
-            }
+          }else{
+              $array['start_date'] =  NUll;
+              $array['expire_date'] =  Null;
+          }
           if($request->authentication_required =="enable")
+          {
+            if($request->authentication_type=="individual_based")
             {
-              if($request->authentication_type=="individual_based")
-              {
-                $array['authorize'] = $request->individual;
-              }
-              elseif($request->authentication_type=="role_based")
-              {
-                  $array['authorize'] = json_encode($request->role);
-              }
-            }else{
+              $array['authorize'] = $request->individual;
+            }
+            elseif($request->authentication_type=="role_based")
+            {
+                $array['authorize'] = json_encode($request->role);
+            }
+          }else{
                     $array['authentication_type'] =Null;
                     $array['authorize'] =Null;
                   }
@@ -91,9 +93,21 @@ class FormBuilderController extends Controller
     {
        return view('formbuilder.add');
     }
-
+ // protected function modelSurrveyValidate($request){
+        
+ //        $rules = [
+                
+ //                'name' => 'required',
+                
+ //               ];
+ //        // if($request->select_operation == 'append' || $request->select_operation == 'replace'){
+ //        //     $rules['dataset_list'] = 'required';
+ //        // }
+ //        $this->validate($request, $rules);
+ //    }
     public function surrvey_save(Request $request)
     {
+      // $this->modelSurrveyValidate($request);
         try{
             $surrvey = new Surrvey();
             $surrvey->name = $request->name;
@@ -107,6 +121,43 @@ class FormBuilderController extends Controller
                 Session::flash('error','Something goes wrong Try Again.');
             }   
     }
+
+
+    public function filledSurrveyData($user_id ,$table )
+    {
+      $data =   DB::table($table)->where('user_id',$user_id)->first();
+      return view('formbuilder.filledsurrvey',['model'=>$data]); 
+
+    }
+
+    public function surrveyUserListData($stable)
+    {
+
+        $model = DB::table($stable)->select('user_id')->get(); 
+        foreach ($model as $key => $value) {
+            $uData =   DB::table('users')->select('name')->where('id',$value->user_id)->first();
+            $model[$key]->user_name = $uData->name;
+            $model[$key]->table = $stable;
+
+         }
+
+         return Datatables::of($model)
+         ->addColumn('actions',function($model)
+            { 
+                return view('formbuilder._surrveyUserListAction',['model'=>$model])->render();
+        })->make('true');
+         
+
+    }
+    public function surrveyUserList($stable)
+      {
+        $plugins = [ 
+                    'css'=>['datatables'],
+                    'js'=>['datatables','custom'=>['gen-datatables']],
+                    'tableName'=>$stable
+                    ];
+        return view('formbuilder.surrveyUserList',$plugins);
+      }
 
     public function index()
     {
@@ -175,8 +226,25 @@ class FormBuilderController extends Controller
        
         return view('formbuilder/create',$plugins);
     }
+
+    protected function modelValidate($request){
+        
+        $rules = [
+                
+                'ques[0]' => 'required',
+                
+               ];
+        // if($request->select_operation == 'append' || $request->select_operation == 'replace'){
+        //     $rules['dataset_list'] = 'required';
+        // }
+        $this->validate($request, $rules);
+    }
+// Save update Question
     public function save(Request $request)
      {  
+          $this->modelValidate($request);
+
+     // dd($request->request);
          $sid = $request->surrvey_id;
          $SQ =  SQ::where('surrvey_id',$sid);
         if($SQ->count() > 0)

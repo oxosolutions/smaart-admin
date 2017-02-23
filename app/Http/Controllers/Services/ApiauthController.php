@@ -18,9 +18,7 @@ USE App\Mail\AfterApproveUser;
 
 use Illuminate\Support\Facades\Mail;
 use App\GlobalSetting as GS;
-use App\Designation as DES;
-use App\Ministrie   as min;
-use App\Department  as DEP;
+use App\organization as org;
 
 class ApiauthController extends Controller
 {
@@ -71,18 +69,7 @@ class ApiauthController extends Controller
             if($val->meta)
             {
                foreach ($val->meta as  $metaValue) {
-                    if($metaValue->key == "designation")
-                       {
-                        $arr[$i]["designation"] = DES::getDesignation($metaValue->value); 
-                       }
-                    if($metaValue->key == "ministry")
-                       {
-                            $json = json_decode($metaValue->value);
-                            if(min::ministryName($json[0])!=false)
-                               {         
-                                 $arr[$i]["ministry"] = min::ministryName($json[0]);
-                                }
-                       }
+                   
                        if($metaValue->key == "phone")
                        {
                         $arr[$i]["phone"] = $metaValue->value;
@@ -91,14 +78,7 @@ class ApiauthController extends Controller
                        {
                         $arr[$i]["address"] = $metaValue->value;
                        }
-                       if($metaValue->key == "department")
-                       {
-                        $dep = json_decode($metaValue->value);  
-                            if(DEP::getDepName($dep[0])!=false)
-                            {
-                                $arr[$i]["department"] = DEP::getDepName($dep[0]);
-                            }
-                       }
+                      
                        if($metaValue->key == "profile_pic")
                        {
                         $arr[$i]["profile_pic"] = $metaValue->value;
@@ -128,17 +108,7 @@ class ApiauthController extends Controller
             
             foreach ($user->meta as  $metaValue) {
 
-                if($metaValue->key == "designation"){
-
-                    $arr["designation"] = DES::getDesignation($metaValue->value); 
-                }
-                if($metaValue->key == "ministry"){
-                    $json = json_decode($metaValue->value);
-                    if(min::ministryName($json[0])!=false){    
-
-                        $arr["ministry"] = min::ministryName($json[0]);
-                    }
-                }
+                
                 if($metaValue->key == "phone"){
 
                     $arr["phone"] = $metaValue->value;
@@ -147,29 +117,17 @@ class ApiauthController extends Controller
 
                     $arr["address"] = $metaValue->value;
                 }
-                if($metaValue->key == "department"){
-
-                    $dep = json_decode($metaValue->value);  
-                    if(DEP::getDepName($dep[0])!=false){
-
-                        $arr["department"] = DEP::getDepName($dep[0]);
-                    }
-                }
+               
                 if($metaValue->key == "profile_pic"){
 
                     $arr["profile_pic"] = $metaValue->value;
                 }
-                foreach (DES::all() as $key => $value) {
-                   $arr['designationList'] = array('id' => $value->id, 'title' => $value->designation);
-                }
-
+                
             }
 
         }
 
-        $arr_list['des_list'] = DES::all();
-        $arr_list['mi_list'] = min::all();
-        $arr_list['de_list'] = DEP::all();
+        
         
         return ['status'=>'success','user_data' => $arr,'data_list' => $arr_list]; 
     }
@@ -253,40 +211,7 @@ class ApiauthController extends Controller
                 }
 
                       $request->user_list = $id;
-                    if($request->designation)
-                    {
-                      if(!is_numeric($request->designation))
-                           {
-                                 $chkDes = DES::where(['designation'=>$request->designation])->get()->count();
-                                 if($chkDes==0){
-                                    $newDes =  new DES();
-                                    $newDes->designation = $request->designation;
-                                    $newDes->save();
-                                    $request->designation = $newDes->id;
-                                 }
-                            }
-                            $designationMeta  = new UserMeta();
-                            $designationMeta->user_id = $request->user_list;
-                            $designationMeta->key =     "designation";
-                            $designationMeta->value   =  $request->designation;
-                            $designationMeta->save();
-                    }
-
-                    
-                    if($request->ministry)   
-                        {
-                               foreach (json_decode($request->ministry) as $key => $value){
-
-                                    $ministryMetaVal[] = $value;
-                                }
-
-                                $minMetaVal = json_encode($ministryMetaVal);
-                                $ministryMeta = new UserMeta();
-                                $ministryMeta->key = "ministry";
-                                $ministryMeta->user_id = $request->user_list;
-                                $ministryMeta->value = $minMetaVal;
-                                $ministryMeta->save();
-                        }  
+                      
                      if($request->phone !="")
                         {
                                 $phoneMeta = new UserMeta();
@@ -303,20 +228,7 @@ class ApiauthController extends Controller
                                 $adrsMeta->value  =  $request->address;
                                 $adrsMeta->save();
                         }
-                    if($request->department)
-                        {
-                                foreach(json_decode($request->department) as $key => $value){
-
-                                  $depValues[] =  $value;
-                                }
-
-                                $depJsonVal =     json_encode($depValues);
-                                $departmentMeta  = new UserMeta();
-                                $departmentMeta->user_id = $request->user_list;
-                                $departmentMeta->key = "department";
-                                $departmentMeta->value   =  $depJsonVal;
-                                $departmentMeta->save();
-                        }  
+                    
 
                          $proPic  = new UserMeta();
                          $path = 'profile_pic';
@@ -365,11 +277,28 @@ class ApiauthController extends Controller
 
     public function Register(Request $request)
     {
+
+
+      $role = 2;
+      if($request->organization =="other")
+      {
+        echo $checkOrg = UserMeta::where(['key'=>'organization','value'=>$request->organization_name])->count();
+          
+          dd($request->request);
+          if($checkOrg==0)
+          {
+            $data = array('organization_name' => $request->organization_name);  
+            $inserted = org::create($data);
+            $request->organization = $inserted->id;
+            $role = 1;
+          }
+      }  
+        
         $api_token    = str_random(20);
-        $validate   = $this->validateUserMeta($request);
-        if(!$validate){
-            return ['status'=>'error','message'=>'Required fields are missing!'];
-        }
+        // $validate   = $this->validateUserMeta($request);
+        // if(!$validate){
+        //     return ['status'=>'error','message'=>'Required fields are missing!'];
+        // }
         if($request->name && $request->email && $request->password )
         {
             if (!filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
@@ -381,6 +310,7 @@ class ApiauthController extends Controller
                             'name' => $request->name,
                             'email' => $request->email,
                             'password' => Hash::make($request->password),
+                            'role_id'=>$role,
                             'api_token' => $api_token
                             ]);
 
@@ -400,20 +330,15 @@ class ApiauthController extends Controller
                     $MetaData[1]['key'] = 'phone';
                     $MetaData[1]['value'] = $request->phone;
                     $MetaData[1]['user_id'] = $user->id;
+                    
                     $MetaData[2]['key'] = 'address';
                     $MetaData[2]['value'] = $request->address;
                     $MetaData[2]['user_id'] = $user->id;
-                    $Departments    = explode(',',$request->departments);
-                    $Ministries     = explode(',',$request->ministries);
-                    $MetaData[3]['key']     = 'department';
-                    $MetaData[3]['value']   = json_encode($Departments);
-                    $MetaData[3]['user_id'] = $user->id;
-                    $MetaData[4]['key'] = 'ministry';
-                    $MetaData[4]['value'] = json_encode($Ministries);
-                    $MetaData[4]['user_id'] = $user->id;
-                    $MetaData[5]['key'] = 'designation';
-                    $MetaData[5]['value'] = $request->designation;
-                    $MetaData[5]['user_id'] = $user->id;
+
+                     $MetaData[3]['key'] = 'organization';
+                     $MetaData[3]['value'] = $request->organization;
+                     $MetaData[3]['user_id'] = $user->id;
+                    
                     UserMeta::insert($MetaData);
 
                     $model = GS::where('meta_key','adminreg_settings')->first();
@@ -424,9 +349,7 @@ class ApiauthController extends Controller
                         $userDetails['name'] = $request->name;
                         $userDetails['email'] = $request->email;
                         $userDetails['phone'] = $request->phone;
-                        $userDetails['ministries'] = $request->ministries;
-                        $userDetails['designation'] = $request->designation;
-                        $userDetails['department'] = $request->departments;
+                       
                         Mail::to(json_decode($model->meta_value)->admin_email)->send(new AdminRegister($userDetails));
                         Mail::to($request->email)->send(new RegisterNewUser($request->name));
 
@@ -451,8 +374,7 @@ class ApiauthController extends Controller
    }
 
    protected function validateUserMeta($request){
-
-       if($request->has('departments') && $request->has('ministries')  && $request->has('designation')){
+      if($request->has('departments') && $request->has('ministries')  && $request->has('designation')){
 
            return true;
        }else{

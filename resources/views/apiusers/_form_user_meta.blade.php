@@ -26,36 +26,6 @@
     @endif
   </div>
 
-  <div class="form-group {{ $errors->has('ministry') ? ' has-error' : '' }}"><!-- fOR MULTIPLE SELECT  select2-department -->
-    {!!Form::label('ministry','Ministry') !!}
-    {!!Form::select('ministry[]',App\Ministrie::ministryList(),null, ['class'=>'form-control select2', 'multiple']) !!}
-    @if($errors->has('ministry'))
-      <span class="help-block">
-            {{ $errors->first('ministry') }}
-      </span>
-    @endif
-  </div>
-
-  <div class="form-group {{ $errors->has('department') ? ' has-error' : '' }}">
-    {!!Form::label('department','Department') !!}
-    {!!Form::select('department[]',App\Department::departmentList(),null, ['class'=>'form-control select2','multiple']) !!}
-    @if($errors->has('department'))
-      <span class="help-block">
-            {{ $errors->first('department') }}
-      </span>
-    @endif
-  </div>
-
-  <div class="form-group {{ $errors->has('designation') ? ' has-error' : '' }}">
-    {!!Form::label('designation','Designation') !!}
-    {!!Form::select('designation',App\Designation::designationList(),null, ['class'=>'form-control select2','multiple']) !!}
-    @if($errors->has('designation'))
-      <span class="help-block">
-            {{ $errors->first('designation') }}
-      </span>
-    @endif
-  </div>
-
   <div class="form-group {{ $errors->has('phone') ? ' has-error' : '' }}">
     {!!Form::label('phone','Phone') !!}
     {!!Form::number('phone',null, ['class'=>'form-control','placeholder'=>'Enter phone']) !!}
@@ -65,11 +35,6 @@
       </span>
     @endif
   </div>
-
-  
-
-
-
 
   <div class="col-md-4 form-group {{ $errors->has('profile_pic') ? ' has-error' : '' }}">
     {!!Form::label('file','Upload Pic') !!}

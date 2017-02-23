@@ -6,10 +6,10 @@ use Yajra\Datatables\Datatables;
 use DB;
 use App\User;
 use App\UserMeta as UM;
-use App\Designation as DES;
+// use App\Designation as DES;
 use Session;
-use App\Ministrie as MIN;
-use App\Department as DEP;
+// use App\Ministrie as MIN;
+// use App\Department as DEP;
 use Hash;
 use Auth;
 use App\GlobalSetting as GS;
@@ -278,12 +278,9 @@ class ApiusersController extends Controller
               return view('apiusers.editProfile', ['user_detail'=>$userDetail, 'user_meta' => $userMeta]); 
             }catch(\Exception $e)
             {
-
               Session::flash('error','No data found for this.');
               return redirect()->route('api.users');
-              
             }
-                  
         }
 
         public function edit($id) {
@@ -382,49 +379,52 @@ class ApiusersController extends Controller
                         $phChk = 1;
                         $phone = $value->value;
                       }elseif($phChk ==0){ $phone ="";}
-                    if($value->key == "designation")
-                      {
-                        $desChk =1;
-                        $designation = $value->value;
-                      }elseif($desChk ==0){ $designation =""; }
+
+                    // if($value->key == "designation")
+                    //   {
+                    //     $desChk =1;
+                    //     $designation = $value->value;
+                    //   }elseif($desChk ==0){ $designation =""; }
                    if($value->key == "profile_pic")
                       { 
                         $picChk =1;
                         $profile_pic = $value->value;
-                      }elseif($picChk ==0){ $profile_pic ="";}             
-                    if($value->key == "ministry")
-                      { 
-                        $minData =json_decode($value->value);
-                        $minCount = count($minData);
+                      }elseif($picChk ==0){ $profile_pic ="";}  
+
+                    // if($value->key == "ministry")
+                    //   { 
+                    //     $minData =json_decode($value->value);
+                    //     $minCount = count($minData);
                         
-                            for($i=0; $i<$minCount; $i++)
-                            {
-                                $minChk  =1;
-                                $mdata[$minData[$i]]=$minData[$i]; 
-                            }
+                    //         for($i=0; $i<$minCount; $i++)
+                    //         {
+                    //             $minChk  =1;
+                    //             $mdata[$minData[$i]]=$minData[$i]; 
+                    //         }
                           
-                        }elseif($minChk==0){ $mdata['']=''; }
-                      if($value->key == "department")
-                      { 
-                        $depData =json_decode($value->value);
-                        $depCount = count($depData);
-                        for($j=0; $j<$depCount; $j++)
-                        { 
-                            $depChk =1;
-                            $dep[$depData[$j]]=$depData[$j]; 
-                        }
-                      }elseif($depChk==0){ $dep[''] ='';  }
+                    //     }elseif($minChk==0){ $mdata['']=''; }
+
+                      // if($value->key == "department")
+                      // { 
+                      //   $depData =json_decode($value->value);
+                      //   $depCount = count($depData);
+                      //   for($j=0; $j<$depCount; $j++)
+                      //   { 
+                      //       $depChk =1;
+                      //       $dep[$depData[$j]]=$depData[$j]; 
+                      //   }
+                      // }elseif($depChk==0){ $dep[''] ='';  }
              }
                  $plugins = [
                               'css'     =>  ['fileupload','select2'],
                               'js'      =>  ['fileupload','select2','custom'=>['api-user']],
                               'model'   =>  @$meta,
                               'id'      =>  $id,
-                              'minData' =>  @$mdata,
+                              //'minData' =>  @$mdata,
                               'address' =>  @$address,
-                              'department' => @$dep,
+                              //'department' => @$dep,
                               'phone'   =>    @$phone,
-                              'designation' =>  @$designation,
+                             // 'designation' =>  @$designation,
                               'profile_pic' =>  @$profile_pic
                             ];
                 return view('apiusers.editmeta',$plugins);
@@ -438,47 +438,17 @@ class ApiusersController extends Controller
         public function updatemeta(Request $request , $id)
         {
          $this->metaValidate($request);
-            if(!$request->ministry && !$request->hasFile('profile_pic') && !$request->designation && !$request->department && $request->phone =="" &&  $request->address =="" )
+            if(!$request->hasFile('profile_pic') && $request->phone =="" &&  $request->address =="" )
             {
-                    UM::where('user_id',$id)->delete(); 
+                  UM::where('user_id',$id)->delete(); 
                   return redirect()->route('api.create_users_meta',$id);
             }
           DB::beginTransaction();
           try{
               UM::where('user_id',$id)->delete();
               $request->user_list = $id;
-            if($request->designation)
-            {
-              if(!is_numeric($request->designation))
-                   {
-                         $chkDes = DES::where(['designation'=>$request->designation])->get()->count();
-                         if($chkDes==0){
-                            $newDes =  new DES();
-                            $newDes->designation = $request->designation;
-                            $newDes->save();
-                            $request->designation = $newDes->id;
-                         }
-                    }
-                    $designationMeta  = new UM();
-                    $designationMeta->user_id = $request->user_list;
-                    $designationMeta->key =     "designation";
-                    $designationMeta->value   =  $request->designation;
-                    $designationMeta->save();
-            }
-            if($request->ministry)   
-            {
-                   foreach ($request->ministry as $key => $value){
-
-                        $ministryMetaVal[] = $value;
-                    }
-
-                    $minMetaVal = json_encode($ministryMetaVal);
-                    $ministryMeta = new UM();
-                    $ministryMeta->key = "ministry";
-                    $ministryMeta->user_id = $request->user_list;
-                    $ministryMeta->value = $minMetaVal;
-                    $ministryMeta->save();
-            }
+            
+            
             if($request->phone !="")
             {
                     $phoneMeta = new UM();
@@ -496,20 +466,7 @@ class ApiusersController extends Controller
                     $adrsMeta->save();
             }
 
-            if($request->department)
-            {
-                    foreach($request->department as $key => $value){
-
-                       $depValues[] =  $value;
-                    }
-
-                    $depJsonVal =     json_encode($depValues);
-                    $departmentMeta  = new UM();
-                    $departmentMeta->user_id = $request->user_list;
-                    $departmentMeta->key = "department";
-                    $departmentMeta->value   =  $depJsonVal;
-                    $departmentMeta->save();
-            }
+            
                 
                     $proPic  = new UM();
                     $path = 'profile_pic';

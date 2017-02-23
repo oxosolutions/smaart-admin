@@ -38,7 +38,7 @@
 		
 
 		//dashboard
-		Route::get('/', ['as'=>'home', 'uses'=>'DashboardController@index' ,'route_name'=>  'View Dashboard']);
+		Route::get('/', ['as'=>'home', 'uses'=>'DashboardController@index' ,'route_name'=> 'View Dashboard']);
 		//Api user
 		Route::get('/api_users/del_all', ['as'=>'user.del', 'uses'=>'ApiusersController@delAllUser' ,'route_name'=>  'Delete User']);
 
@@ -167,6 +167,11 @@
 		Route::post('surrvey_setting/save/{id}',['as'=>'setting.save', 'uses'=>'FormBuilderController@save_setting']);
 
 		Route::get('surrveys', ['as'=>'surrvey.index', 'uses'=>'FormBuilderController@index']);
+		Route::get('surrvey/userList/{surrvey_table}', ['as'=>'surrvey.user', 'uses'=>'FormBuilderController@surrveyUserList']);
+		Route::get('surrveyUserListData/{surrvey_table}', ['as'=>'surrvey.userData', 'uses'=>'FormBuilderController@surrveyUserListData']);
+		
+		Route::get('filledSurrveyData/{user_id}/{table}', ['as'=>'surrvey.filldata', 'uses'=>'FormBuilderController@filledSurrveyData']);
+
 		Route::get('surrveyData', ['as'=>'surrvey.data', 'uses'=>'FormBuilderController@index_data']);
 		Route::get('surrvey/add', ['as'=>'surrvey.add', 'uses'=>'FormBuilderController@create_surrvey']);
 		Route::get('surrvey_edit/{id}', ['as'=>'surrvey.edit', 'uses'=>'FormBuilderController@surrvey_edit']);

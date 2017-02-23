@@ -286,8 +286,8 @@ class ImportdatasetController extends Controller
             if($result){
                 $model = new DL;
                 $model->dataset_table = $tableName;
-                $model->dataset_name = $origName;
-                $model->dataset_file = $filePath;
+                $model->dataset_name  = $origName;
+                $model->dataset_file  = $filePath;
                 $model->dataset_file_name = $orName;
                 $model->user_id = Auth::user()->id;
                 $model->uploaded_by = Auth::user()->name;

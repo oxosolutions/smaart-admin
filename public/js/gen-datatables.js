@@ -18,6 +18,19 @@
       ]
     });
 
+  var table =  $("#surrveyTable").val();
+  
+$('#surrveyUserList').DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: route()+'/surrveyUserListData/'+table,
+      order:[[0,"desc"]],
+      columns: [
+            { data: 'user_id', name: 'user_id' },
+            { data: 'user_name', name: 'user_name' },
+            { data: 'actions', name: 'actions', orderable: false, searchable: false, "className": 'actions' },
+      ]
+    });
 
     $('#departments').DataTable({
       processing: true,

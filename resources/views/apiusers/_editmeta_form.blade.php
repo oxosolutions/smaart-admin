@@ -23,35 +23,7 @@
     @endif
   </div>
 
-  <div class="form-group {{ $errors->has('ministry') ? ' has-error' : '' }}">
-    {!!Form::label('ministry','Ministry') !!}
-    {!!Form::select('ministry[]',App\Ministrie::ministryList(),$minData, ['class'=>'form-control select2','multiple']) !!}
-    @if($errors->has('ministry'))
-      <span class="help-block">
-            {{ $errors->first('ministry') }}
-      </span>
-    @endif
-  </div>
-
-  <div class="form-group {{ $errors->has('department') ? ' has-error' : '' }}">
-    {!!Form::label('department','Department') !!}
-    {!!Form::select('department[]',App\Department::departmentList(),$department, ['class'=>'form-control select2','multiple']) !!}
-    @if($errors->has('department'))
-      <span class="help-block">
-            {{ $errors->first('department') }}
-      </span>
-    @endif
-  </div>
-
-  <div class="form-group {{ $errors->has('designation') ? ' has-error' : '' }}">
-    {!!Form::label('designation','Designation') !!}
-    {!!Form::select('designation',App\Designation::designationList(),$designation, ['class'=>'form-control select2','multiple']) !!}
-    @if($errors->has('designation'))
-      <span class="help-block">
-            {{ $errors->first('designation') }}
-      </span>
-    @endif
-  </div>
+  
 
   <div class="form-group {{ $errors->has('phone') ? ' has-error' : '' }}">
     {!!Form::label('phone','Phone') !!}

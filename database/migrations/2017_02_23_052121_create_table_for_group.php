@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDatasetslistTable extends Migration
+class CreateTableForGroup extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class CreateDatasetslistTable extends Migration
      */
     public function up()
     {
-        Schema::create('datasets_lists', function(Blueprint $table){
+        Schema::create('groups',function(Blueprint $table){
             $table->increments('id');
-            $table->string('dataset_name')->nullable();
-            $table->longText('dataset_records')->nullable();
-            $table->string('uploaded_by')->nullable();
+            $table->unsignedInteger('survey_id')->index;
+            $table->string('title');
+            $table->text('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
+            $table->foreign('survey_id')->references('id')->on('surrveys')->onUpdate('cascade');
         });
     }
 
@@ -29,6 +31,6 @@ class CreateDatasetslistTable extends Migration
      */
     public function down()
     {
-        Schema::drop('datasets_list');
+        Schema::drop('groups');
     }
 }

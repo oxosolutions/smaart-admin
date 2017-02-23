@@ -37,9 +37,9 @@ class DataSetsController extends Controller
 
     public function correctCsv()
     {
-           // $filename ='output_new.csv';
+        // $filename ='output_new.csv';
 
-         $filename ='23ch5.csv';
+        $filename ='23ch5.csv';
 
              echo "<pre>";
 
@@ -52,8 +52,6 @@ class DataSetsController extends Controller
 
                      $data[] = $row;
                 }
-
-                   
                 for($i=0; $i< count($data); $i++ )
                 {
                     echo "size $i <br>";

@@ -1,6 +1,6 @@
 
 <div class="box-body">
-<h1>Setting</h1>
+
  
   <div class="form-group {{ $errors->has('title') ? ' has-error' : '' }}">
     {!!Form::label('name','Surrvey Name') !!}

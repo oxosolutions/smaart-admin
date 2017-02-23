@@ -1,23 +1,41 @@
 <?php
-
 namespace App\Http\Controllers\Services;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
-
+use Carbon\carbon;
 use Hash;
 use Auth;
 use App\UserMeta;
+use App\organization as org;
 class ProfileApiController extends Controller
 {
-    public function getUserProfile(Request $request){
+    // public function getUserProfile(Request $request){
+    //     $id = Auth::user()->id;        
+    //     $user = User::where('id',$id)->get();
+    //     $user_meta = UserMeta::where('user_id',$id)->get();
 
+    //     $responseArray = [];
+    //     $responseArray['user'] = $user;
+    //     $responseArray['phone'] =  UserMeta::where(['user_id'=>$id,'key'=>'phone'])->get();
+    //     $responseArray['address'] =  UserMeta::where(['user_id'=>$id,'key'=>'address'])->get();
+
+    //     return ['status'=>'success','details'=>$responseArray];
+    // }
+
+    //old function is below
+
+
+
+
+
+     public function getUserProfile(Request $request){
 
         $model = $request->user();        
         $responseArray = [];
-        $responseArray['departments'] = [];
-        $responseArray['ministries'] = [];
+        // $responseArray['departments'] = [];
+        // $responseArray['ministries'] = [];
         $responseArray['name']  = $model->name;
         $responseArray['email'] = $model->email;
         $responseArray['phone'] = $model->phone;
@@ -29,11 +47,16 @@ class ProfileApiController extends Controller
             foreach ($model->meta as $metaKey => $metaValue) {
                 switch($metaValue->key){
                     
-                    case'profile_pic': 
+                    case'profile_pic':
                         if($metaValue->value == '' || $metaValue->value == null){
-                           $responseArray[$metaValue->key] = asset('profile_pic/profile.jpg');
+                            $responseArray[$metaValue->key] = asset('profile_pic/profile.jpg');
                         }else{
-                                 $responseArray[$metaValue->key] = asset('profile_pic/'.$metaValue->value);
+                            $responseArray[$metaValue->key] = asset('profile_pic/'.$metaValue->value);
+                        }
+                        case'organization': 
+                        if($metaValue->value == '' || $metaValue->value == null){
+                        }else{
+                            $responseArray[$metaValue->key] = org::select(['id','organization_name'])->where('id',$metaValue->value)->first();
                         }
                     break;
                     default:
@@ -41,6 +64,7 @@ class ProfileApiController extends Controller
                 }
             }
         }
+        
         return ['status'=>'success','details'=>$responseArray];
     }
 
@@ -98,19 +122,9 @@ class ProfileApiController extends Controller
             $model->name = $request->name;
         }
         $model->save();
-        $ministries = explode(',',$request->ministry);
-        $departments = explode(',',$request->department);
 
-        if($request->ministry != 'undefined' && $request->department != 'undefined' || $request->phone != 'undefined' || $request->designation != 'undefined' || $request->designation == 'address'){
-
-            $UserMetaMinistry = UserMeta::where(['key'=>'ministry', 'user_id' => $userId])->get();
-            if(count($UserMetaMinistry) < 1){
-                $sendData = 'ministry';
-                $this->checkUserDetails( $request ,$sendData);
-            }else{
-                UserMeta::where(['key'=>'ministry', 'user_id' => $userId])->update(['value'=>json_encode($ministries)]);
-            }
-
+        if( $request->phone != 'undefined' || $request->address != 'undefined'){
+           
             $UserMetaPhone = UserMeta::where(['key'=>'phone', 'user_id' => $userId])->get();
             if(count($UserMetaPhone) < 1){
                 $sendData = 'phone';
@@ -118,16 +132,6 @@ class ProfileApiController extends Controller
             }else{
                 UserMeta::where(['key'=>'phone', 'user_id' => $userId])->update(['value' => $request->phone]);
             }
-
-
-            $UserMetaDesignation = UserMeta::where(['key'=>'designation', 'user_id' => $userId])->get();
-            if(count($UserMetaDesignation) < 1){
-                $sendData = 'designation';
-                $this->checkUserDetails( $request ,$sendData);
-            }else{
-                UserMeta::where(['key'=>'designation', 'user_id' => $userId])->update(['value'=>$request->designation]);
-            }
-
 
             $UserMetaAddress =  UserMeta::where(['key'=>'address', 'user_id' => $userId])->get();
             if (count($UserMetaAddress) < 1){
@@ -137,12 +141,12 @@ class ProfileApiController extends Controller
                 UserMeta::where(['key'=>'address', 'user_id' => $userId])->update(['value'=>$request->address]);
             }
 
-            $UserMetaDepartment = UserMeta::where(['key'=>'department', 'user_id' => $userId])->get();
-            if (count($UserMetaDepartment) < 1){
-                $sendData = 'department';
+            $UserMetaOrganization = UserMeta::where(['key'=>'organization', 'user_id' => $userId])->get();
+            if (count($UserMetaOrganization) < 1){
+                $sendData = 'organization';
                 $this->checkUserDetails( $request ,$sendData);
             }else{
-                UserMeta::where(['key'=>'department', 'user_id' => $userId])->update(['value'=>json_encode($departments)]);
+                UserMeta::where(['key'=>'organization', 'user_id' => $userId])->update(['value'=>$request->organization]);
             }
 
 
@@ -163,7 +167,7 @@ class ProfileApiController extends Controller
     }
 
     protected function validateProfile($request){
-        if($request->has('name') && $request->has('phone') && $request->has('designation') && $request->has('address') && $request->has('department') && $request->has('ministry')){
+        if($request->has('name') && $request->has('phone') && $request->has('address') ){
             return true;
         }else{
             return false;

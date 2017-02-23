@@ -2,3 +2,8 @@
 <a href="javascript:;" class="delete" data-link="{{route('surrvey.del',$model->id)}}" title="Delete"><span class="fa fa-trash"  style="color:red"></span></a>
 | 
 <a href="{{route('surrvey.setting',$model->id)}}" >Setting</a>
+| @if(!empty($model->surrvey_table) || $model->surrvey_table !=null)
+<a href="{{route('surrvey.user',$model->surrvey_table)}}" >Filled User List </a>
+@else
+Still Not Filled
+@endif

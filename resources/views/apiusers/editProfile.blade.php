@@ -61,7 +61,7 @@
                   </div>
                   @endif
                   @endforeach
-                  <div class="form-group">
+                  {{-- <div class="form-group">
                      <!--  @foreach(App\UserMeta::where(['key'=>'ministry' ,'user_id'=>Auth::user()->id])->get() as $value)
                           @foreach(App\Ministrie::select('ministry_title')->where('id',$value->value)->get() as $value)
                             {{$value->ministry_title}}
@@ -75,8 +75,8 @@
                         @endforeach
                       </select>
                     </div>
-                  </div>   
-                  <div class="form-group">
+                  </div>    --}}
+                  {{-- <div class="form-group">
                     <label class="control-label col-sm-2" for="dep">Department:</label>
                     <div class="col-sm-8">
                       <select class="form-control" id="dep" name="department">
@@ -96,7 +96,7 @@
                       </select>
                     </div>
                   </div>   
-                    
+                     --}}
 
                   <div class="form-group"> 
                     <div class="col-sm-offset-2 col-sm-8">
