@@ -1,0 +1,1461 @@
+permalink,company,numEmps,fundedDate,raisedAmt,raisedCurrency,round
+lifelock,LifeLock,0,1-May-07,6850000,USD,b
+lifelock,LifeLock,0,1-Oct-06,6000000,USD,a
+lifelock,LifeLock,0,1-Jan-08,25000000,USD,c
+mycityfaces,MyCityFaces,7,1-Jan-08,50000,USD,seed
+flypaper,Flypaper,0,1-Feb-08,3000000,USD,a
+infusionsoft,Infusionsoft,105,1-Oct-07,9000000,USD,a
+gauto,gAuto,4,1-Jan-08,250000,USD,seed
+chosenlist-com,ChosenList.com,5,1-Oct-06,140000,USD,seed
+chosenlist-com,ChosenList.com,5,25-Jan-08,233750,USD,angel
+digg,Digg,60,1-Dec-06,8500000,USD,b
+digg,Digg,60,1-Oct-05,2800000,USD,a
+facebook,Facebook,450,1-Sep-04,500000,USD,angel
+facebook,Facebook,450,1-May-05,12700000,USD,a
+facebook,Facebook,450,1-Apr-06,27500000,USD,b
+facebook,Facebook,450,1-Oct-07,300000000,USD,c
+facebook,Facebook,450,1-Mar-08,40000000,USD,c
+facebook,Facebook,450,15-Jan-08,15000000,USD,c
+facebook,Facebook,450,1-May-08,100000000,USD,debt_round
+photobucket,Photobucket,60,1-May-06,10500000,USD,b
+photobucket,Photobucket,60,1-Mar-05,3000000,USD,a
+omnidrive,Omnidrive,0,1-Dec-06,800000,USD,angel
+geni,Geni,18,1-Jan-07,1500000,USD,a
+geni,Geni,18,1-Mar-07,10000000,USD,b
+twitter,Twitter,17,1-Jul-07,5400000,USD,b
+twitter,Twitter,17,1-May-08,15000000,USD,c
+stumbleupon,StumbleUpon,0,1-Dec-05,1500000,USD,seed
+gizmoz,Gizmoz,0,1-May-07,6300000,USD,a
+gizmoz,Gizmoz,0,16-Mar-08,6500000,USD,b
+scribd,Scribd,14,1-Jun-06,12000,USD,seed
+scribd,Scribd,14,1-Jan-07,40000,USD,angel
+scribd,Scribd,14,1-Jun-07,3710000,USD,a
+slacker,Slacker,0,1-Jun-07,40000000,USD,b
+slacker,Slacker,0,1-Jun-07,13500000,USD,a
+lala,Lala,0,1-May-07,9000000,USD,a
+plaxo,Plaxo,50,1-Nov-02,3800000,USD,a
+plaxo,Plaxo,50,1-Jul-03,8500000,USD,b
+plaxo,Plaxo,50,1-Apr-04,7000000,USD,c
+plaxo,Plaxo,50,1-Feb-07,9000000,USD,d
+powerset,Powerset,60,1-Jun-07,12500000,USD,a
+technorati,Technorati,25,1-Jun-06,10520000,USD,c
+technorati,Technorati,25,1-Sep-04,6500000,USD,b
+technorati,Technorati,25,13-Jun-08,7500000,USD,d
+technorati,Technorati,25,10-May-07,1000000,USD,c
+mahalo,Mahalo,40,1-Jan-06,5000000,USD,a
+mahalo,Mahalo,40,1-Jan-07,16000000,USD,b
+kyte,Kyte,40,1-Jul-07,2250000,USD,a
+kyte,Kyte,40,1-Dec-07,15000000,USD,b
+kyte,Kyte,40,10-Mar-08,6100000,USD,b
+veoh,Veoh,0,1-Apr-06,12500000,USD,b
+veoh,Veoh,0,1-Aug-07,25000000,USD,c
+veoh,Veoh,0,1-Jul-05,2250000,USD,a
+veoh,Veoh,0,3-Jun-08,30000000,USD,d
+jingle-networks,Jingle Networks,0,1-Oct-06,30000000,USD,c
+jingle-networks,Jingle Networks,0,1-Dec-05,5000000,USD,a
+jingle-networks,Jingle Networks,0,1-Apr-06,26000000,USD,b
+jingle-networks,Jingle Networks,0,1-Oct-05,400000,USD,angel
+jingle-networks,Jingle Networks,0,1-Jan-08,13000000,USD,c
+ning,Ning,41,1-Jul-07,44000000,USD,c
+ning,Ning,41,1-Apr-08,60000000,USD,d
+jotspot,JotSpot,0,1-Aug-04,5200000,USD,a
+mercora,Mercora,0,1-Jan-05,5000000,USD,a
+wesabe,Wesabe,0,1-Feb-07,700000,USD,seed
+wesabe,Wesabe,0,1-Jun-07,4000000,USD,a
+jangl,Jangl,22,1-Jul-06,7000000,USD,b
+hyphen8,Hyphen 8,4,1-Oct-07,100000,USD,angel
+prosper,Prosper,0,1-Jun-07,20000000,USD,c
+prosper,Prosper,0,1-Apr-05,7500000,USD,a
+prosper,Prosper,0,1-Feb-06,12500000,USD,b
+google,Google,20000,1-Jun-99,25000000,USD,a
+jajah,Jajah,80,1-May-07,20000000,USD,c
+jajah,Jajah,80,1-Mar-06,3000000,USD,a
+jajah,Jajah,80,1-Apr-06,5000000,USD,b
+youtube,YouTube,0,1-Nov-05,3500000,USD,a
+youtube,YouTube,0,1-Apr-06,8000000,USD,b
+ustream,Ustream,0,1-Dec-07,2000000,USD,angel
+ustream,Ustream,0,10-Apr-08,11100000,USD,a
+gizmoproject,GizmoProject,0,1-Feb-06,6000000,USD,a
+adap-tv,Adap.tv,15,1-Jul-07,10000000,USD,a
+topix,Topix,0,1-Nov-06,15000000,USD,b
+revision3,Revision3,0,1-Sep-06,1000000,USD,a
+revision3,Revision3,0,1-Jun-07,8000000,USD,b
+aggregateknowledge,Aggregate Knowledge,0,1-Jun-06,5000000,USD,a
+aggregateknowledge,Aggregate Knowledge,0,1-Apr-07,20000000,USD,b
+sugarinc,Sugar Inc,0,1-Oct-06,5000000,USD,a
+sugarinc,Sugar Inc,0,1-Jun-07,10000000,USD,b
+zing,Zing,0,1-Jan-07,13000000,USD,a
+criticalmetrics,CriticalMetrics,4,1-Jan-07,100000,USD,angel
+spock,Spock,30,1-Dec-06,7000000,USD,a
+wize,Wize,0,1-Jan-07,4000000,USD,a
+sodahead,SodaHead,0,1-Jan-07,4250000,USD,a
+sodahead,SodaHead,0,25-Jun-08,8400000,USD,b
+casttv,CastTV,0,1-Apr-07,3100000,USD,a
+buzznet,BuzzNet,0,1-May-07,6000000,USD,a
+buzznet,BuzzNet,0,7-Apr-08,25000000,USD,b
+funny-or-die,Funny Or Die,0,1-Dec-07,15000000,USD,b
+sphere,Sphere,11,1-May-06,3000000,USD,b
+sphere,Sphere,11,1-Apr-05,500000,USD,a
+meevee,MeeVee,0,1-Feb-06,6500000,USD,b
+meevee,MeeVee,0,1-Aug-06,8000000,USD,c
+meevee,MeeVee,0,1-Feb-05,7000000,USD,a
+meevee,MeeVee,0,1-Sep-07,3500000,USD,d
+mashery,Mashery,0,26-Jun-08,2000000,USD,c
+yelp,Yelp,0,1-Oct-06,10000000,USD,c
+yelp,Yelp,0,1-Oct-05,5000000,USD,b
+yelp,Yelp,0,1-Jul-04,1000000,USD,a
+yelp,Yelp,0,26-Feb-08,15000000,USD,d
+spotplex,Spotplex,3,1-Jan-07,450000,USD,angel
+coghead,Coghead,21,1-Mar-06,3200000,USD,a
+coghead,Coghead,21,1-Mar-07,8000000,USD,b
+zooomr,Zooomr,0,1-Feb-06,50000,USD,angel
+sidestep,SideStep,75,1-Feb-07,15000000,USD,c
+sidestep,SideStep,75,1-Jan-04,8000000,USD,b
+sidestep,SideStep,75,1-Dec-99,2200000,USD,a
+sidestep,SideStep,75,1-Oct-00,6800000,USD,a
+rockyou,RockYou,0,1-Jan-07,1500000,USD,a
+rockyou,RockYou,0,1-Mar-07,15000000,USD,b
+rockyou,RockYou,0,9-Jun-08,35000000,USD,c
+rockyou,RockYou,0,27-May-08,1000000,USD,unattributed
+pageflakes,Pageflakes,20,1-May-06,1300000,USD,a
+swivel,Swivel,0,1-Sep-06,1000000,USD,a
+swivel,Swivel,0,1-Apr-07,1000000,USD,a
+slide,Slide,64,1-Jul-05,8000000,USD,b
+slide,Slide,64,1-Jan-08,50000000,USD,d
+bebo,Bebo,0,1-May-06,15000000,USD,a
+freebase,freebase,0,1-Mar-06,15000000,USD,a
+freebase,freebase,0,1-Jan-08,42500000,USD,b
+metawebtechnologies,Metaweb Technologies,0,15-Jan-08,42000000,USD,b
+glammedia,Glam Media,0,1-Jul-04,1100000,USD,a
+glammedia,Glam Media,0,1-Jul-05,10000000,USD,b
+glammedia,Glam Media,0,1-Dec-06,18500000,USD,c
+glammedia,Glam Media,0,1-Feb-08,65000000,USD,d
+glammedia,Glam Media,0,1-Feb-08,20000000,USD,d
+thefind,TheFind,0,1-Feb-05,7000000,USD,a
+thefind,TheFind,0,1-Oct-06,4000000,USD,b
+thefind,TheFind,0,1-Jul-07,15000000,USD,c
+zazzle,Zazzle,0,1-Jul-05,16000000,USD,a
+zazzle,Zazzle,0,1-Oct-07,30000000,USD,b
+dogster,Dogster,0,1-Sep-06,1000000,USD,angel
+pandora,Pandora,80,1-Jan-04,7800000,USD,b
+pandora,Pandora,80,1-Oct-05,12000000,USD,c
+pandora,Pandora,80,2-Mar-00,1500000,USD,a
+cafepress,Cafepress,300,1-Mar-00,1200000,USD,a
+cafepress,Cafepress,300,1-May-01,300000,USD,a
+cafepress,Cafepress,300,1-Feb-05,14000000,USD,b
+pbwiki,pbwiki,15,11-Sep-06,350000,USD,a
+pbwiki,pbwiki,15,1-Feb-07,2100000,USD,b
+adbrite,AdBrite,0,1-Sep-04,4000000,USD,a
+adbrite,AdBrite,0,1-Feb-06,8000000,USD,b
+adbrite,AdBrite,0,1-Nov-07,23000000,USD,c
+loomia,Loomia,0,1-Jun-05,1000000,USD,seed
+loomia,Loomia,0,1-Apr-08,5000000,USD,a
+meebo,Meebo,40,1-Dec-05,3500000,USD,a
+meebo,Meebo,40,1-Jan-07,9000000,USD,b
+meebo,Meebo,40,30-Apr-08,25000000,USD,c
+eventbrite,Eventbrite,13,1-Nov-06,100000,USD,angel
+linkedin,LinkedIn,0,1-Nov-03,4700000,USD,a
+linkedin,LinkedIn,0,1-Oct-04,10000000,USD,b
+linkedin,LinkedIn,0,1-Jan-07,12800000,USD,c
+linkedin,LinkedIn,0,17-Jun-08,53000000,USD,d
+flickim,FlickIM,0,1-Mar-07,1600000,USD,a
+terabitz,Terabitz,12,1-Feb-07,10000000,USD,a
+healthline,Healthline,0,1-Jan-06,14000000,USD,a
+healthline,Healthline,0,1-Jul-07,21000000,USD,b
+box-net,Box.net,19,1-Oct-06,1500000,USD,a
+box-net,Box.net,19,23-Jan-08,6000000,USD,b
+conduit,Conduit,0,1-Jul-06,1800000,USD,a
+conduit,Conduit,0,1-Jan-08,8000000,USD,b
+edgeio,Edgeio,0,1-Jul-07,5000000,USD,a
+spotrunner,Spot Runner,0,1-Jan-06,10000000,USD,a
+spotrunner,Spot Runner,0,1-Oct-06,40000000,USD,b
+spotrunner,Spot Runner,0,7-May-08,51000000,USD,c
+kaboodle,Kaboodle,0,1-Mar-05,1500000,USD,a
+kaboodle,Kaboodle,0,1-Mar-06,2000000,USD,b
+kaboodle,Kaboodle,0,1-Mar-07,1500000,USD,c
+giga-omni-media,Giga Omni Media,18,1-Jun-06,325000,USD,a
+visiblepath,Visible Path,0,1-Mar-06,17000000,USD,b
+visiblepath,Visible Path,0,1-Mar-06,7700000,USD,a
+wink,Wink,0,1-Jan-05,6200000,USD,a
+seesmic,seesmic,0,1-Nov-07,6000000,USD,a
+seesmic,seesmic,0,20-Jun-08,6000000,USD,b
+zvents,Zvents,0,7-Nov-06,7000000,USD,a
+zvents,Zvents,0,5-Oct-05,200000,USD,seed
+eventful,Eventful,35,1-Sep-06,7500000,USD,b
+eventful,Eventful,35,1-Mar-05,2100000,USD,a
+oodle,Oodle,0,1-May-06,5000000,USD,a
+oodle,Oodle,0,1-Jul-07,11000000,USD,b
+odesk,oDesk,0,1-Apr-06,6000000,USD,a
+odesk,oDesk,0,1-Sep-06,8000000,USD,b
+odesk,oDesk,0,1-Jun-08,15000000,USD,c
+simplyhired,SimplyHired,0,1-Mar-06,13500000,USD,b
+simplyhired,SimplyHired,0,5-Aug-05,3000000,USD,a
+ooma,ooma,47,1-Jan-05,8000000,USD,a
+ooma,ooma,47,1-Dec-06,18000000,USD,b
+goingon,GoingOn,3,1-Aug-05,1000000,USD,seed
+flixster,Flixster,17,1-Feb-07,2000000,USD,a
+flixster,Flixster,17,4-Apr-08,5000000,USD,b
+piczo,Piczo,0,1-Jan-07,11000000,USD,c
+socialtext,Socialtext,0,1-Jun-04,300000,USD,angel
+socialtext,Socialtext,0,1-Jun-05,3100000,USD,b
+socialtext,Socialtext,0,1-Nov-07,9500000,USD,c
+powerreviews,PowerReview,0,1-Dec-05,6250000,USD,a
+powerreviews,PowerReview,0,1-Sep-07,15000000,USD,b
+hi5,hi5,100,1-Jul-07,20000000,USD,a
+hi5,hi5,100,1-Dec-07,15000000,USD,debt_round
+tagged,Tagged,0,1-Sep-05,1500000,USD,angel
+tagged,Tagged,0,1-Dec-05,7000000,USD,a
+tagged,Tagged,0,1-Jul-07,15000000,USD,b
+jaxtr,Jaxtr,0,1-Jul-07,1500000,USD,angel
+jaxtr,Jaxtr,0,1-Aug-07,10000000,USD,a
+jaxtr,Jaxtr,0,23-Jun-08,10000000,USD,b
+m,Me,0,1-May-07,1500000,USD,seed
+intronetworks,introNetworks,9,1-May-07,2700000,USD,a
+leveragesoftware,Leverage Software,21,14-May-05,6000000,USD,a
+lithiumtechnologies,Lithium Technologies,42,17-Apr-07,9000000,USD,a
+lithiumtechnologies,Lithium Technologies,42,1-Jun-08,12000000,USD,b
+genius,Genius,0,1-Mar-06,5100000,USD,a
+genius,Genius,0,1-Jan-07,10000000,USD,b
+genius,Genius,0,5-Feb-08,19000000,USD,c
+respectance,Respectance,0,1-Jun-07,250000,USD,seed
+respectance,Respectance,0,1-Jul-07,1500000,USD,a
+curse,Curse,0,1-Jul-07,5000000,USD,a
+licketyship,LicketyShip,0,1-Dec-07,1500000,USD,angel
+grockit,Grockit,8,1-Jun-07,2300000,USD,a
+grockit,Grockit,8,30-May-08,8000000,USD,b
+peerme,PeerMe,0,1-Jan-05,5000000,USD,a
+kiptronic,Kiptronic,20,1-Dec-06,4000000,USD,a
+kiptronic,Kiptronic,20,1-Nov-05,300000,USD,angel
+kiptronic,Kiptronic,20,5-Jun-08,3000000,USD,b
+vuze,Vuze,0,1-Dec-06,12000000,USD,b
+vuze,Vuze,0,1-Dec-07,20000000,USD,c
+phonezoo,Phonezoo,0,1-Jun-06,560000,USD,a
+phonezoo,Phonezoo,0,1-Feb-07,1500000,USD,a
+droplettechnology,Droplet Technology,0,1-Oct-06,3500000,USD,a
+podtech,PodTech,0,1-Mar-06,5500000,USD,a
+podtech,PodTech,0,1-Jun-07,2000000,USD,a
+crackle,Crackle,0,1-Dec-05,1750000,USD,a
+reddit,Reddit,0,1-Jun-05,100000,USD,seed
+wikia,Wikia,0,1-Mar-06,4000000,USD,a
+wikia,Wikia,0,1-Dec-06,10000000,USD,b
+retrevo,Retrevo,0,1-Dec-06,3200000,USD,a
+retrevo,Retrevo,0,1-Feb-06,700000,USD,seed
+retrevo,Retrevo,0,20-Mar-08,8000000,USD,b
+buxfer,Buxfer,2,1-Jan-07,15000,USD,seed
+buxfer,Buxfer,2,1-Apr-07,300000,USD,angel
+yousendit,YouSendIt,0,24-Apr-07,10000000,USD,b
+yousendit,YouSendIt,0,1-Aug-05,10000000,USD,a
+yousendit,YouSendIt,0,15-Jul-08,14000000,USD,c
+tangler,Tangler,0,1-Jul-06,1500000,USD,angel
+obopay,obopay,0,1-Feb-06,10000000,USD,a
+obopay,obopay,0,1-Sep-06,7000000,USD,b
+obopay,obopay,0,1-Jul-07,29000000,USD,c
+obopay,obopay,0,21-Apr-08,20000000,USD,d
+paypal,PayPal,0,1-Apr-00,100000000,USD,c
+paypal,PayPal,0,1-Feb-01,90000000,USD,d
+paypal,PayPal,0,1-Jul-99,4000000,USD,b
+talkplus,TalkPlus,0,1-Oct-06,5500000,USD,a
+vudu,Vudu,50,1-Jun-05,21000000,USD,a
+insiderpages,Insider Pages,0,1-Mar-06,8500000,USD,a
+snapfish,Snapfish,0,1-Nov-99,7500000,USD,a
+snapfish,Snapfish,0,1-May-00,36000000,USD,b
+affinitycircles,Affinity Circles,22,1-May-06,4100000,USD,c
+affinitycircles,Affinity Circles,22,1-Jun-05,1000000,USD,b
+affinitycircles,Affinity Circles,22,1-Dec-04,440000,USD,a
+imvu,IMVU,0,1-Feb-06,1000000,USD,angel
+nirvanix,Nirvanix,0,19-Dec-07,18000000,USD,a
+fuzzwich,Habit Industries,4,1-Jun-07,15000,USD,seed
+gaia,Gaia,0,1-Jun-06,8930000,USD,a
+gaia,Gaia,0,1-Mar-07,12000000,USD,b
+gaia,Gaia,0,14-Jul-08,11000000,USD,c
+greatcall,GreatCall,0,1-Aug-07,36600000,USD,a
+revver,Revver,0,1-Nov-05,4000000,USD,a
+revver,Revver,0,1-Apr-06,8700000,USD,b
+metacafe,Metacafe,0,1-Jul-06,15000000,USD,b
+metacafe,Metacafe,0,1-Aug-07,30000000,USD,c
+flock,Flock,40,1-Nov-05,3300000,USD,b
+flock,Flock,40,1-Jun-06,10000000,USD,c
+flock,Flock,40,21-May-08,15000000,USD,d
+vmixmedia,VMIX Media,42,1-Mar-06,5000000,USD,a
+vmixmedia,VMIX Media,42,1-Oct-07,16500000,USD,b
+kontera,Kontera,0,1-Aug-07,10300000,USD,b
+kontera,Kontera,0,1-Jul-06,7000000,USD,a
+tokbox,Tokbox,0,1-Oct-07,4000000,USD,a
+tokbox,Tokbox,0,6-Aug-08,10000000,USD,b
+six-apart,Six Apart,150,1-Oct-04,10000000,USD,b
+six-apart,Six Apart,150,1-Mar-06,12000000,USD,c
+six-apart,Six Apart,150,23-Apr-03,600000,USD,a
+weebly,Weebly,0,1-May-07,650000,USD,seed
+synthasite,Synthasite,26,1-Nov-07,5000000,USD,a
+bittorrent,BitTorrent,29,1-Sep-05,8750000,USD,a
+bittorrent,BitTorrent,29,1-Dec-06,25000000,USD,b
+kongregate,Kongregate,16,1-Mar-07,1000000,USD,a
+kongregate,Kongregate,16,1-Aug-07,5000000,USD,b
+kongregate,Kongregate,16,1-Apr-08,3000000,USD,b
+dancejam,DanceJam,0,1-May-07,1000000,USD,angel
+dancejam,DanceJam,0,1-Feb-08,3500000,USD,a
+fathomonline,Fathom Online,0,1-Jul-04,6000000,USD,a
+zivity,Zivity,16,1-Aug-07,1000000,USD,seed
+zivity,Zivity,16,1-Mar-08,7000000,USD,b
+bluelithium,BlueLithium,135,1-Feb-05,11500000,USD,a
+expresso,eXpresso,0,1-Oct-07,2000000,USD,a
+doostang,Doostang,0,1-Sep-07,3500000,USD,a
+docstoc,Docstoc,0,1-Nov-07,750000,USD,a
+docstoc,Docstoc,0,28-Apr-08,3250000,USD,b
+mevio,Mevio,0,1-Jul-05,8900000,USD,a
+mevio,Mevio,0,1-Sep-06,15000000,USD,b
+mevio,Mevio,0,9-Jul-08,15000000,USD,c
+purevideo,PureVideo Networks,0,1-Dec-05,5600000,USD,a
+purevideo,PureVideo Networks,0,1-Sep-07,2850000,USD,b
+filmloop,FilmLoop,0,1-Feb-05,5600000,USD,a
+bitpass,BitPass,0,1-Jul-03,1500000,USD,a
+bitpass,BitPass,0,1-Sep-04,11800000,USD,b
+art-com,Art.com,500,1-Feb-05,30000000,USD,a
+atomshockwave,Atom Shockwave,0,1-Mar-01,22900000,USD,a
+cinemanow,CinemaNow,0,1-Jul-04,11000000,USD,a
+digitalchocolate,Digital Chocolate,0,1-Dec-03,8400000,USD,a
+digitalchocolate,Digital Chocolate,0,1-Dec-03,13000000,USD,b
+eharmony,eHarmony,0,1-Jun-00,3000000,USD,a
+eharmony,eHarmony,0,1-Nov-04,110000000,USD,b
+friendster,Friendster,465,1-Dec-02,2400000,USD,a
+friendster,Friendster,465,1-Oct-03,13000000,USD,b
+friendster,Friendster,465,1-Aug-06,10000000,USD,c
+friendster,Friendster,465,5-Aug-08,20000000,USD,d
+greystripe,Greystripe,0,1-May-07,8900000,USD,b
+slingmedia,Sling Media,0,1-Nov-04,10500000,USD,a
+slingmedia,Sling Media,0,1-Jul-05,4000000,USD,a
+trulia,Trulia,0,1-Dec-05,5700000,USD,b
+trulia,Trulia,0,1-May-07,10000000,USD,c
+trulia,Trulia,0,1-Sep-05,2100000,USD,a
+trulia,Trulia,0,10-Jul-08,15000000,USD,d
+lendingclub,Lending Club,0,1-May-07,2000000,USD,angel
+lendingclub,Lending Club,0,1-Aug-07,10260000,USD,a
+tubemogul,tubemogul,15,7-Feb-08,1500000,USD,a
+gemini,Gemini,0,1-Mar-07,20000000,USD,a
+gemini,Gemini,0,1-May-07,5000000,USD,b
+multiverse,Multiverse,0,1-May-07,4175000,USD,a
+multiverse,Multiverse,0,17-Apr-07,850000,USD,angel
+limelife,LimeLife,0,28-Mar-06,10000000,USD,b
+limelife,LimeLife,0,1-Aug-05,5000000,USD,a
+limelife,LimeLife,0,24-May-07,3900000,USD,b
+opentable,OpenTable,0,1-May-99,2000000,USD,a
+opentable,OpenTable,0,1-Jan-00,10000000,USD,b
+opentable,OpenTable,0,1-Oct-00,36000000,USD,c
+rooftopcomedy,RooftopComedy,20,1-May-07,2500000,USD,a
+federatedmedia,Federated Media,0,1-Aug-07,4500000,USD,b
+federatedmedia,Federated Media,0,1-Apr-08,50000000,USD,c
+deliveryagent,Delivery Agent,0,1-May-07,18500000,USD,c
+deliveryagent,Delivery Agent,0,17-May-06,11000000,USD,b
+deliveryagent,Delivery Agent,0,29-Mar-05,5500000,USD,a
+reunion,Reunion,100,1-Apr-07,25000000,USD,a
+mixercast,Mixercast,0,1-May-05,2600000,USD,a
+mixercast,Mixercast,0,1-Jan-08,6000000,USD,b
+mtraks,mTraks,0,1-May-07,550000,USD,angel
+xora,Xora,0,1-May-01,7000000,USD,a
+xora,Xora,0,1-Feb-03,4000000,USD,b
+xora,Xora,0,1-Jun-07,4000000,USD,debt_round
+ooyala,Ooyala,0,1-Jan-08,8500000,USD,b
+saynow,SayNow,14,1-Sep-07,7500000,USD,a
+crunchyroll,Crunchyroll,0,1-Feb-08,4050000,USD,a
+circleup,CircleUp,19,1-Jun-07,3000000,USD,a
+pixsense,PixSense,0,1-Dec-06,5400000,USD,a
+pixsense,PixSense,0,1-Jun-07,2000000,USD,b
+danal,Danal,0,1-Jun-07,9500000,USD,a
+hulu,hulu,0,1-Aug-07,100000000,USD,a
+ourstory,OurStory,0,1-Jan-06,6300000,USD,a
+specificmedia,Specificmedia,0,1-Jun-06,10000000,USD,a
+specificmedia,Specificmedia,0,1-Nov-07,100000000,USD,b
+admob,AdMob,0,1-Mar-07,15000000,USD,b
+mysql,MySQL,0,1-Feb-06,18500000,USD,c
+mysql,MySQL,0,1-Jun-03,19500000,USD,b
+attributor,Attributor,0,28-Jan-06,2000000,USD,a
+attributor,Attributor,0,2-Apr-08,12000000,USD,c
+attributor,Attributor,0,18-Dec-06,8000000,USD,b
+socialmedia,Social Media,15,1-Sep-07,500000,USD,a
+socialmedia,Social Media,15,1-Oct-07,3500000,USD,b
+demandmedia,Demand Media,0,1-May-06,120000000,USD,a
+demandmedia,Demand Media,0,1-Sep-06,100000000,USD,b
+demandmedia,Demand Media,0,1-Sep-07,100000000,USD,c
+demandmedia,Demand Media,0,24-Mar-08,35000000,USD,d
+tripit,TripIt,8,1-Apr-07,1000000,USD,seed
+pubmatic,PubMatic,35,1-Jan-08,7000000,USD,a
+mint,Mint,22,1-Oct-07,4700000,USD,a
+mint,Mint,22,1-Oct-06,325000,USD,seed
+mint,Mint,22,5-Mar-08,12000000,USD,b
+app2you,app2you,4,20-Nov-07,255000,USD,angel
+app2you,app2you,4,1-Oct-06,177000,USD,angel
+yourstreet,YourStreet,6,1-Oct-06,250000,USD,angel
+tagworld,Tagworld,0,1-Mar-06,7500000,USD,a
+tagworld,Tagworld,0,1-Dec-06,40000000,USD,b
+rotohog,RotoHog,0,1-Aug-07,6000000,USD,a
+thisnext,ThisNext,0,1-Jan-08,5000000,USD,b
+thisnext,ThisNext,0,1-Jan-06,2500000,USD,a
+chesspark,ChessPark,0,1-Jul-07,1000000,USD,angel
+break,Break,0,1-Jul-07,21400000,USD,a
+musestorm,MuseStorm,0,1-Jul-07,1000000,USD,a
+mediamachines,Media Machines,0,1-Aug-07,9400000,USD,a
+mig33,Ciihui,0,1-May-07,10000000,USD,a
+mig33,Ciihui,0,1-Jan-08,13500000,USD,b
+aliph,Aliph,0,1-Jul-07,5000000,USD,a
+mego,mEgo,15,1-May-06,1100000,USD,angel
+mego,mEgo,15,1-Jul-07,2000000,USD,angel
+realius,Realius,3,1-May-07,500000,USD,angel
+xobni,Xobni,0,1-Jun-06,12000,USD,seed
+xobni,Xobni,0,1-Nov-06,80000,USD,angel
+xobni,Xobni,0,1-Mar-07,4260000,USD,a
+spoke,Spoke,0,18-Nov-03,11700000,USD,c
+spoke,Spoke,0,24-Apr-03,9200000,USD,b
+fixya,FixYa,30,1-Jan-07,2000000,USD,a
+fixya,FixYa,30,18-Mar-08,6000000,USD,b
+mozilla,Mozilla,150,15-Jul-03,2000000,USD,unattributed
+brightqube,BrightQube,0,1-May-07,200000,USD,angel
+buzzdash,BuzzDash,0,1-Sep-06,1200000,USD,angel
+urbanmapping,Urban Mapping,9,1-May-06,400000,USD,seed
+consortemedia,Consorte Media,0,1-Dec-07,7000000,USD,b
+ffwd,ffwd,0,1-Aug-07,1700000,USD,a
+satisfaction,Get Satisfaction,0,1-Sep-07,1300000,USD,a
+ringcentral,RingCentral,0,1-Sep-07,12000000,USD,a
+ringcentral,RingCentral,0,1-Feb-08,12000000,USD,b
+3jam,3Jam,0,1-Jul-07,4000000,USD,a
+playspan,PlaySpan,0,1-Sep-07,6500000,USD,a
+grouply,Grouply,6,1-Jun-07,935000,USD,angel
+grouply,Grouply,6,1-Jan-08,365000,USD,angel
+grouply,Grouply,6,14-Jan-08,1300000,USD,a
+graspr,Graspr,0,10-Jul-08,2500000,USD,a
+zannel,Zannel,0,2-Jun-08,10000000,USD,b
+deca-tv,deca.tv,0,1-Sep-07,5000000,USD,a
+zimbra,Zimbra,0,1-Apr-06,14500000,USD,c
+friendfeed,FriendFeed,0,26-Feb-08,5000000,USD,a
+rupture,Rupture,15,1-Jul-07,3000000,USD,angel
+jibjab,JibJab,0,1-Oct-07,3000000,USD,b
+rubiconproject,Rubicon Project,0,1-Oct-07,4000000,USD,a
+rubiconproject,Rubicon Project,0,1-Oct-07,2000000,USD,debt_round
+rubiconproject,Rubicon Project,0,28-Jan-08,15000000,USD,b
+snaplayout,SnapLayout,0,1-May-07,650000,USD,a
+confabb,Confabb,0,1-Aug-07,200000,USD,angel
+uptake,UpTake,0,18-Dec-07,4000000,USD,a
+23andme,23andMe,30,1-May-07,9000000,USD,a
+yume,YuMe,0,1-Oct-07,9000000,USD,b
+mochimedia,Mochi Media,0,12-Mar-08,4000000,USD,a
+mochimedia,Mochi Media,0,18-Jun-08,10000000,USD,b
+blurb,Blurb,0,1-Oct-06,12000000,USD,b
+weatherbill,WeatherBill,0,1-Oct-07,12600000,USD,a
+automattic,Automattic,20,1-Jul-05,1100000,USD,a
+automattic,Automattic,20,1-Jan-08,29500000,USD,b
+twine,Radar Networks,0,1-Apr-06,5000000,USD,a
+twine,Radar Networks,0,1-Feb-08,13000000,USD,b
+veodia,Veodia,15,12-May-08,8300000,USD,a
+echosign,EchoSign,0,1-Oct-07,6000000,USD,a
+rollbase,Rollbase,0,1-Aug-07,400000,USD,angel
+predictify,Predictify,6,25-Mar-08,4300000,USD,a
+trialpay,TrialPay,50,1-Feb-08,12700000,USD,b
+socializr,Socializr,0,1-Sep-07,1500000,USD,a
+eurekster,Eurekster,0,1-Dec-04,1350000,USD,a
+eurekster,Eurekster,0,13-Mar-07,5500000,USD,b
+gydget,Gydget,0,1-Aug-06,1000000,USD,a
+pickspal,PicksPal,0,1-Oct-07,3000000,USD,c
+gigya,Gigya,0,1-Feb-07,3000000,USD,a
+gigya,Gigya,0,9-Mar-08,9500000,USD,b
+songbird,Songbird,0,1-Dec-06,8000000,USD,seed
+guardiananalytics,Guardian Analytics,0,1-Oct-07,4500000,USD,b
+fora-tv,Fora.TV,0,1-Oct-07,4000000,USD,a
+disqus,Disqus,3,18-Mar-08,500000,USD,a
+sezwho,SezWho,9,1-Oct-07,1000000,USD,a
+yieldbuild,YieldBuild,0,3-Mar-08,6000000,USD,b
+akimbo,Akimbo,0,1-Jun-06,15500000,USD,c
+akimbo,Akimbo,0,1-Jul-04,12000000,USD,b
+akimbo,Akimbo,0,1-Jun-03,4200000,USD,seed
+akimbo,Akimbo,0,29-Feb-08,8000000,USD,d
+laszlosystems,Laszlo Systems,60,6-Mar-08,14600000,USD,c
+laszlosystems,Laszlo Systems,60,15-Apr-05,6250000,USD,b
+brightroll,BrightRoll,0,1-Oct-07,5000000,USD,b
+merchantcircle,MerchantCircle,10,1-Sep-07,10000000,USD,b
+minekey,Minekey,0,1-Aug-07,3000000,USD,a
+bookingangel,Booking Angel,0,1-Aug-07,100000,USD,angel
+loopt,Loopt,0,1-Jun-05,6000,USD,seed
+loopt,Loopt,0,23-Jul-07,8250000,USD,b
+fix8,Fix8,0,1-Oct-07,3000000,USD,a
+fix8,Fix8,0,3-Apr-08,2000000,USD,b
+mybuys,MyBuys,0,21-Feb-07,2800000,USD,a
+mybuys,MyBuys,0,8-Oct-07,10000000,USD,b
+blackarrow,BlackArrow,35,1-Oct-07,12000000,USD,b
+blackarrow,BlackArrow,35,1-Nov-06,14750000,USD,a
+peerflix,Peerflix,0,1-Oct-05,8000000,USD,b
+peerflix,Peerflix,0,1-Mar-05,2000000,USD,a
+fatdoor,fatdoor,0,1-Nov-07,5500000,USD,a
+fatdoor,fatdoor,0,1-Feb-07,1000000,USD,angel
+fatdoor,fatdoor,0,1-May-07,500000,USD,debt_round
+verimatrix,Verimatrix,100,1-Jun-06,8000000,USD,b
+verimatrix,Verimatrix,100,1-Oct-07,5000000,USD,c
+billeo,Billeo,0,1-Nov-07,7000000,USD,b
+billeo,Billeo,0,1-Apr-06,4000000,USD,a
+caring-com,Caring.com,0,1-Sep-07,6000000,USD,a
+ask-com,Ask.com,475,1-Mar-99,25000000,USD,a
+projectplaylist,Project Playlist,0,1-Sep-07,3000000,USD,a
+blowtorch,Blowtorch,0,1-Nov-07,50000000,USD,a
+gamelayers,GameLayers,0,1-Oct-07,500000,USD,seed
+mogreet,MoGreet,0,1-Aug-07,1200000,USD,a
+mogreet,MoGreet,0,20-Jun-08,2500000,USD,b
+yourtrumanshow,YourTrumanShow,0,1-Dec-06,1300000,USD,angel
+apprema,Apprema,0,1-Nov-07,800000,USD,debt_round
+trustedid,TrustedID,100,1-Jan-07,5000000,USD,a
+trustedid,TrustedID,100,18-Oct-07,10000000,USD,b
+seeqpod,Seeqpod,25,1-Apr-08,7000000,USD,angel
+quantenna,Quantenna,0,1-Nov-07,12700000,USD,b
+qwaq,Qwaq,0,1-Nov-07,7000000,USD,b
+uber,uber,24,26-May-08,7600000,USD,b
+cashview,CashView,0,1-Sep-07,6500000,USD,b
+crossloop,CrossLoop,8,1-Dec-07,3000000,USD,a
+dapper,Dapper,20,1-Dec-07,3000000,USD,a
+anchorintelligence,Anchor Intelligence,0,1-Jan-07,2000000,USD,a
+anchorintelligence,Anchor Intelligence,0,1-Sep-07,4000000,USD,b
+edgecast,EdgeCast,30,1-Dec-07,6000000,USD,b
+edgecast,EdgeCast,30,1-Jun-07,4000000,USD,a
+kosmix,Kosmix,0,1-Dec-07,10000000,USD,c
+goodreads,GoodReads,0,1-Nov-07,750000,USD,angel
+ribbit,Ribbit,28,1-Dec-07,10000000,USD,b
+ribbit,Ribbit,28,1-Oct-06,3000000,USD,a
+jobvite,Jobvite,0,1-Dec-07,7200000,USD,a
+juicewireless,Juice Wireless,0,1-Apr-05,500000,USD,a
+juicewireless,Juice Wireless,0,1-Jan-06,1500000,USD,a
+juicewireless,Juice Wireless,0,1-Jul-06,4000000,USD,a
+juicewireless,Juice Wireless,0,1-Mar-07,3300000,USD,b
+juicewireless,Juice Wireless,0,1-Dec-07,6000000,USD,c
+qik,Qik,22,9-Apr-08,3000000,USD,b
+playfirst,PlayFirst,0,1-Dec-07,16500000,USD,c
+playfirst,PlayFirst,0,1-Jan-06,5000000,USD,b
+mobissimo,Mobissimo,15,1-Apr-04,1000000,USD,seed
+chumby,Chumby,20,1-Dec-06,5000000,USD,a
+chumby,Chumby,20,31-Mar-08,12500000,USD,b
+ugobe,UGOBE,0,1-Oct-06,8000000,USD,b
+ausra,Ausra,4,1-Sep-07,40000000,USD,a
+causes,Causes,0,1-Jan-07,2350000,USD,a
+causes,Causes,0,1-Mar-08,5000000,USD,b
+nanosolar,Nanosolar,0,1-May-05,20000000,USD,b
+nanosolar,Nanosolar,0,1-Jun-06,75000000,USD,c
+shozu,Shozu,0,1-May-05,12000000,USD,b
+shozu,Shozu,0,29-Jan-08,12000000,USD,c
+tesla-motors,Tesla Motors,270,1-May-06,40000000,USD,c
+tesla-motors,Tesla Motors,270,1-May-07,45000000,USD,d
+tesla-motors,Tesla Motors,270,1-Apr-04,7500000,USD,a
+tesla-motors,Tesla Motors,270,1-Feb-05,13000000,USD,b
+tesla-motors,Tesla Motors,270,8-Feb-08,40000000,USD,e
+bunchball,Bunchball,0,1-Oct-06,2000000,USD,a
+bunchball,Bunchball,0,13-Apr-08,4000000,USD,b
+pinger,Pinger,0,1-Dec-06,8000000,USD,b
+hooja,Hooja,0,1-Dec-07,1250000,USD,seed
+travelmuse,TravelMuse,11,1-May-07,3000000,USD,a
+cooking-com,Cooking.com,0,1-Jan-08,7000000,USD,debt_round
+cooking-com,Cooking.com,0,1-May-00,35000000,USD,e
+cooking-com,Cooking.com,0,1-Apr-99,16000000,USD,b
+cooking-com,Cooking.com,0,1-Oct-99,30000000,USD,c
+meraki,Meraki,0,1-Feb-07,5000000,USD,a
+meraki,Meraki,0,1-Jan-08,20000000,USD,b
+sugarcrm,SugarCRM,0,1-Jan-08,14500000,USD,d
+sugarcrm,SugarCRM,0,1-Oct-05,18770000,USD,c
+sugarcrm,SugarCRM,0,1-Aug-04,2000000,USD,a
+sugarcrm,SugarCRM,0,1-Feb-05,5750000,USD,b
+puddingmedia,Pudding Media,11,1-Jan-08,8000000,USD,a
+4homemedia,4HomeMedia,10,1-Jan-07,2850000,USD,a
+pageonce,Pageonce,0,1-Jan-08,1500000,USD,a
+bluepulse,bluepulse,0,1-Apr-07,6000000,USD,a
+mogad,Mogad,2,1-Aug-07,500000,USD,a
+devicevm,DeviceVM,0,1-Aug-06,10000000,USD,a
+devicevm,DeviceVM,0,1-Oct-07,10000000,USD,b
+outspark,Outspark,0,11-Apr-07,4000000,USD,a
+outspark,Outspark,0,1-Jan-08,11000000,USD,b
+engineyard,Engine Yard,60,1-Jan-08,3500000,USD,a
+engineyard,Engine Yard,60,13-Jul-08,15000000,USD,b
+plymedia,PLYmedia,0,1-Oct-06,2500000,USD,a
+plymedia,PLYmedia,0,1-Jul-08,6000000,USD,b
+fabrik,fabrik,175,1-Sep-05,4100000,USD,a
+fabrik,fabrik,175,1-Jun-06,8000000,USD,b
+fabrik,fabrik,175,1-Feb-07,14300000,USD,c
+fabrik,fabrik,175,1-May-07,24900000,USD,d
+widgetbox,Widgetbox,0,1-Jun-06,1500000,USD,angel
+widgetbox,Widgetbox,0,1-Jan-08,8000000,USD,b
+widgetbox,Widgetbox,0,1-Jun-07,5000000,USD,a
+razorgator,RazorGator,0,1-Mar-05,26000000,USD,a
+razorgator,RazorGator,0,1-Mar-06,22800000,USD,b
+oversee,OverSee,150,1-Jan-07,60000000,USD,debt_round
+oversee,OverSee,150,1-Jan-08,150000000,USD,a
+zynga,Zynga,90,1-Jan-08,10000000,USD,a
+zynga,Zynga,90,22-Jul-08,29000000,USD,b
+smaato,Smaato,0,1-Jan-08,3500000,USD,a
+credit-karma,Credit Karma,4,1-May-07,750000,USD,angel
+greenplum,Greenplum,0,1-Jan-08,27000000,USD,c
+greenplum,Greenplum,0,1-Feb-07,15000000,USD,b
+greenplum,Greenplum,0,1-Mar-06,15000000,USD,a
+greenplum,Greenplum,0,1-Feb-07,4000000,USD,debt_round
+amobee,Amobee,0,1-Nov-06,5000000,USD,a
+amobee,Amobee,0,1-Jan-07,15000000,USD,b
+webmynd,WebMynd,0,1-Jul-08,250000,USD,angel
+currenttv,Current Media,0,29-Jul-05,15000000,USD,a
+heroku,Heroku,3,1-Jan-08,20000,USD,seed
+heroku,Heroku,3,8-May-08,3000000,USD,a
+lookery,Lookery,9,7-Feb-08,900000,USD,seed
+mill-river-labs,Mill River Labs,5,1-Jan-08,900000,USD,angel
+grouptivity,Grouptivity,10,1-May-06,2000000,USD,angel
+aductions,Aductions,5,5-Jul-07,100000,USD,seed
+venturebeat,VentureBeat,0,11-Feb-08,320000,USD,seed
+collarity,Collarity,30,1-Feb-08,7800000,USD,b
+rocketon,RocketOn,0,1-Feb-08,5800000,USD,b
+what-they-like,What They Like,10,29-Aug-07,990000,USD,a
+gumgum,GumGum,5,1-Dec-07,225000,USD,seed
+gumgum,GumGum,5,21-Jul-08,1000000,USD,a
+snap-technologies,Snap Technologies,32,1-Jul-05,10000000,USD,a
+twofish,TwoFish,0,1-Jun-07,5000000,USD,a
+three-rings,Three Rings,30,3-Mar-08,3500000,USD,a
+smalltown,Smalltown,8,1-Nov-05,4000000,USD,a
+sparkplay-media,Sparkplay Media,0,1-Feb-08,4250000,USD,a
+mog,MOG,0,1-Mar-07,1800000,USD,angel
+mog,MOG,0,29-Apr-08,2800000,USD,a
+social-gaming-network,Social Gaming Network,0,13-May-08,15000000,USD,a
+danger,Danger,0,1-Oct-01,36000000,USD,b
+danger,Danger,0,1-Feb-03,35000000,USD,d
+danger,Danger,0,1-Jul-04,37000000,USD,d
+coverity,Coverity,0,1-Feb-08,22000000,USD,a
+genietown,GenieTown,8,1-Oct-07,2000000,USD,a
+redux,Redux,11,1-Mar-07,1650000,USD,seed
+redux,Redux,11,7-Apr-08,6500000,USD,a
+evernote,Evernote,0,1-Mar-06,6000000,USD,angel
+evernote,Evernote,0,1-Sep-07,3000000,USD,angel
+numobiq,Numobiq,0,8-Feb-08,4500000,USD,a
+goldspot-media,GoldSpot Media,0,23-Jan-08,3000000,USD,a
+mobixell,Mobixell,0,8-Jul-08,6000000,USD,a
+ad-infuse,Ad Infuse,0,23-Jan-08,12000000,USD,b
+ad-infuse,Ad Infuse,0,1-Jun-06,5000000,USD,a
+sendme,SendMe,0,1-Dec-06,6000000,USD,b
+sendme,SendMe,0,18-Mar-08,15000000,USD,c
+tiny-pictures,Tiny Pictures,15,1-Aug-07,4000000,USD,a
+tiny-pictures,Tiny Pictures,15,1-Feb-08,7200000,USD,b
+flurry,flurry,0,8-Mar-07,3500000,USD,a
+sharpcast,Sharpcast,0,8-Mar-06,13500000,USD,a
+sharpcast,Sharpcast,0,8-Mar-06,3000000,USD,b
+teneros,Teneros,0,1-Jul-04,7000000,USD,a
+teneros,Teneros,0,1-Mar-05,17500000,USD,b
+teneros,Teneros,0,1-Apr-06,20000000,USD,c
+teneros,Teneros,0,1-Jan-08,40000000,USD,d
+photocrank,PhotoCrank,3,1-Apr-07,250000,USD,seed
+yodlee,Yodlee,0,4-Jun-08,35000000,USD,unattributed
+sliderocket,SlideRocket,5,31-Dec-07,2000000,USD,a
+surf-canyon,Surf Canyon,3,31-Jul-07,250000,USD,seed
+surf-canyon,Surf Canyon,3,8-May-08,600000,USD,seed
+central-desktop,Central Desktop,0,16-Apr-08,7000000,USD,a
+opendns,OpenDNS,15,1-Jun-06,2000000,USD,a
+coveo,Coveo,0,6-Mar-08,2500000,USD,a
+vizu,Vizu,0,20-Feb-06,1000000,USD,a
+vizu,Vizu,0,31-Jan-07,2900000,USD,b
+taltopia,Taltopia,0,8-Mar-08,800000,USD,angel
+kapow-technologies,Kapow Technologies,0,6-Mar-08,11600000,USD,c
+kapow-technologies,Kapow Technologies,0,1-Feb-05,5100000,EUR,b
+programmermeetdesigner-com,ProgrammerMeetDesigner.com,4,12-Dec-07,500000,USD,seed
+liveops,LiveOps,0,1-Apr-04,22000000,USD,b
+liveops,LiveOps,0,13-Feb-07,28000000,USD,c
+clickpass,Clickpass,0,1-Jun-07,20000,USD,seed
+searchme,SearchMe,52,1-Jul-05,400000,USD,a
+searchme,SearchMe,52,1-Jan-06,3600000,USD,b
+searchme,SearchMe,52,1-Jun-07,12000000,USD,c
+searchme,SearchMe,52,1-Oct-07,15000000,USD,d
+searchme,SearchMe,52,1-May-08,12600000,USD,e
+accountnow,AccountNow,0,29-Jun-07,12750000,USD,c
+dailystrength,DailyStrength,14,18-May-07,4000000,USD,a
+popularmedia,PopularMedia,0,1-Mar-07,4250000,USD,unattributed
+popularmedia,PopularMedia,0,28-Jul-08,8000000,USD,c
+clarizen,Clarizen,5,1-May-08,9000000,USD,b
+sellpoint,SellPoint,0,27-Feb-08,7000000,USD,a
+livedeal,LiveDeal,0,26-Oct-05,4900000,USD,a
+neoedge-networks,NeoEdge Networks,0,8-Jun-07,3000000,USD,b
+zuora,Zuora,30,13-Mar-08,6500000,USD,a
+jivox,Jivox,0,10-Mar-08,2700000,USD,seed
+jivox,Jivox,0,16-Jun-08,10700000,USD,a
+elastra,Elastra,0,15-Aug-07,2600000,USD,a
+kwiry,kwiry,3,20-Mar-07,1000000,USD,a
+supplyframe,SupplyFrame,25,21-Jun-07,7000000,USD,b
+inmage-systems,InMage Systems,0,10-Jul-07,10000000,USD,b
+authenticlick,Authenticlick,20,1-Feb-06,5000000,USD,a
+interneer,Interneer,6,6-Jun-07,2000000,USD,angel
+interneer,Interneer,6,11-Mar-07,1200000,USD,a
+handipoints,Handipoints,0,2-May-07,250000,USD,seed
+handipoints,Handipoints,0,2-May-08,550000,USD,angel
+adconion-media-group,Adconion Media Group,150,24-Feb-08,80000000,USD,c
+zend-technologies,Zend Technologies,0,28-Aug-06,20000000,USD,d
+zend-technologies,Zend Technologies,0,19-Jul-04,8000000,USD,c
+slideshare,SlideShare,10,7-May-08,3000000,USD,a
+intent,Intent,6,1-Feb-08,250000,USD,angel
+wikimedia-foundation,Wikimedia Foundation,0,25-Mar-08,3000000,USD,unattributed
+clearwell-systems,Clearwell Systems,75,22-Aug-07,17000000,USD,c
+become,Become,0,25-Mar-08,17500000,USD,c
+become,Become,0,17-Jul-08,8000000,USD,d
+bubble-motion,Bubble Motion,0,26-Mar-08,14000000,USD,b
+bubble-motion,Bubble Motion,0,11-Sep-06,10000000,USD,a
+perfect-market,Perfect Market,0,9-Jul-08,15600000,USD,a
+glassdoor,Glassdoor,12,27-Mar-08,3000000,USD,b
+support-space,Support Space,0,24-Oct-06,4250000,USD,a
+xoopit,Xoopit,0,1-Dec-06,1500000,USD,angel
+xoopit,Xoopit,0,2-Apr-08,5000000,USD,a
+reality-digital,Reality Digital,0,1-Nov-05,2000000,USD,a
+reality-digital,Reality Digital,0,31-Mar-08,6300000,USD,b
+cloud9-analytics,Cloud9 Analytics,0,25-Jul-07,5000000,USD,a
+netcipia,Netcipia,3,30-Aug-07,200000,USD,angel
+icontrol,iControl,0,2-Apr-08,15500000,USD,b
+icontrol,iControl,0,26-Apr-06,5000000,USD,a
+frengo,Frengo,0,1-Dec-06,2300000,USD,a
+frengo,Frengo,0,3-May-07,5700000,USD,b
+mblox,mBlox,0,23-Feb-06,25000000,USD,d
+mblox,mBlox,0,9-Mar-05,7500000,USD,c
+mblox,mBlox,0,9-Jul-04,10000000,USD,b
+mblox,mBlox,0,28-Jan-08,22000000,USD,e
+esolar,eSolar,10,17-Jan-08,10000000,USD,a
+esolar,eSolar,10,21-Apr-08,130000000,USD,b
+marin-software,Marin Software,0,5-Oct-06,2000000,USD,a
+marin-software,Marin Software,0,9-Apr-08,7250000,USD,b
+sibeam,SiBEAM,0,1-Dec-04,1250000,USD,seed
+sibeam,SiBEAM,0,1-May-05,15000000,USD,a
+sibeam,SiBEAM,0,1-Aug-06,21000000,USD,b
+sibeam,SiBEAM,0,7-Apr-08,40000000,USD,c
+lumosity,Lumos Labs,0,11-Jun-07,400000,USD,angel
+lumosity,Lumos Labs,0,3-Jun-08,3000000,USD,a
+irise,iRise,150,1-Mar-08,20000000,USD,unattributed
+richrelevance,richrelevance,0,8-Apr-08,4200000,USD,b
+labmeeting,Labmeeting,0,1-May-08,500000,USD,seed
+shopflick,Shopflick,10,15-Mar-08,1000000,USD,angel
+shopflick,Shopflick,10,1-Jul-08,7000000,USD,a
+turnhere,TurnHere,35,15-Feb-08,7500000,USD,a
+turnhere,TurnHere,35,1-Nov-06,1100000,USD,seed
+coupa,Coupa,0,13-Mar-07,1500000,USD,a
+coupa,Coupa,0,9-Apr-08,6000000,USD,b
+squaretrade,SquareTrade,0,1-Oct-99,400000,USD,seed
+squaretrade,SquareTrade,0,10-Apr-08,9000000,USD,b
+v-enable,V-Enable,0,28-Feb-06,6000000,USD,c
+v-enable,V-Enable,0,21-Sep-03,3750000,USD,b
+aeria,Aeria,0,1-Oct-07,288000,USD,seed
+heysan,Heysan,6,24-Jan-07,20000,USD,seed
+memeo,Memeo,0,7-Jan-08,8100000,USD,b
+imageshack,imageshack,0,1-May-07,10000000,USD,a
+pluggedin,PluggedIn,0,15-Apr-08,2000000,USD,unattributed
+cellspin,CellSpin,12,1-Dec-06,1100000,USD,angel
+remixation,Remixation,5,1-Jul-07,1000000,USD,a
+the-auteurs,The Auteurs,9,1-Aug-07,750000,USD,a
+modern-feed,Modern Feed,0,1-Apr-07,3000000,USD,seed
+grou-ps,GROU.PS,0,1-Jun-08,1100000,USD,a
+triggit,Triggit,5,1-Mar-07,350000,USD,seed
+triggit,Triggit,5,1-Jul-07,500000,USD,angel
+serious-business,Serious Business,6,25-Apr-08,4000000,USD,unattributed
+presdo,Presdo,1,1-Dec-07,35000,USD,seed
+nile-guide,Nile Guide,0,5-Jun-08,8000000,USD,b
+adify,Adify,10,1-Aug-06,8000000,USD,a
+adify,Adify,10,18-Apr-07,19000000,USD,b
+invensense,Invensense,0,28-Apr-08,19000000,USD,c
+centerd,Center'd,0,1-Feb-07,1000000,USD,angel
+centerd,Center'd,0,1-Oct-07,5500000,USD,a
+centerd,Center'd,0,1-May-07,500000,USD,debt_round
+new-relic,New Relic,0,1-Apr-08,3500000,USD,a
+gridstone-research,Gridstone Research,0,4-Apr-08,10000000,USD,b
+fusionops,FusionOps,10,1-Mar-05,4000000,USD,a
+marketlive,MarketLive,0,5-May-08,20000000,USD,e
+snaplogic,SnapLogic,0,22-May-07,2500000,USD,a
+boardwalktech,Boardwalktech,20,1-Oct-06,500000,USD,angel
+rosum,Rosum,0,15-Apr-08,15000000,USD,b
+citizenhawk,CitizenHawk,0,12-May-08,3000000,USD,unattributed
+dilithium-networks,Dilithium Networks,0,23-Apr-03,10000000,USD,b
+dilithium-networks,Dilithium Networks,0,14-Mar-05,18000000,USD,c
+dilithium-networks,Dilithium Networks,0,3-Jul-07,33000000,USD,d
+passenger,Passenger,0,5-Nov-07,8300000,USD,b
+passenger,Passenger,0,14-Mar-08,12200000,USD,c
+experience-project,Experience Project,0,13-May-08,3000000,USD,a
+mozes,Mozes,0,22-Feb-07,5000000,USD,a
+mozes,Mozes,0,1-May-08,11500000,USD,b
+rvita,rVita,6,1-Oct-07,1000000,USD,angel
+mefeedia,Mefeedia,6,19-Mar-08,250000,USD,angel
+wavemaker-software,Wavemaker Software,0,15-Apr-08,4500000,USD,a
+virtuallogix,VirtualLogix,0,11-Jul-07,16000000,USD,b
+fonemesh,Fonemesh,7,1-Jun-08,100000,USD,angel
+fonemesh,Fonemesh,7,1-May-08,150000,USD,seed
+cognition-technologies,Cognition Technologies,20,15-Jul-08,2700000,USD,unattributed
+sometrics,Sometrics,0,14-May-08,1000000,USD,a
+socialvibe,SocialVibe,0,1-Dec-07,4200000,USD,a
+deviantart,deviantART,0,21-Jun-07,3500000,USD,a
+mythings,MyThings,0,1-Apr-06,8000000,USD,a
+mywaves,mywaves,35,8-Dec-06,6000000,USD,a
+litescape,litescape,0,6-Aug-07,14000000,USD,b
+nextbio,nextbio,0,6-Jun-07,7000000,USD,b
+parascale,Parascale,0,23-Jun-08,11370000,USD,a
+row44,Row44,0,20-May-08,21000000,USD,a
+jellycloud,JellyCloud,0,16-May-08,6600000,USD,a
+aster-data-systems,Aster Data Systems,50,1-Nov-05,1000000,USD,angel
+aster-data-systems,Aster Data Systems,50,1-May-07,5000000,USD,a
+pixim,Pixim,0,7-Mar-07,15000000,USD,b
+pixim,Pixim,0,9-Jun-05,12000000,USD,a
+pixim,Pixim,0,12-Jun-07,5100000,USD,b
+funambol,Funambol,0,8-Aug-05,5000000,USD,a
+funambol,Funambol,0,1-Dec-06,5500000,USD,a
+funambol,Funambol,0,17-Jun-08,12500000,USD,b
+funambol,Funambol,0,1-Jun-08,2000000,USD,debt_round
+moblyng,Moblyng,0,21-May-08,5700000,USD,b
+moblyng,Moblyng,0,28-Mar-07,1530000,USD,a
+zecter,Zecter,3,1-Jun-07,15000,USD,seed
+votigo,Votigo,0,31-Dec-07,1265000,USD,a
+zinio,Zinio,0,12-Sep-05,7000000,USD,a
+dreamfactory,Dreamfactory,0,8-May-06,5800000,USD,a
+greennote,GreenNote,15,1-Oct-07,4200000,USD,a
+skyfire,Skyfire,0,1-Jun-07,4800000,USD,a
+skyfire,Skyfire,0,28-May-08,13000000,USD,b
+edufire,eduFire,0,9-Apr-08,400000,USD,angel
+b-hive-networks,B-hive Networks,0,25-Aug-06,7000000,USD,a
+vmware,VMware,5000,30-Jul-07,150000000,USD,unattributed
+katalyst-media,Katalyst Media,11,28-Jan-08,10000000,USD,a
+neurovigil,NeuroVigil,5,30-May-08,250000,USD,seed
+sylantro,Sylantro,0,1-Apr-06,11000000,USD,e
+sylantro,Sylantro,0,1-Nov-03,4500000,USD,d
+sylantro,Sylantro,0,1-Oct-00,55000000,USD,c
+teleflip,TeleFlip,0,1-Jan-08,4900000,USD,b
+vidshadow,Vidshadow,16,15-Feb-07,2000000,USD,a
+jigsaw,Jigsaw,0,1-Dec-03,750000,USD,a
+jigsaw,Jigsaw,0,1-Sep-04,5200000,USD,b
+jigsaw,Jigsaw,0,1-Mar-06,12000000,USD,c
+ozmo-devices,Ozmo Devices,0,30-Mar-06,12550000,USD,a
+cooliris,Cooliris,0,1-Jul-07,3000000,USD,a
+gamook,Gamook,0,16-Mar-08,1500000,USD,a
+vindicia,Vindicia,0,31-Mar-08,5600000,USD,c
+dizzywood,Dizzywood,0,7-Feb-08,1000000,USD,a
+limbo,Limbo,37,25-Apr-07,8000000,USD,b
+startforce,StartForce,21,1-Sep-07,1000000,USD,a
+coolearth,coolearth,9,20-Feb-08,21000000,USD,a
+coolearth,coolearth,9,1-Jun-07,1000000,USD,angel
+yield-software,Yield Software,0,4-Jun-08,6000000,USD,b
+tapulous,Tapulous,9,1-Jul-08,1800000,USD,angel
+codefast,Codefast,0,15-Mar-05,6500000,USD,a
+hyperic,Hyperic,0,10-May-06,3800000,USD,a
+ipling-2,iPling :)),7,1-Mar-08,300000,USD,angel
+intacct,Intacct,100,29-Apr-08,15000000,USD,unattributed
+intacct,Intacct,100,27-Jun-07,14000000,USD,unattributed
+vivaty,Vivaty,25,1-Aug-07,9400000,USD,a
+aurora-biofuels,Aurora Biofuels,0,10-Jun-08,20000000,USD,b
+eeye,eEye,0,1-Jun-04,15000000,USD,d
+eeye,eEye,0,1-Dec-02,9000000,USD,c
+allbusiness-com,AllBusiness.com,50,1-Jul-04,10000000,USD,b
+allbusiness-com,AllBusiness.com,50,1-Feb-06,12400000,USD,c
+insideview,InsideView,40,1-Jun-07,7400000,USD,a
+clickability,Clickability,0,14-Jul-08,3500000,USD,debt_round
+keibi-technologies,Keibi Technologies,30,1-May-07,5000000,USD,b
+robodynamics,RoboDynamics,5,1-Sep-03,100000,USD,seed
+robodynamics,RoboDynamics,5,1-May-06,500000,USD,angel
+imagespan,ImageSpan,0,23-Jun-08,11000000,USD,b
+solarflare,Solarflare,0,18-Jun-08,26000000,USD,unattributed
+clupedia,Clupedia,0,22-May-07,1300000,USD,a
+zigabid,Zigabid,10,1-Dec-06,500000,USD,seed
+zigabid,Zigabid,10,1-Feb-08,500000,USD,angel
+inthrma,InThrMa,3,1-Oct-07,10000,USD,seed
+webaroo,Webaroo,0,22-Dec-06,10000000,USD,b
+webaroo,Webaroo,0,5-Jul-08,10000000,USD,c
+fluid-entertainment,Fluid Entertainment,0,12-Mar-08,3200000,USD,a
+unisfair,Unisfair,0,21-Jan-08,10000000,USD,b
+on24,ON24,0,11-Jul-08,8000000,USD,unattributed
+trueanthem,trueAnthem,10,28-Jul-08,2000000,USD,angel
+colizer,Colizer,0,1-Apr-04,120000,USD,a
+coremetrics,Coremetrics,0,9-Mar-06,31000000,USD,d
+coremetrics,Coremetrics,0,4-Apr-08,60000000,USD,e
+minted,Minted,0,18-Jul-08,2500000,USD,seed
+appirio,Appirio,0,13-Mar-08,1100000,USD,a
+appirio,Appirio,0,21-Jul-08,10000000,USD,b
+samfind,samfind,3,1-Jan-06,20000,USD,seed
+eye-fi,Eye-Fi,0,11-Jun-07,5500000,USD,a
+responselogix,ResponseLogix,0,23-Jan-08,8000000,USD,a
+qumu,Qumu,0,21-Jul-08,10700000,USD,c
+carbonflow,CarbonFlow,0,23-Jul-08,2900000,USD,a
+allvoices,Allvoices,8,31-Jul-07,4500000,USD,a
+moxsie,Moxsie,0,27-Jun-08,1000000,USD,a
+service-now-com,Service-now.com,80,5-Jul-05,2500000,USD,a
+service-now-com,Service-now.com,80,5-Dec-06,5000000,USD,b
+anvato,Anvato,0,29-Jul-08,550000,USD,seed
+vantage-media,Vantage Media,150,28-Feb-07,70000000,USD,a
+entone-technologies,Entone Technologies,80,1-Aug-08,14500000,USD,b
+entone-technologies,Entone Technologies,80,2-May-03,9500000,USD,a
+750-industries,750 Industries,7,1-Aug-08,1000000,USD,a
+plastic-logic,Plastic Logic,0,20-Apr-02,13700000,USD,a
+plastic-logic,Plastic Logic,0,5-Jan-05,8000000,USD,b
+plastic-logic,Plastic Logic,0,30-Nov-05,24000000,USD,c
+plastic-logic,Plastic Logic,0,6-Jan-07,100000000,USD,d
+plastic-logic,Plastic Logic,0,4-Aug-08,50000000,USD,e
+paymo,Paymo,0,1-Aug-08,5000000,USD,seed
+brilliant-telecom,Brilliant Telecom,0,4-Aug-08,11000000,USD,a
+skygrid,SkyGrid,0,6-Aug-08,11000000,USD,b
+intensedebate,Intense Debate,4,1-May-07,15000,USD,seed
+associatedcontent,Associated Content,0,1-Jan-06,5400000,USD,a
+associatedcontent,Associated Content,0,1-Jul-07,10000000,USD,b
+madkast,madKast,0,1-Mar-07,15000,USD,seed
+madkast,madKast,0,1-Oct-07,300000,USD,a
+eventvue,EventVue,0,1-Aug-07,15000,USD,seed
+eventvue,EventVue,0,1-Sep-07,250000,USD,a
+socialthing,Socialthing!,6,18-May-07,15000,USD,seed
+socialthing,Socialthing!,6,1-Oct-07,500000,USD,debt_round
+jsquaredmedia,J Squared Media,0,1-Aug-07,15000,USD,seed
+searchtophone,Search to Phone,0,1-Aug-07,15000,USD,seed
+filtrbox,Filtrbox,0,1-Aug-07,15000,USD,seed
+filtrbox,Filtrbox,0,28-Feb-08,500000,USD,seed
+brightkite,Brightkite,0,1-Aug-07,15000,USD,seed
+brightkite,Brightkite,0,1-Mar-08,1000000,USD,angel
+newsgator,NewsGator,0,23-Jun-04,1400000,USD,a
+newsgator,NewsGator,0,1-Dec-07,12000000,USD,c
+newsgator,NewsGator,0,1-Dec-04,8600000,USD,b
+me-dium,Me.dium,0,1-Jun-07,15000000,USD,b
+buzzwire,Buzzwire,0,1-Dec-07,8000000,USD,b
+hivelive,HiveLive,0,1-Feb-08,2200000,USD,angel
+hivelive,HiveLive,0,27-Feb-08,5600000,USD,a
+xaware,XAware,0,1-Jan-08,7400000,USD,b
+xaware,XAware,0,1-Nov-02,2100000,USD,a
+lijit,Lijit,0,1-Jan-07,900000,USD,a
+lijit,Lijit,0,1-Jun-07,3300000,USD,b
+hubbuzz,hubbuzz,8,1-Mar-07,750000,USD,angel
+gnip,Gnip,6,1-Mar-08,1100000,USD,a
+collective-intellect,Collective Intellect,0,1-Feb-06,2600000,USD,a
+collective-intellect,Collective Intellect,0,15-Apr-08,6600000,USD,b
+rally-software,Rally Software,0,4-Jun-08,16850000,USD,c
+rally-software,Rally Software,0,14-Jun-06,8000000,USD,b
+symplified,Symplified,0,9-Jun-08,6000000,USD,a
+indeed,Indeed,0,1-Aug-05,5000000,USD,a
+geezeo,Geezeo,0,24-Apr-08,1200000,USD,unattributed
+entrecard,Entrecard,1,1-Jan-07,30000,USD,seed
+entrecard,Entrecard,1,1-Nov-07,40000,USD,seed
+americantowns-com,AmericanTowns.com,10,1-Jul-06,1100000,USD,a
+americantowns-com,AmericanTowns.com,10,1-Sep-07,3300000,USD,b
+kayak,Kayak,58,1-May-06,11500000,USD,c
+kayak,Kayak,58,1-Dec-04,7000000,USD,b
+kayak,Kayak,58,1-Dec-07,196000000,USD,d
+gocrosscampus,GoCrossCampus,25,1-Sep-07,375000,USD,seed
+health-plan-one,Health Plan One,0,21-Apr-08,6500000,USD,a
+your-survival,Your Survival,10,1-Nov-07,350000,USD,angel
+media-lantern,Media Lantern,9,30-Mar-08,250000,USD,seed
+gridpoint,GridPoint,0,1-Sep-07,32000000,USD,d
+gridpoint,GridPoint,0,1-May-06,16000000,USD,b
+gridpoint,GridPoint,0,1-Sep-06,21000000,USD,c
+gridpoint,GridPoint,0,28-Mar-08,15000000,USD,d
+hotpads-com,HotPads,11,1-Mar-07,2300000,USD,a
+launchbox,LaunchBox,0,1-Feb-08,250000,USD,a
+cogent,Cogent,0,12-Feb-08,510000,USD,seed
+swapdrive,SwapDrive,0,1-May-00,2650000,USD,a
+swapdrive,SwapDrive,0,1-May-01,2000000,USD,a
+searchles,Searchles,0,1-Jul-08,2000000,USD,angel
+payperpost,PayPerPost,0,1-Jun-07,7000000,USD,b
+payperpost,PayPerPost,0,1-Oct-06,3000000,USD,a
+affinityinternet,Affinity Internet,0,1-Oct-99,60000000,USD,a
+affinityinternet,Affinity Internet,0,1-Jan-02,25000000,USD,a
+multiply,Multiply,0,1-Nov-05,2000000,USD,a
+multiply,Multiply,0,1-Jul-06,3000000,USD,a
+multiply,Multiply,0,1-Aug-07,16600000,USD,b
+revolutionmoney,Revolution Money,0,1-Sep-07,50000000,USD,b
+batanga,Batanga,0,1-Aug-07,30000000,USD,c
+batanga,Batanga,0,1-Apr-06,5000000,USD,b
+divorce360,divorce360,6,1-Sep-07,2500000,USD,a
+infinitybox,Infinity Box,3,1-Jan-06,18000,USD,seed
+infinitybox,Infinity Box,3,1-Apr-06,100000,USD,angel
+moli,MOLI,0,1-Jan-08,29600000,USD,b
+global-roaming,Global Roaming,29,1-Feb-07,7500000,USD,a
+global-roaming,Global Roaming,29,1-Feb-08,23000000,USD,b
+slingpage,Slingpage,8,1-Dec-07,2250000,USD,angel
+wrapmail,WrapMail,10,6-Jan-07,1100000,USD,seed
+ejamming,eJamming,0,2-Jun-08,150000,USD,unattributed
+lehigh-technologies,Lehigh Technologies,0,23-Jun-08,34500000,USD,unattributed
+tournease,TournEase,10,1-Apr-06,3000000,USD,angel
+tournease,TournEase,10,1-Mar-08,500000,USD,angel
+vitrue,Vitrue,0,1-Oct-07,10000000,USD,b
+vitrue,Vitrue,0,1-May-06,2200000,USD,seed
+screamingsports,Screaming Sports,0,1-Jul-07,1250000,USD,a
+berecruited,beRecruited,0,1-Nov-07,1200000,USD,a
+mfg,MFG,0,1-Sep-05,14000000,USD,a
+mfg,MFG,0,1-Jan-07,4000000,USD,c
+mfg,MFG,0,1-Jan-08,26000000,USD,d
+scintella-solutions,Scintella Solutions,2,30-Apr-08,10000,USD,seed
+scribestorm,ScribeStorm,12,24-Apr-06,225000,USD,angel
+balihoo,Balihoo,0,1-Jul-07,1500000,USD,a
+balihoo,Balihoo,0,1-Jan-08,4000000,USD,b
+info,Info,0,1-Nov-04,8400000,USD,a
+feedburner,FeedBurner,0,1-Jun-04,1000000,USD,a
+feedburner,FeedBurner,0,1-Apr-05,7000000,USD,b
+viewpoints,Viewpoints,0,1-Jun-07,5000000,USD,a
+grubhub,GrubHub,0,1-Nov-07,1100000,USD,a
+ticketsnow,TicketsNow,0,1-Jan-07,34000000,USD,a
+the-point,The Point,0,1-Nov-07,2500000,USD,angel
+the-point,The Point,0,1-Feb-08,4800000,USD,a
+inkling,Inkling,2,1-Jan-07,20000,USD,seed
+crowdspring,crowdSPRING,6,23-May-08,3000000,USD,angel
+ifbyphone,Ifbyphone,16,1-Jul-07,1500000,USD,a
+fave-media,Fave Media,18,17-Jan-08,1600000,USD,a
+accertify,Accertify,0,3-Jun-08,4000000,USD,a
+firefly-energy,Firefly Energy,0,14-Oct-04,4000000,USD,a
+firefly-energy,Firefly Energy,0,10-Jun-08,15000000,USD,c
+firefly-energy,Firefly Energy,0,13-Nov-06,10000000,USD,b
+savo,SAVO,68,1-Sep-05,10000000,USD,a
+chacha,ChaCha,75,1-Jan-07,6000000,USD,a
+chacha,ChaCha,75,1-Nov-07,10000000,USD,b
+betterworld,Better World Books,0,7-Apr-08,4500000,USD,a
+compendium-blogware,Compendium Blogware,25,1-May-07,1100000,USD,angel
+compendium-blogware,Compendium Blogware,25,1-May-08,1600000,USD,angel
+instagarage,Instagarage,4,10-May-07,25000,USD,seed
+iskoot,iSkoot,0,27-Feb-07,7000000,USD,b
+iskoot,iSkoot,0,29-Nov-06,6200000,USD,a
+gotuitmedia,Gotuit Media,0,1-Dec-04,10000000,USD,b
+gotuitmedia,Gotuit Media,0,1-Dec-02,6000000,USD,a
+carbonite,Carbonite,68,1-Mar-06,2500000,USD,a
+carbonite,Carbonite,68,1-Dec-06,3500000,USD,a
+carbonite,Carbonite,68,1-May-07,15000000,USD,b
+carbonite,Carbonite,68,28-Dec-07,5000000,USD,b
+scanscout,ScanScout,40,1-Mar-07,7000000,USD,a
+scanscout,ScanScout,40,1-Apr-07,2000000,USD,angel
+going,Going,0,1-Jul-07,5000000,USD,a
+brightcove,Brightcove,0,1-Mar-05,5500000,USD,a
+brightcove,Brightcove,0,1-Nov-05,16200000,USD,b
+brightcove,Brightcove,0,1-Jan-07,59500000,USD,c
+brightcove,Brightcove,0,1-Sep-06,5000000,USD,b
+brightcove,Brightcove,0,1-May-08,4900000,USD,d
+permissiontv,PermissionTV,0,1-Jun-07,9000000,USD,c
+bountii,Bountii,0,1-Jun-07,15000,USD,seed
+conduitlabs,Conduit Labs,0,1-Aug-07,5500000,USD,a
+zoominfo,ZoomInfo,80,1-Jul-04,7000000,USD,a
+zoominfo,ZoomInfo,80,1-Jul-04,7000000,USD,a
+vlingo,Vlingo,0,2-Apr-08,20000000,USD,b
+vtap,Vtap,0,1-May-07,14000000,USD,b
+mocospace,MocoSpace,25,1-Jan-07,3000000,USD,a
+quattro-wireless,Quattro Wireless,0,1-May-07,6000000,USD,a
+quattro-wireless,Quattro Wireless,0,5-Sep-07,12300000,USD,b
+care-com,Care.com,0,1-May-07,3100000,USD,a
+onforce,OnForce,0,1-Sep-07,6750000,USD,a
+onforce,OnForce,0,12-Jan-06,15000000,USD,a
+ratepoint,RatePoint,0,1-Jun-07,6500000,USD,a
+updown,UpDown,5,29-Jan-08,750000,USD,angel
+eons,Eons,0,1-Mar-07,22000000,USD,b
+eons,Eons,0,1-Apr-06,10000000,USD,a
+gamerdna,GamerDNA,0,18-Apr-08,3000000,USD,a
+mixandmeet,Mix & Meet,2,29-Mar-08,400000,USD,angel
+sermo,Sermo,0,1-Sep-07,25000000,USD,c
+sermo,Sermo,0,1-Jan-07,9500000,USD,b
+sermo,Sermo,0,1-Sep-06,3000000,USD,a
+worklight,WorkLight,30,1-Sep-06,5100000,USD,a
+worklight,WorkLight,30,30-Apr-08,12000000,USD,b
+matchmine,MatchMine,0,1-Sep-07,10000000,USD,a
+condodomain,CondoDomain,4,1-Jun-05,300000,USD,angel
+utest,uTest,10,1-Oct-07,2300000,USD,a
+compete,Compete,0,1-Aug-07,10000000,USD,c
+compete,Compete,0,6-Oct-03,13000000,USD,b
+azuki,Azuki Systems,30,1-Sep-07,6000000,USD,a
+acinion,Acinion,0,1-Dec-06,5000000,USD,a
+acinion,Acinion,0,1-Oct-07,16000000,USD,b
+xkoto,xkoto,45,1-Nov-07,7500000,USD,b
+hubspot,HubSpot,30,1-Sep-07,5000000,USD,a
+hubspot,HubSpot,30,16-May-08,12000000,USD,b
+hubspot,HubSpot,30,1-May-06,500000,USD,seed
+utterz,Utterz,3,1-Sep-07,4000000,USD,a
+intronis,Intronis,0,1-Oct-07,5000000,USD,a
+acquia,Acquia,11,1-Dec-07,7000000,USD,a
+a123systems,A123Systems,0,1-Oct-07,30000000,USD,d
+a123systems,A123Systems,0,1-Jan-07,40000000,USD,c
+a123systems,A123Systems,0,1-Feb-06,30000000,USD,b
+bostonpower,Boston Power,55,1-Nov-06,8000000,USD,a
+bostonpower,Boston Power,55,1-Jan-08,45000000,USD,c
+bostonpower,Boston Power,55,1-Jan-07,15600000,USD,b
+visiblemeasures,Visible Measures,0,1-Mar-07,5000000,USD,a
+visiblemeasures,Visible Measures,0,1-Jan-08,13500000,USD,b
+visiblemeasures,Visible Measures,0,1-Jan-06,800000,USD,seed
+endeca,Endeca,500,1-Jun-04,15000000,USD,c
+endeca,Endeca,500,1-Jan-08,15000000,USD,d
+endeca,Endeca,500,1-Nov-01,15000000,USD,b
+endeca,Endeca,500,1-Jan-01,10000000,USD,a
+choicestream,ChoiceStream,70,1-Jan-00,15000000,USD,seed
+choicestream,ChoiceStream,70,22-Feb-05,7000000,USD,a
+choicestream,ChoiceStream,70,1-Jun-06,13100000,USD,b
+choicestream,ChoiceStream,70,4-Apr-07,26500000,USD,c
+youcastr,YouCastr,5,1-Feb-08,100000,USD,angel
+jackpot-rewards,JackPot Rewards,0,1-Feb-08,16700000,USD,a
+mzinga,Mzinga,0,3-Mar-08,32500000,USD,d
+dimdim,Dimdim,0,1-Feb-07,2400000,USD,a
+dimdim,Dimdim,0,1-Jul-08,6000000,USD,b
+utoopia,utoopia,2,1-Mar-07,100000,USD,seed
+retail-convergence,Retail Convergence,0,24-Apr-08,25000000,USD,a
+frame-media,Frame Media,0,9-Nov-07,2000000,USD,a
+frame-media,Frame Media,0,2-May-08,3000000,USD,unattributed
+turbine,Turbine,200,29-Apr-08,40000000,USD,c
+turbine,Turbine,200,9-May-05,30000000,USD,b
+zeer,Zeer,5,1-Aug-07,1050000,USD,angel
+simpletuition,SimpleTuition,0,14-Apr-06,4400000,USD,a
+simpletuition,SimpleTuition,0,18-Dec-06,7500000,USD,b
+sirtris-pharmaceuticals,Sirtris Pharmaceuticals,0,1-Dec-04,13000000,USD,a
+sirtris-pharmaceuticals,Sirtris Pharmaceuticals,0,8-Mar-05,27000000,USD,b
+sirtris-pharmaceuticals,Sirtris Pharmaceuticals,0,19-Apr-06,37000000,USD,c
+good-data,Good Data,30,23-Jul-08,2000000,USD,seed
+navic-networks,Navic Networks,0,14-Feb-00,2000000,USD,a
+navic-networks,Navic Networks,0,26-Feb-01,20000000,USD,c
+navic-networks,Navic Networks,0,7-Jun-00,20000000,USD,b
+pivot,Pivot,40,1-Dec-04,5000000,USD,a
+pivot,Pivot,40,1-Apr-06,8000000,USD,b
+optaros,Optaros,200,1-Jun-08,12000000,USD,c
+optaros,Optaros,200,20-Nov-06,13000000,USD,b
+optaros,Optaros,200,9-Mar-05,7000000,USD,a
+astaro,Astaro,0,1-May-03,6200000,USD,a
+astaro,Astaro,0,1-May-04,6700000,USD,b
+pangea-media,Pangea Media,25,1-Apr-07,1000000,USD,angel
+posterous,Posterous,0,1-May-08,15000,USD,seed
+spire,Spire,0,8-Jul-08,9000000,USD,a
+neosaej,neoSaej,0,14-Jul-08,7000000,USD,unattributed
+genarts,GenArts,0,17-Jul-08,22400000,USD,unattributed
+ordermotion,OrderMotion,0,21-Jul-08,1400000,USD,unattributed
+ham-it,HAM-IT,7,1-Oct-07,340000,USD,seed
+freewebs,Freewebs,35,1-Aug-06,12000000,USD,a
+mptrax,MPTrax,4,1-Jan-07,350000,USD,angel
+jackbe,JackBe,0,1-Oct-07,9500000,USD,c
+zenimax,ZeniMax,0,1-Oct-07,300000000,USD,a
+zenimax,ZeniMax,0,30-May-08,9900000,USD,a
+intelliworks,Intelliworks,24,14-Feb-05,6000000,USD,a
+intelliworks,Intelliworks,24,10-Oct-06,10000000,USD,b
+intelliworks,Intelliworks,24,7-Apr-08,4000000,USD,c
+hexio,HEXIO,1,10-Jan-08,20000,USD,seed
+foneshow,Foneshow,8,1-Sep-07,1050000,USD,a
+foneshow,Foneshow,8,1-Sep-06,25000,USD,seed
+zattoo,Zattoo,45,1-Nov-07,10000000,USD,b
+loudclick,LoudClick,9,31-Mar-08,600000,USD,angel
+agilis-systems,Agilis Systems,0,16-May-08,5000000,USD,b
+international-liars-poker-association,International Liars Poker Association,24,1-Nov-07,1250000,USD,seed
+channeladvisor,ChannelAdvisor,300,1-May-07,30000000,USD,c
+channeladvisor,ChannelAdvisor,300,22-Jan-04,7000000,USD,a
+channeladvisor,ChannelAdvisor,300,28-Apr-05,18000000,USD,b
+yap,Yap,0,1-Mar-07,1500000,USD,angel
+yap,Yap,0,10-Jun-08,6500000,USD,a
+prepchamps,PrepChamps,10,22-Apr-08,1200000,USD,a
+silkroad-technology,SilkRoad technology,0,19-Feb-08,10000000,USD,b
+silkroad-technology,SilkRoad technology,0,15-May-08,54000000,USD,c
+brightdoor-systems,BrightDoor Systems,26,13-Apr-07,200000,USD,a
+drifttoit,DriftToIt,4,1-Jun-07,300000,USD,angel
+rpath,rPath,45,24-Jan-06,6400000,USD,a
+rpath,rPath,45,24-Jan-07,9100000,USD,b
+rpath,rPath,45,24-Jun-08,10000000,USD,c
+ntractive,Ntractive,6,8-Jul-08,570000,USD,a
+billmelater,Bill Me Later,0,1-Mar-06,27400000,USD,a
+adaptiveblue,AdaptiveBlue,6,15-Feb-07,1500000,USD,a
+phanfare,Phanfare,0,1-Nov-07,2500000,USD,c
+phanfare,Phanfare,0,1-Jul-06,2000000,USD,b
+enterprisedb,EnterpriseDB,0,7-Sep-05,7000000,USD,a
+enterprisedb,EnterpriseDB,0,1-Aug-06,20000000,USD,b
+enterprisedb,EnterpriseDB,0,25-Mar-08,10000000,USD,c
+neocleus,Neocleus,0,19-Jun-08,11000000,USD,b
+datapipe,Datapipe,0,8-Jul-08,75000000,USD,unattributed
+switch2health,Switch2Health,0,16-Jul-08,200000,USD,unattributed
+voltaix,Voltaix,0,29-Jul-08,12500000,USD,unattributed
+spaboom,SpaBoom,9,15-Jul-06,700000,USD,a
+spaboom,SpaBoom,9,15-Sep-07,600000,USD,b
+novint,Novint,0,17-Jun-08,5200000,USD,unattributed
+meetmoi,MeetMoi,7,1-Jun-07,1500000,USD,a
+meetup,Meetup,1,1-Dec-02,2800000,USD,a
+meetup,Meetup,1,1-Nov-03,5300000,USD,b
+meetup,Meetup,1,23-Jul-08,7500000,USD,d
+mogulus,Mogulus,20,1-May-07,1200000,USD,angel
+mogulus,Mogulus,20,1-Jan-08,1500000,USD,angel
+mogulus,Mogulus,20,1-Jul-08,10000000,USD,a
+pando,Pando,23,1-Jan-07,11000000,USD,b
+pando,Pando,23,1-Mar-08,20900000,USD,c
+outside-in,Outside.in,17,1-Feb-07,900000,USD,angel
+outside-in,Outside.in,17,1-Oct-07,1500000,USD,angel
+outside-in,Outside.in,17,19-May-08,3000000,USD,a
+selectminds,SelectMinds,55,1-Aug-07,5500000,USD,a
+veotag,Veotag,0,1-May-07,750000,USD,angel
+roo,KIT digital,100,8-May-08,15000000,USD,b
+roo,KIT digital,100,18-Apr-08,5000000,USD,a
+contextweb,ContextWeb,0,1-Jun-04,3000000,USD,a
+contextweb,ContextWeb,0,1-Jun-05,9000000,USD,b
+contextweb,ContextWeb,0,20-Jul-08,26000000,USD,d
+datranmedia,Datran Media,0,1-Mar-05,60000000,USD,a
+eyeblaster,Eyeblaster,0,1-Dec-03,8000000,USD,a
+eyeblaster,Eyeblaster,0,21-Mar-07,30000000,USD,b
+covestor,Covestor,0,1-Jun-07,1000000,USD,angel
+covestor,Covestor,0,7-Apr-08,6500000,USD,a
+globalgrind,Global Grind,20,1-Aug-07,4500000,USD,b
+heavy-com,Heavy.com,0,1-Mar-01,3000000,USD,a
+spiralfrog,SpiralFrog,15,1-Dec-07,2000000,USD,debt_round
+broadbandenterprises,Broadband Enterprises,0,1-Jan-08,10000000,USD,a
+thumbplay,Thumbplay,0,13-Mar-08,18000000,USD,e
+waterfrontmedia,Waterfront Media,0,1-Sep-07,25000000,USD,d
+waterfrontmedia,Waterfront Media,0,1-Mar-04,4000000,USD,a
+waterfrontmedia,Waterfront Media,0,1-Mar-06,6000000,USD,b
+waterfrontmedia,Waterfront Media,0,1-Apr-07,8000000,USD,c
+tutor,Tutor,55,1-May-07,13500000,USD,b
+daylife,Daylife,0,1-Jun-07,8300000,USD,b
+teachthepeople,Teach The People,1,1-Jan-07,300000,USD,angel
+healthcare-health-human-powered-search,OrganizedWisdom,18,1-Jun-08,2300000,USD,a
+snooth,Snooth,0,1-Dec-06,300000,USD,angel
+snooth,Snooth,0,1-Nov-07,1000000,USD,a
+5min,5min,8,1-Apr-07,300000,USD,angel
+5min,5min,8,1-Nov-07,5000000,USD,a
+kaltura,Kaltura,20,1-May-07,2100000,USD,a
+mimeo,Mimeo,0,1-Sep-07,25000000,USD,a
+rayv,RayV,0,1-Oct-07,8000000,USD,b
+tumblr,Tumblr,0,31-Oct-07,750000,USD,a
+payoneer,Payoneer,50,24-Jul-08,8000000,USD,b
+exelate,eXelate,0,1-Oct-07,4000000,USD,a
+quigo,Quigo,0,1-Mar-04,5000000,USD,a
+peer39,Peer39,50,1-Feb-07,3000000,USD,a
+peer39,Peer39,50,1-Sep-07,8200000,USD,b
+peer39,Peer39,50,1-Mar-06,500000,USD,seed
+rebelmonkey,Rebel Monkey,15,5-Feb-08,1000000,USD,a
+answers,Answers Corporation,0,1-Jan-99,300000,USD,a
+answers,Answers Corporation,0,1-Apr-99,1360000,USD,b
+answers,Answers Corporation,0,1-Sep-99,2750000,USD,c
+answers,Answers Corporation,0,1-May-00,28000000,USD,d
+answers,Answers Corporation,0,17-Jun-08,13000000,USD,debt_round
+seetoo,SeeToo,0,1-Oct-07,1000000,USD,angel
+drop-io-2,drop.io,0,1-Nov-07,1250000,USD,a
+drop-io-2,drop.io,0,10-Mar-08,2700000,USD,b
+motionbox,Motionbox,0,1-Sep-06,4200000,USD,a
+motionbox,Motionbox,0,1-Dec-07,7000000,USD,b
+dgplabs,DGP Labs,0,1-Nov-07,4750000,USD,a
+ideeli,Ideeli,0,1-Dec-07,3800000,USD,a
+livegamer,Live Gamer,0,1-Dec-07,24000000,USD,a
+weshow,WeShow,0,1-Jun-07,5000000,USD,a
+etsy,Etsy,45,1-Jun-06,315000,USD,angel
+etsy,Etsy,45,1-Nov-06,1000000,USD,a
+etsy,Etsy,45,1-Jul-07,3250000,USD,b
+etsy,Etsy,45,1-Jan-08,27000000,USD,c
+phonetag,PhoneTag,10,1-Feb-07,3500000,USD,angel
+phonetag,PhoneTag,10,1-Jan-04,200000,USD,seed
+phonetag,PhoneTag,10,1-Dec-07,2000000,USD,angel
+tremormedia,Tremor Media,0,1-Sep-06,8400000,USD,a
+tremormedia,Tremor Media,0,1-Jan-08,11000000,USD,b
+yoonew,YooNew,0,1-Aug-05,2000000,USD,angel
+fifthgenerationsystems,Fifth Generation Systems,0,1-Jan-08,5300000,USD,b
+fifthgenerationsystems,Fifth Generation Systems,0,1-Nov-06,5250000,USD,a
+igaworldwide,IGA Worldwide,0,1-Feb-06,12000000,USD,a
+igaworldwide,IGA Worldwide,0,1-Jul-07,25000000,USD,b
+igaworldwide,IGA Worldwide,0,1-Jan-08,5000000,USD,b
+theladders,TheLadders,200,8-Nov-04,7250000,USD,a
+adotube,Adotube,30,31-Jul-07,630000,USD,seed
+adotube,Adotube,30,1-Apr-08,600000,USD,seed
+kluster,Kluster,0,1-Jan-08,1000000,USD,seed
+blog-talk-radio,Blog Talk Radio,0,25-Jun-08,4600000,USD,a
+pingg,Pingg,7,1-Jan-07,500000,USD,seed
+pingg,Pingg,7,1-Mar-07,800000,USD,angel
+outbrain,Outbrain,0,1-Jan-07,1000000,USD,seed
+outbrain,Outbrain,0,25-Feb-08,5000000,USD,a
+mochila,Mochila,52,2-Jan-07,8000000,USD,b
+olx,OLX,85,1-Sep-07,10000000,USD,a
+olx,OLX,85,11-Apr-08,13500000,USD,b
+boonty,Boonty,150,7-Jul-05,10000000,USD,b
+tripology,Tripology,0,1-Jan-07,1250000,USD,a
+the-feedroom,The Feedroom,0,9-Jul-08,12000000,USD,unattributed
+next-new-networks,Next New Networks,15,1-Jan-07,8000000,USD,a
+next-new-networks,Next New Networks,15,12-Mar-08,15000000,USD,b
+riverwired,RiverWired,0,1-Mar-08,1500000,USD,seed
+fynanz,Fynanz,10,1-Oct-07,500000,USD,angel
+digital-railroad,Digital Railroad,0,14-Jun-05,5200000,USD,a
+digital-railroad,Digital Railroad,0,5-Feb-07,10000000,USD,b
+silicon-alley-insider,Silicon Alley Insider,0,16-Jul-08,900000,USD,seed
+undertone-networks,Undertone Networks,0,31-Mar-08,40000000,USD,a
+someecards,Someecards,0,1-Apr-08,350000,USD,seed
+trunkt,Trunkt,2,15-May-07,350000,USD,seed
+cutcaster-2,Cutcaster,6,1-Jan-08,150000,USD,seed
+visible-world,Visible World,0,14-Apr-08,25000000,USD,c
+visible-world,Visible World,0,17-Nov-03,8000000,USD,b
+mad-mimi,Mad Mimi,3,29-Apr-07,200000,USD,angel
+social-median,Social Median,0,7-Mar-08,500000,USD,seed
+scanbuy,Scanbuy,0,12-Dec-06,9000000,USD,b
+scanbuy,Scanbuy,0,1-Nov-07,6800000,USD,b
+pontiflex,Pontiflex,0,30-Apr-08,2500000,USD,a
+chic-tv,CHIC.TV,12,1-Jan-06,500000,USD,angel
+expertflyer,ExpertFlyer,3,1-Mar-04,30000,USD,seed
+x-1,x+1,0,1-Jun-08,16000000,USD,a
+media6,Media6¡,0,1-May-08,2000000,USD,debt_round
+knewton,Knewton,0,21-May-08,2500000,USD,a
+sense-networks,Sense Networks,0,1-Apr-08,3000000,USD,a
+targetspot,TargetSpot,20,11-Mar-08,8600000,USD,b
+bountyjobs,BountyJobs,31,7-Jul-08,12000000,USD,b
+vbs-tv,vbs tv,40,1-Dec-06,10000000,USD,seed
+instinctiv,Instinctiv,0,1-Jun-08,750000,USD,seed
+visualplant,VISUALPLANT,6,1-Mar-07,500000,USD,seed
+xunlight,XunLight,0,7-May-08,22000000,USD,b
+strands,Strands,150,1-Mar-06,6000000,USD,a
+strands,Strands,150,18-Jun-07,25000000,USD,b
+strands,Strands,150,1-Dec-07,24000000,USD,b
+jivesoftware,Jive Software,0,1-Aug-07,15000000,USD,a
+platial,Platial,0,1-Oct-05,800000,USD,angel
+platial,Platial,0,1-Feb-07,2600000,USD,a
+garagegames,GarageGames,0,1-Sep-07,50000000,USD,a
+iovation,iovation,50,27-Mar-08,15000000,USD,a
+ingrid,InGrid,0,1-Jul-07,13500000,USD,c
+ingrid,InGrid,0,1-Sep-04,6600000,USD,a
+ingrid,InGrid,0,1-Jun-06,8100000,USD,b
+ingrid,InGrid,0,1-Jun-06,1500000,USD,debt_round
+sleep-fm,Sleep.FM,4,30-Mar-08,15000,USD,seed
+boomi,Boomi,0,1-Jul-08,4000000,USD,a
+styky,Styky,3,1-Jan-07,100000,USD,seed
+totaltakeout,TotalTakeout,25,1-Oct-07,150000,USD,seed
+redlasso,RedLasso,0,1-Nov-07,6500000,CAD,a
+qpondirect,QponDirect,10,1-Mar-08,300000,USD,angel
+energyweb-solutions,EnergyWeb Solutions,3,15-Jun-06,100000,USD,seed
+aria-systems,Aria Systems,0,7-Nov-07,4000000,USD,a
+vivsimo,Viv’simo,0,17-Mar-08,4000000,USD,a
+vivsimo,Viv’simo,0,12-Jul-03,960000,USD,seed
+vivsimo,Viv’simo,0,4-Jul-02,500000,USD,seed
+vivsimo,Viv’simo,0,1-Jun-00,100000,USD,seed
+vivsimo,Viv’simo,0,29-Jan-01,100000,USD,seed
+showclix,ShowClix,0,1-Oct-07,150000,USD,seed
+showclix,ShowClix,0,1-Jun-08,250000,USD,seed
+biowizard,BioWizard,8,3-Jan-08,1000000,USD,a
+ticketleap,TicketLeap,4,22-Jul-08,2000000,USD,a
+tizra,Tizra,0,1-May-07,500000,USD,seed
+quickoffice,Quickoffice,0,5-Feb-07,7000000,USD,b
+quickoffice,Quickoffice,0,1-Jan-06,11500000,USD,a
+quickoffice,Quickoffice,0,23-May-08,3000000,USD,c
+thoof,Thoof,0,1-Jun-07,1000000,USD,seed
+bazaarvoice,Bazaarvoice,0,1-May-06,4000000,USD,a
+bazaarvoice,Bazaarvoice,0,1-Sep-07,8800000,USD,b
+bazaarvoice,Bazaarvoice,0,18-Jun-08,7100000,USD,c
+smallworldlabs,Small World Labs,25,19-Mar-08,1000000,USD,a
+pluck,Pluck,0,6-Oct-04,8500000,USD,b
+pluck,Pluck,0,14-Nov-06,7000000,USD,c
+spiceworks,Spiceworks,0,1-Aug-07,8000000,USD,b
+spendview,SpendView,3,1-Jan-08,2000000,USD,a
+shangby,Shangby,0,1-Jun-07,1000000,USD,a
+onnetworks,On Networks,20,1-Nov-06,4000000,USD,a
+onnetworks,On Networks,20,1-Nov-07,12000000,USD,b
+careflash,CareFlash,0,1-Aug-07,600000,USD,seed
+heliovolt,HelioVolt,0,1-Aug-07,77000000,USD,b
+challenge-games,Challenge Games,0,10-Jul-08,4500000,USD,a
+woot,Woot,100,1-Jan-08,4000000,USD,a
+mumboe,Mumboe,17,1-Oct-06,4500000,USD,seed
+breakingpoint-systems,BreakingPoint Systems,54,12-Nov-07,15000000,USD,c
+famecast,FameCast,0,1-Jun-07,4500000,USD,a
+click-forensics,Click Forensics,0,1-Jan-07,5000000,USD,a
+click-forensics,Click Forensics,0,1-Mar-08,10000000,USD,b
+godtube,GodTube,0,4-May-08,30000000,USD,b
+ibiz-software,iBiz Software,50,20-May-08,250000,USD,angel
+cosential,Cosential,10,1-Jun-02,250000,USD,b
+jad-tech-consulting,JAD Tech Consulting,6,23-Sep-93,125000,USD,seed
+mozy,Mozy,26,1-May-05,1900000,USD,a
+mozy,Mozy,26,1-May-05,1900000,USD,a
+ancestry-com,Ancestry.com,0,1-Sep-99,33200000,USD,b
+movenetworks,Move Networks,0,1-Dec-06,11300000,USD,a
+movenetworks,Move Networks,0,1-Oct-07,34000000,USD,b
+movenetworks,Move Networks,0,14-Apr-08,46000000,USD,c
+worldvitalrecords,World Vital Records,0,1-Sep-07,1200000,USD,a
+bungee-labs,Bungee Labs,38,14-Mar-08,8000000,USD,c
+footnote,Footnote,31,1-Jan-08,8000000,USD,a
+mediaforge,mediaFORGE,0,1-Jul-06,1500000,USD,a
+teamstreamz,TeamStreamz,5,10-Jan-07,80000,USD,seed
+exinda,Exinda,0,22-May-04,6000000,USD,a
+clearspring,Clearspring,0,1-May-06,2500000,USD,a
+clearspring,Clearspring,0,1-Feb-07,5500000,USD,b
+clearspring,Clearspring,0,20-May-08,18000000,USD,c
+clearspring,Clearspring,0,27-Jul-07,10000000,USD,b
+availmedia,Avail Media,0,1-May-07,17000000,USD,b
+availmedia,Avail Media,0,1-Nov-07,25000000,USD,c
+fortiusone,FortiusOne,0,1-May-07,5450000,USD,b
+mixx,Mixx,0,1-Sep-07,1500000,USD,a
+mixx,Mixx,0,1-Feb-08,2000000,USD,b
+jobfox,Jobfox,0,1-Jan-08,20000000,USD,c
+jobfox,Jobfox,0,1-May-06,13000000,USD,b
+jobfox,Jobfox,0,1-Apr-05,7000000,USD,a
+healthcentral,HealthCentral,0,1-Jan-08,50000000,USD,a
+comscore,comScore,0,6-Jun-02,20000000,USD,d
+comscore,comScore,0,13-Aug-01,15000000,USD,c
+visualcv,VisualCV,20,28-Jan-08,2000000,USD,a
+paxfire,Paxfire,0,22-May-05,2100000,USD,a
+shoutwire,ShoutWire,9,1-Jan-07,500000,USD,a
+parature,Parature,100,5-Jul-06,13500000,USD,a
+parature,Parature,100,7-May-08,16000000,USD,b
+loladex,Loladex,2,1-Nov-07,350000,USD,seed
+appian,Appian,120,21-Jul-08,10000000,USD,a
+fortisphere,Fortisphere,50,19-Nov-07,10000000,USD,a
+wetpaint,Wetpaint,35,1-Oct-05,5250000,USD,a
+wetpaint,Wetpaint,35,1-Jan-07,9500000,USD,b
+wetpaint,Wetpaint,35,1-May-05,25000000,USD,c
+jobster,Jobster,0,1-Aug-05,19500000,USD,b
+jobster,Jobster,0,1-Jul-06,18000000,USD,c
+jobster,Jobster,0,1-Jan-05,8000000,USD,a
+jobster,Jobster,0,25-Apr-08,7000000,USD,d
+yapta,Yapta,0,1-Jul-07,2300000,USD,a
+yapta,Yapta,0,1-Jul-07,700000,USD,seed
+farecast,Farecast,26,1-Oct-04,1500000,USD,a
+farecast,Farecast,26,1-Jul-05,7000000,USD,b
+farecast,Farecast,26,1-Jan-07,12100000,USD,c
+hautesecure,Haute Secure,0,1-Jan-07,500000,USD,a
+newsvine,Newsvine,6,1-Jul-05,1250000,USD,a
+ilike,iLike,28,1-Jan-06,2500000,USD,a
+ilike,iLike,28,1-Jan-06,13300000,USD,b
+redfin,Redfin,100,1-Jul-07,12000000,USD,c
+redfin,Redfin,100,1-May-06,8000000,USD,b
+redfin,Redfin,100,1-Sep-05,770000,USD,a
+actionengine,Action Engine,0,1-May-00,7700000,USD,a
+actionengine,Action Engine,0,1-May-02,5000000,USD,b
+actionengine,Action Engine,0,1-Jan-05,10000000,USD,d
+actionengine,Action Engine,0,1-Mar-03,15500000,USD,c
+actionengine,Action Engine,0,1-Jul-07,20000000,USD,e
+wishpot,Wishpot,0,29-Apr-08,1000000,USD,a
+payscale,PayScale,0,1-Oct-04,3200000,USD,a
+payscale,PayScale,0,1-Oct-05,7000000,USD,b
+payscale,PayScale,0,1-Jul-07,10300000,USD,c
+buddytv,BuddyTV,0,1-Jul-07,2800000,USD,a
+buddytv,BuddyTV,0,1-May-07,250000,USD,angel
+buddytv,BuddyTV,0,14-Apr-08,6000000,USD,b
+judysbook,Judys Book,0,1-Jul-04,2500000,USD,a
+judysbook,Judys Book,0,1-Nov-05,8000000,USD,b
+sampa,Sampa,4,1-Aug-07,310000,USD,angel
+sampa,Sampa,4,2-Apr-08,1000000,USD,angel
+zango,Zango,225,1-Mar-04,40000000,USD,a
+cdigix,Cdigix,0,1-Nov-05,4000000,USD,a
+ripl,Ripl,0,1-Aug-07,4500000,USD,b
+eyejot,EyeJot,5,1-May-07,750000,USD,seed
+eyejot,EyeJot,5,1-Jan-07,400000,USD,angel
+flowplay,FlowPlay,6,1-May-07,500000,USD,angel
+flowplay,FlowPlay,6,6-Feb-08,3700000,USD,a
+smartsheet,SmartSheet,0,1-Jun-07,2690000,USD,a
+visibletechnologies,Visible Technologies,60,1-Aug-06,3500000,USD,a
+visibletechnologies,Visible Technologies,60,1-Sep-07,12000000,USD,b
+zillow,Zillow,155,1-Oct-05,32000000,USD,a
+zillow,Zillow,155,1-Jul-06,25000000,USD,b
+zillow,Zillow,155,1-Sep-07,30000000,USD,c
+seomoz,SEOMoz,0,1-Sep-07,1250000,USD,a
+docusign,DocuSign,0,1-Apr-06,10000000,USD,b
+docusign,DocuSign,0,1-Sep-07,12400000,USD,c
+adready,AdReady,33,1-Dec-07,10000000,USD,b
+treemo,Treemo,0,1-Oct-07,2550000,USD,a
+gridnetworks,GridNetworks,0,1-Oct-07,9500000,USD,a
+pelago,Pelago,0,1-Nov-06,7400000,USD,a
+pelago,Pelago,0,27-May-08,15000000,USD,b
+blist,Blist,0,20-Feb-08,6500000,USD,a
+realself,RealSelf,0,1-Oct-07,1000000,USD,angel
+rescuetime,RescueTime,0,14-Oct-07,20000,USD,seed
+zoji,Zoji,0,1-Oct-07,1500000,USD,angel
+snapvine,Snapvine,20,1-Jul-06,2000000,USD,a
+snapvine,Snapvine,20,1-Sep-07,10000000,USD,b
+jott,Jott,0,1-May-07,5400000,USD,b
+earthclassmail,Earth Class Mail,0,1-Sep-07,7400000,USD,a
+earthclassmail,Earth Class Mail,0,1-Jan-08,5900000,USD,a
+smilebox,Smilebox,0,1-Feb-06,5000000,USD,a
+smilebox,Smilebox,0,1-Dec-07,7000000,USD,b
+fyreball,Fyreball,0,1-Dec-07,1000000,USD,angel
+delve-networks,Delve Networks,0,1-Dec-06,1650000,USD,seed
+delve-networks,Delve Networks,0,1-Aug-07,8000000,USD,a
+livemocha,LiveMocha,0,1-Jan-08,6000000,USD,a
+mercentcorporation,Mercent Corporation,50,1-Jan-08,6500000,USD,b
+cleverset,CleverSet,0,1-Aug-06,1400000,USD,angel
+cleverset,CleverSet,0,1-Sep-05,1200000,USD,a
+cleverset,CleverSet,0,1-Dec-07,500000,USD,angel
+liquidplanner,LiquidPlanner,11,1-Jan-08,1200000,USD,angel
+limeade,Limeade,10,1-Jan-07,1000000,USD,angel
+yodio,Yodio,4,1-Feb-08,850000,USD,a
+tastemakers,Tastemakers,11,1-Feb-07,1000000,USD,a
+whitepages-com,WhitePages.com,125,1-Aug-05,45000000,USD,a
+revenuescience,RevenueScience,0,19-Dec-05,24000000,USD,e
+gotvoice,GotVoice,15,25-Oct-06,3000000,USD,a
+cardomain-network,CarDomain Network,50,29-Jun-07,3000000,USD,a
+mpire,mpire,0,1-Feb-07,9800000,USD,a
+mpire,mpire,0,11-Jun-08,10000000,USD,b
+teachstreet,TeachStreet,8,1-Mar-08,2250000,USD,a
+estately,Estately,0,24-Apr-08,450000,USD,angel
+infinia,Infinia,0,22-Apr-08,57000000,USD,b
+infinia,Infinia,0,1-Jun-07,9500000,USD,a
+m-metrics,M:Metrics,0,16-Oct-05,7000000,USD,b
+cozi,Cozi,26,11-Jul-07,3000000,USD,a
+cozi,Cozi,26,1-Jun-08,8000000,USD,c
+trusera,Trusera,15,1-Jun-07,2000000,USD,angel
+alerts-com,Alerts.com,0,8-Jul-08,1200000,USD,a
+myrio,Myrio,75,1-Jan-01,20500000,USD,unattributed
+grid-networks,Grid Networks,0,30-Oct-07,9500000,USD,a
+grid-networks,Grid Networks,0,20-May-08,10500000,USD,b

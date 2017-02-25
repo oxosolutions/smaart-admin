@@ -3,9 +3,26 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Session;
+use Auth;
 class DatasetsList extends Model
 {
+    protected $table;
+   public function __construct(){
+      parent::__construct();
+
+      if(Session::get('org_id') == null){
+        foreach(Auth::user()->meta as $key => $value){
+            if($value->key == 'organization'){
+                $this->table = $value->value.'_datasets';
+                break;
+            }
+        }
+      }else{
+        $this->table = Session::get('org_id').'_datasets';
+      }
+     
+   }
     protected $fillable = ['dataset_name','dataset_records','uploaded_by'];
 
     public static function datasetList(){

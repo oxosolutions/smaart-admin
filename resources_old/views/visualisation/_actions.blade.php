@@ -1,0 +1,2 @@
+<a title="Edit" href="{{route('visualisation.edit',$model->id)}}"><span class="fa fa-edit"></span></a> | 
+<a title="Delete" href="javascript:;" class="delete" data-link="{{route('visualisation.delete',$model->id)}}"><span class="fa fa-trash" style="color:red"></span></a>

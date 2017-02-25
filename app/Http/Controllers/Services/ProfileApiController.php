@@ -32,16 +32,15 @@ class ProfileApiController extends Controller
 
      public function getUserProfile(Request $request){
 
-        $model = $request->user();        
+        $model = $request->user();
+        // return $model;
         $responseArray = [];
         // $responseArray['departments'] = [];
         // $responseArray['ministries'] = [];
         $responseArray['name']  = $model->name;
         $responseArray['email'] = $model->email;
         $responseArray['phone'] = $model->phone;
-
         $responseArray['token'] = $model->api_token;
-        $responseArray['profile_pic'] = asset('profile_pic/profile.jpg');//'profile.jpg';
         if($model->meta != null){
 
             foreach ($model->meta as $metaKey => $metaValue) {
@@ -53,10 +52,12 @@ class ProfileApiController extends Controller
                         }else{
                             $responseArray[$metaValue->key] = asset('profile_pic/'.$metaValue->value);
                         }
-                        case'organization': 
+                    break;
+                    case'organization': 
                         if($metaValue->value == '' || $metaValue->value == null){
+                            $responseArray[$metaValue->key] = "null";
                         }else{
-                            $responseArray[$metaValue->key] = org::select(['id','organization_name'])->where('id',$metaValue->value)->first();
+                            $responseArray[$metaValue->key] = org::select(['id','organization_name'])->where('id',$metaValue->value)->get();
                         }
                     break;
                     default:
@@ -67,7 +68,6 @@ class ProfileApiController extends Controller
         
         return ['status'=>'success','details'=>$responseArray];
     }
-
 
     public function changePassword(Request $request){
 

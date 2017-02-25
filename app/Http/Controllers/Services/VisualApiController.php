@@ -258,7 +258,7 @@ class VisualApiController extends Controller
         }
         $globalVisualSettings = GS::where('meta_key','visual_setting')->first();
         $responseArray['maps']  =   $mapChartsArray;
-        $responseArray['map_display_val'] = $extraData;
+        $responseArray['map_display_val'] = @$extraData;
         $responseArray['chart_data'] = $transposeArray;
         $responseArray['filters'] = $filtersArray;
         $responseArray['chart_types'] = $visual->chart_type;
@@ -331,6 +331,7 @@ class VisualApiController extends Controller
         foreach($columns as $key => $value){           
             $filter = [];
             if($columnsWithType['filter_'.$index]['type'] == 'range'){
+               
                 $allData = array_column($tmpAry, $value);
                 $min = min($allData);
                 $max = max($allData);

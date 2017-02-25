@@ -254,6 +254,26 @@ $('#fact').DataTable({
       ]
     });
 
+     $('#userpages').DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: route()+'/pages_list',
+      order:[[0,"desc"]],
+      columns: [
+            { data: 'selector', name: 'selector',orderable: false, searchable: false},
+            { data: 'id', name: 'id' },
+            { data: 'page_title', name: 'page_title' },
+            { data: 'page_subtitle', name: 'page_subtitle' },
+            { data: 'page_slug', name: 'page_slug' },
+            { data: 'status', name: 'status' },
+            { data: 'created_by', name: 'created_by' },
+            { data: 'created_at', name: 'created_at' },
+            { data: 'actions', name: 'actions', orderable: false, searchable: false, "className": 'actions' },
+      ]
+    });
+
+    
+
     $('#visualisations').DataTable({
       processing: true,
       serverSide: true,

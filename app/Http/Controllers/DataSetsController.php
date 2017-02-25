@@ -359,8 +359,8 @@ class DataSetsController extends Controller
       
             DB::beginTransaction();
             $model = new MySQLWrapper();
-            $tableName = 'data_table_'.time();
-            
+            $org_id = Session::get('org_id');
+            $tableName = $org_id.'_data_table_'.time();
             $result = $model->wrapper->createTableFromCSV($filePath,$tableName,',','"', '\\', 0, array(), 'generate','\r\n');
             
             if($result){

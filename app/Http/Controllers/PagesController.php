@@ -60,6 +60,7 @@
         DB::beginTransaction();
         try{
             $model = new Page($request->except(['_token']));
+            $model->fill($request->except(['_token']));
             $model->created_by = Auth::user()->id;
             $path = 'pages_data';
             if($request->hasFile('page_image')){

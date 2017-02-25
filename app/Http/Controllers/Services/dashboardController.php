@@ -14,8 +14,6 @@ use App\UserMeta as UM;
 	class DashboardController extends Controller
 	{
 
-
-
 		public function DashboardData()
 		{
 			$pp = UM::select('value')->where(['user_id' => Auth::user()->id , 'key' => 'profile_pic'])->get();

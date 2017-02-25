@@ -58,11 +58,11 @@ class VisualisationController extends Controller
     public function store(Request $request){
 
     	$this->modelValidate($request);
-
-    	DB::beginTransaction();
+        DB::beginTransaction();
     	try{
 
-    		$model = new VS($request->except(['_token']));
+    		$model = new VS();
+            $model->fill($request->except(['_token']));
     		$model->created_by = Auth::user()->id;
     		$model->save();
     		DB::commit();

@@ -14,6 +14,9 @@ Route::group(['prefix' => 'v1'], function () {
 	Route::group(['middleware'=>['cors','log']], function(){
 	Route::post('/dataset/save',['as'=>'dataset.save','uses'=>'Services\SaveServeController@saveDataset']);
 
+Route::get('/userpages',						['as'=>'pages.list','uses'=>'Services\UserPagesApiController@getAllPages' , 'route_name'=>  'View Pages']);
+Route::get('/userpages/{page_slug}',			['as'=>'pages.by_slug','uses'=>'Services\UserPagesApiController@getPageBySlug']);
+
 
 	Route::post('/logs_filter','Services\LogApiController@logFilter');
 	Route::post('/auth','Services\ApiauthController@Authenicates');
@@ -43,8 +46,7 @@ Route::group(['prefix' => 'v1'], function () {
 
 	Route::get('/dataset/download/{fileName}',  ['as'=>'dataset.download','uses'=>'Services\ExportDatasetController@downloadFile']);
 
-// VISUAL API START HERE
-	Route::post('/singlevisual', ['as'=>'single.visual','uses'=>'Services\VisualApiController@visualById']);
+
 
 // VISUAL   API END  HERE
 
@@ -52,7 +54,8 @@ Route::group(['prefix' => 'v1'], function () {
 Route::group(['middleware'=>['auth:api','cors','log']], function(){
 	//dashboard 
 		Route::get('/dashboard', ['as' => 'dashboard' , 'uses' => 'Services\dashboardController@DashboardData']);
-
+	// VISUAL API START HERE
+	Route::post('/singlevisual', ['as'=>'single.visual','uses'=>'Services\VisualApiController@visualById']);
 	//surrvey
 	Route::post('surrvey/save', ['as'=>'surrvey.surrvey_save', 'uses'=>'Services\SurrveyApiController@surrvey_save', 'route_name'=> 'Survey Created']);
 	Route::get('surrvey/list', ['as'=>'apisurrvey.list', 'uses'=>'Services\SurrveyApiController@surrvey_list' , 'route_name'=> 'Survey List View']);

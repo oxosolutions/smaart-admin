@@ -12,10 +12,12 @@ use Carbon\Carbon as tm;
 use DB;
 class FormBuilderController extends Controller
 {
-   
+    public function __construct(Request $request)
+    {
+      
+    }
       public function surrvey_setting($id)
       {
-
 
         $model = Surrvey::where('id',$id)->first();
 
@@ -91,6 +93,9 @@ class FormBuilderController extends Controller
   }
     public function create_surrvey()
     {
+      Session::put('', 'value');
+      dump(Session::all());
+     
        return view('formbuilder.add');
     }
  // protected function modelSurrveyValidate($request){
@@ -107,7 +112,7 @@ class FormBuilderController extends Controller
  //    }
     public function surrvey_save(Request $request)
     {
-      // $this->modelSurrveyValidate($request);
+    // $this->modelSurrveyValidate($request);
         try{
             $surrvey = new Surrvey();
             $surrvey->name = $request->name;
@@ -117,7 +122,8 @@ class FormBuilderController extends Controller
             Session::flash('success','Surrvey Create Successfully');
             return redirect()->route('surrvey.index');
             }catch(\Exception $e)
-            {
+            { 
+                //throw $e;
                 Session::flash('error','Something goes wrong Try Again.');
             }   
     }
@@ -127,18 +133,15 @@ class FormBuilderController extends Controller
     {
       $data =   DB::table($table)->where('user_id',$user_id)->first();
       return view('formbuilder.filledsurrvey',['model'=>$data]); 
-
     }
 
     public function surrveyUserListData($stable)
     {
-
         $model = DB::table($stable)->select('user_id')->get(); 
         foreach ($model as $key => $value) {
             $uData =   DB::table('users')->select('name')->where('id',$value->user_id)->first();
             $model[$key]->user_name = $uData->name;
             $model[$key]->table = $stable;
-
          }
 
          return Datatables::of($model)

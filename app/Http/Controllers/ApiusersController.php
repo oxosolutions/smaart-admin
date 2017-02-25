@@ -18,8 +18,10 @@ use App\Mail\AfterApproveUser;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\LogSystem as LOG;
 use Carbon\Carbon AS TM;
+use App\organization as org;
 
-class ApiusersController extends Controller
+
+class ApiusersController extends VirtualTableGenController
 {
     public $ipAdress;
     public function __construct(Request $request)
@@ -48,30 +50,55 @@ class ApiusersController extends Controller
     }
 
     public function create(){
-      $plugins = [
+        $plugins = [
                   'css' => ['fileupload','select2'],
-                  'js'  => ['fileupload','select2','custom'=>['api-user']]
+                  'js'  => ['fileupload','select2','custom'=>['api-user','registration']]
                 ];
-      return view('apiusers.create',$plugins);
+        return view('apiusers.create',$plugins);
     }
 
     public function store(Request $request){
-       
-          $role_id = (int) $request->role_id[0];
-          $this->modelValidate($request);
-
+        
+        $this->modelValidate($request);
+        $role = 2; 
+        if($request->organization =="other")
+        {
+          $org = org::select('id')->where('organization_name', $request->organization_name);
+          if($org->count()==0)
+            {
+              $org_status ="new";
+              $data = array('organization_name' => $request->organization_name);  
+              $inserted = org::create($data);
+              $organization_id = $inserted->id;
+              $role = 1;
+            }
+            else{
+                $organization_id  = $org->first()->id;
+                $org_status ="used";
+            }
+        }
+        else{
+            $organization_id  = $request->organization;
+            $org_status ="used";
+        }  
          DB::beginTransaction();
           try{
-                User::create([
+               $user = User::create([
                     'name' => $request->name,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
-                    'role_id' => $role_id,
+                    'role_id' => $role,
                     'api_token' => $request->token
                 ]);
-                DB::commit();
-                Session::flash('success','Successfully created!');
 
+        $um =   UM::create(['key'=>"organization" , 'value'=>$organization_id, 'user_id'=>$user->id]);
+       
+                DB::commit();
+               if($org_status == "new")
+                {
+                  $this->generateTable($organization_id);
+                }
+                Session::flash('success','Successfully created!');
                 return redirect()->route('api.users');
             }catch(\Exception $e){
 

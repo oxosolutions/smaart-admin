@@ -1,0 +1,1 @@
+<script src="{{asset('/bower_components/admin-lte/plugins/morris/morris.min.js')}}"></script>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Services;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\VirtualTableGenController;
 use App\User;
 // use App\ApiUsers ;
 use Validator;
@@ -19,11 +20,13 @@ USE App\Mail\AfterApproveUser;
 use Illuminate\Support\Facades\Mail;
 use App\GlobalSetting as GS;
 use App\organization as org;
+use Session;
 
-class ApiauthController extends Controller
+class ApiauthController extends VirtualTableGenController
 {
    public  function Authenicates(Request $request)
     {
+    
         if(empty ( $request->email )){
             return ['status'=>'error','message'=>'We need to know your e-mail address!'];
         }
@@ -41,6 +44,15 @@ class ApiauthController extends Controller
             }
             $model = UserMeta::select('value')->where(['user_id'=>$user->id,'key'=>'profile_pic'])->first();
             $image = (!empty($model))?$model->value:'';
+            
+            foreach (Auth::user()->meta as $key => $value) {
+                  if($value->key =="organization")
+                  {
+                    Session::put('org_id', $value->value);
+                    break;
+                  }
+
+            }
            
             /*$api_token    =   str_random(20);
             $updateToken  =   User::findOrfail($user->id);
@@ -279,19 +291,27 @@ class ApiauthController extends Controller
     {
 
 
-      $role = 2;
+        $role = 2;
+        $org_status ="used";
       if($request->organization =="other")
       {
-        echo $checkOrg = UserMeta::where(['key'=>'organization','value'=>$request->organization_name])->count();
+         $checkOrg = UserMeta::where(['key'=>'organization','value'=>$request->organization_name]);//->count();
           
-          dd($request->request);
-          if($checkOrg==0)
+          if($checkOrg->count()==0)
           {
             $data = array('organization_name' => $request->organization_name);  
             $inserted = org::create($data);
-            $request->organization = $inserted->id;
+            $organization_id = $inserted->id;
             $role = 1;
+             $org_status ="new";
           }
+          else{
+                $organization_id  = $org->first()->id;
+                $org_status ="used";
+          }
+      }else{
+        $organization_id  = $request->organization;
+            $org_status ="used";
       }  
         
         $api_token    = str_random(20);
@@ -336,10 +356,14 @@ class ApiauthController extends Controller
                     $MetaData[2]['user_id'] = $user->id;
 
                      $MetaData[3]['key'] = 'organization';
-                     $MetaData[3]['value'] = $request->organization;
+                     $MetaData[3]['value'] = $organization_id;
                      $MetaData[3]['user_id'] = $user->id;
                     
                     UserMeta::insert($MetaData);
+                    if($org_status=="new")
+                    {
+                      $this->generateTable($organization_id);
+                    }
 
                     $model = GS::where('meta_key','adminreg_settings')->first();
                     if(!empty($model) && json_decode($model->meta_value)->activate == 'true' && json_decode($model->meta_value)->admin_email != ''){

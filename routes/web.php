@@ -53,6 +53,18 @@
 		Route::get('/api_users/delete/{id}', ['as'=>'apiuser.delete', 'uses'=>'ApiusersController@delete']);
 
 
+
+//userPages
+		
+		Route::get('/userpages/deleteall',['middleware'=>'log','as'=>'userpages.del','uses'=>'UserPagesController@delAllPages']);
+
+		Route::get('/userpages',['middleware'=>'log','as'=>'userpages.list','uses'=>'UserPagesController@index']);
+		Route::get('/userpages/create',['middleware'=>'log','as'=>'userpages.create','uses'=>'UserPagesController@create']);
+		Route::get('/userpages/delete/{id}',['middleware'=>'log','as'=>'userpages.delete', 'uses'=>'UserPagesController@destroy']);
+		Route::get('/userpages_list',['middleware'=>'log','as'=>'userpages.list.ajax','uses'=>'UserPagesController@indexData']);
+		Route::post('/userpages/store',['middleware'=>'log','as'=>'userpages.store','uses'=>'UserPagesController@store']);
+		Route::get('/userpages/edit/{id}',['middleware'=>'log','as'=>'userpages.edit', 'uses'=>'UserPagesController@edit']);
+		Route::patch('/userpages/update/{id}',['middleware'=>'log','as'=>'userpages.update', 'uses'=>'UserPagesController@update']);
 	//Pages
 		
 		Route::get('/pages/deleteall',['middleware'=>'log','as'=>'pages.del','uses'=>'PagesController@delAllPages']);

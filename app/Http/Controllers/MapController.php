@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Map;
 class MapController extends Controller
 {
+
+    
     public function create()
     {
     	return view('map.create');
@@ -16,6 +18,7 @@ class MapController extends Controller
     public function save(Request $request)
     {
     	$map  =	new Map( $request->except(['_token']));
+        $map->fill($request->except(['_token']));
     	$map->save();
     	Session::flash('success','Data Create Successfully!');
 

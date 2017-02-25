@@ -52,13 +52,26 @@
         @endif
       </div>
   @endif
-
-  <div class="form-group {{ $errors->has('ministry') ? ' has-error' : '' }}">
-    {!!Form::label('role','Role') !!}
-    {!!Form::select('role_id[]',App\Role::role_list(),null, ['class'=>'form-control select2-department']) !!}
-    @if($errors->has('ministry'))
+<?php
+    $org_arr = App\organization::org_list();
+    $org_arr["other"] ="other";
+?>
+  <div class="form-group {{ $errors->has('org') ? ' has-error' : '' }}">
+    {!!Form::label('org','Organization') !!}
+    {!!Form::select('organization',$org_arr,null, ['id'=>'org' ,'class'=>'form-control select2-department']) !!}
+    @if($errors->has('org'))
       <span class="help-block">
-            {{ $errors->first('ministry') }}
+            {{ $errors->first('org') }}
+      </span>
+    @endif
+  </div>
+
+   <div id="other" class="form-group {{ $errors->has('other') ? ' has-error' : '' }}">
+    {!!Form::label('other','Other') !!}
+    {!!Form::text('organization_name',null, ['class'=>'form-control','placeholder'=>'Enter Name']) !!}
+    @if($errors->has('other'))
+      <span class="help-block">
+            {{ $errors->first('other') }}
       </span>
     @endif
   </div>
