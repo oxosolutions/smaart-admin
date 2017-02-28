@@ -49,7 +49,7 @@ Route::get('/userpages/{page_slug}',			['as'=>'pages.by_slug','uses'=>'Services\
 
 
 // VISUAL   API END  HERE
-
+Route::post('/singlevisualEmbed', ['as'=>'single.visual','uses'=>'Services\VisualApiController@EmbedVisualById']);
 
 Route::group(['middleware'=>['auth:api','cors','log']], function(){
 	//dashboard 
@@ -120,6 +120,7 @@ Route::group(['middleware'=>['auth:api','cors','log']], function(){
 	Route::get('/calculate/visual/{id}',		['as'=>'calc.visual','uses'=>'Services\VisualApiController@calculateVisuals']);
 	Route::post('/saveVisualSettings',			['as'=>'save.visual.settings','uses'=>'Services\VisualApiController@saveVisualSettings' ,'route_name'=>  'Save Visual Setting']);
 	Route::get('/getVisualList/{dataset_id}',	['as'=>'visual.list.byDataset','uses'=>'Services\VisualApiController@getVisualsFromDatsetID' ]);
+	Route::post('/generateEmbedToken',			['as'=>'generate.embed','uses'=>'Services\VisualApiController@generateEmbed']);
 		
 	});
 });

@@ -4,7 +4,7 @@
 
   use Illuminate\Http\Request;
   use Yajra\Datatables\Datatables;
-  use App\UserPage as Page;
+  use App\Userpage as Page;
   use Session;
   use DB;
   use Auth;
@@ -21,6 +21,7 @@
       DB::enableQueryLog();  
     }
     public function index(){
+      
 
         $plugins = [
                   'css'  => ['datatables'],

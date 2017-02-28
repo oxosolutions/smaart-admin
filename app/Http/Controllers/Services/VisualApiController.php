@@ -11,6 +11,8 @@ use App\GeneratedVisualQuerie as GVQ;
 use Auth;
 use App\GlobalSetting as GS;
 use App\Map;
+use App\Embed;
+use Session;
 class VisualApiController extends Controller
 {
     public function visualList(){
@@ -599,5 +601,165 @@ class VisualApiController extends Controller
         }
 
         return ['status'=>'success','list_visuals'=>$responseArray];
+    }
+
+    public function generateEmbed(Request $request){
+        $user = Auth::user();
+        foreach($user->meta as $key => $value){
+            if($value->key == 'organization'){
+                $org_id = $value->value;
+            }
+        }
+        $exist = Embed::where(['user_id'=>$user->id,'visual_id'=>$request->visual_id])->first();
+        if($exist == null){
+            $model = new Embed;
+            $embed_token = str_random(20);
+            $model->visual_id = $request->visual_id;
+            $model->org_id  = $org_id;
+            $model->user_id = $user->id;
+            $model->embed_token = $embed_token;
+            $model->save();
+        }else{
+            $embed_token = $exist->embed_token;
+        }
+
+        return ['status'=>'success','message'=>'Successfully generated!','token'=>$embed_token];
+    }
+
+
+    public function EmbedVisualById(Request $request){
+        $model = Embed::where('embed_token',$request->id)->first();
+        $responseArray = [];
+        $mapChartsArray = [];
+        Session::put('org_id',$model->org_id);
+        $visual = GV::find($model->visual_id);
+        $dataset_id = $visual->dataset_id;
+        $columns = json_decode($visual->columns, true);
+        $chartType = json_decode($visual->chart_type, true);
+        $countCharts = '';
+        if($columns == null){
+            return ['status'=>'error','message'=>'No settings found!'];
+        }
+        /*if(array_key_exists('count', $columns) && is_array(@$columns['count'])){
+            $countCharts = $columns['count'];
+        }*/
+
+        $responseArray['num_of_charts'] = count($columns['column_one']);
+        $chartsArray = [];
+        $datatableName = DL::find($dataset_id);
+        if($request->type == 'filter'){ 
+               
+            $dbObj =  DB::table($datatableName->dataset_table);
+            $range_filter = json_decode($request->range_filters,true);
+            $filter_multi = json_decode($request->filter_array_multi, true);
+            if($range_filter != null){
+                foreach ($range_filter as $key => $value) {
+                    $dbObj->whereBetween($key,[$value['min'],$value['max']]);
+                }
+            }
+            if($filter_multi != null){
+                foreach($filter_multi as $key => $mValue){
+                    $firstWhere = 0;
+                    $where = [];
+                    $dbObj->where(function($query) use ($mValue, $key){
+                        foreach($mValue as $vKey => $vVal){
+                            $query->orWhere($key, $vVal);
+                        }
+                    });
+                }
+            }
+            
+            if(!empty($request->filter_array) && $request->filter_array!=null && $request->filter_array!= 'undefined')
+            {
+                $filter_array = json_decode($request->filter_array,true);
+                $dbObj->where($filter_array);
+            }
+            $datasetData =  $dbObj->get()->toArray();
+        }else{
+
+            $datasetData = DB::table($datatableName->dataset_table)->where('id','!=',1)->get()->toArray();
+        }
+        $dataProce = [];
+        foreach($datasetData as $colKey => $value){
+           
+            $dataProce[] = (array)$value;
+        
+        }
+        $datasetData = $dataProce;
+        $datasetColumns = (array)DB::table($datatableName->dataset_table)->where('id',1)->first();
+        foreach($columns['column_one'] as $key => $value){
+            if($chartType[$key] == 'CustomMap'){
+                $mapChartsArray[$key] = $this->createMaps($columns,$key);
+            }
+            $columnData = [];
+            switch($columns['formula'][$key]){
+
+                case'count':
+                    $tempArray = [];
+                    $resultData = [];
+                    foreach($columns['columns_two'][$key] as $colKey => $colVal){
+                        $resultData[$colVal] = $this->generateCountColumns($colVal,$datatableName->dataset_table,$request->type == 'filter'?true:false,json_decode($request->filter_array,true),json_decode($request->filter_array_multi, true),json_decode($request->range_filters,true));
+                    }
+                    $resultCorrectData = $this->correctDataforCount($resultData,$datasetColumns);
+                    $columnData = $resultCorrectData;
+                break;
+
+                case'addition':
+                    $additionData = $this->getDataforAddition($value, $key, $columns, $datatableName->dataset_table, $request);
+                    $singleVal = array_column($additionData,$value);
+                    array_unshift($singleVal,$datasetColumns[$value]);
+                    $columnData[] = $singleVal;
+                    foreach($columns['columns_two'][$key] as $k => $v){
+                        $singleVal = array_column($additionData, $v);
+                        array_unshift($singleVal,$datasetColumns[$v]);
+                        $columnData[] = $singleVal;
+                    }
+                break;
+
+                case'no':
+                    $arrayData = array_column($datasetData, $value);
+                    array_unshift($arrayData,$datasetColumns[$value]);
+                    $columnData[] = $arrayData;
+                    foreach($columns['columns_two'][$key] as $colKey => $colVal){
+                        $arrayData = array_column($datasetData, $colVal);
+                        array_unshift($arrayData,$datasetColumns[$colVal]);
+                        if($chartType[$key] != 'CustomMap'){
+                            $arrayData = array_merge(array($arrayData[0]),array_map('intval', array_slice($arrayData, 1)));
+                        }
+                        $columnData[] = $arrayData;
+                    }
+                    if($chartType[$key] == 'CustomMap'){
+                        
+                        $extraData = array_column($datasetData, $columns['viewData'][$key]);
+                        array_unshift($extraData,$datasetColumns[$columns['viewData'][$key]]);
+                    }
+                break;
+            }
+            $chartsArray[$key] = $columnData;
+        }
+
+        // if(!empty(json_decode($visual->filter_columns))){
+        $filter_chk = json_decode($visual->filter_columns,true);
+     
+        if(!empty($filter_chk) && !empty($filter_chk["filter_1"]["column"]) && !empty($filter_chk["filter_1"]["type"]) ){
+            $filtersArray = $this->getFIlters($datatableName->dataset_table, json_decode($visual->filter_columns, true), $datasetColumns);
+        }else{
+            $filtersArray = [];
+        }
+        $transposeArray = [];
+        foreach($chartsArray as $tKey => $tValue){
+            $transposeArray[$tKey] = $this->transpose($tValue);
+        }
+        $globalVisualSettings = GS::where('meta_key','visual_setting')->first();
+        $responseArray['maps']  =   $mapChartsArray;
+        $responseArray['map_display_val'] = @$extraData;
+        $responseArray['chart_data'] = $transposeArray;
+        $responseArray['filters'] = $filtersArray;
+        $responseArray['chart_types'] = $visual->chart_type;
+        $responseArray['default_settings'] = $globalVisualSettings->meta_value;
+        $responseArray['settings'] = $columns['visual_settings'];
+        $responseArray['titles'] = $columns['title'];
+        $responseArray['status'] = 'success';
+        return $responseArray;
     }
 }

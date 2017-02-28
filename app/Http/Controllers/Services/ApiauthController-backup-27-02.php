@@ -45,9 +45,14 @@ class ApiauthController extends VirtualTableGenController
             $model = UserMeta::select('value')->where(['user_id'=>$user->id,'key'=>'profile_pic'])->first();
             $image = (!empty($model))?$model->value:'';
 
-            
-            Session::put('org_id', $user->organization_id);
-            
+            foreach (Auth::user()->meta as $key => $value) {
+                  if($value->key =="organization")
+                  {
+                    Session::put('org_id', $value->value);
+                    break;
+                  }
+
+            }
            
             /*$api_token    =   str_random(20);
             $updateToken  =   User::findOrfail($user->id);
@@ -63,19 +68,38 @@ class ApiauthController extends VirtualTableGenController
     public function listUser()
     {   
       $i =0;
+      foreach ($org_user as $key => $val) {
+        dump($value->organization);
+      }
+     // dump($org_user);
+
+      //dump()
+      die;
+      if(Auth::user()->role_id==1)
+      {
+         foreach(Auth::user()->meta as $key => $value){
+              if($value->key == 'organization'){
+                  $this->table = $value->value.'_userpages';
+                  break;
+              }
+          }
+      }
+
+       $org_id  = Auth::user()->organization_id;
+
+
       if(Auth::user()->role_id ==1)
       {
-        $org_id  = Auth::user()->organization_id;
         $org_user  = User::where(['organization_id'=>$org_id,'role_id'=>2])->get();
-        foreach($org_user as  $val)
+
+        foreach(User::where('api_token','!=',Auth::user()->api_token)->get() as  $val)
         {
-            $arr[$i]['id']   =  $val->id;
-            $arr[$i]['name'] =$val->name;
-            $arr[$i]['email'] =$val->email;
+            $arr[$i]['id']=  $val->id;
+            $arr[$i]['name']=$val->name;
+            $arr[$i]['email']=$val->email;
             $arr[$i]['api_token']=$val->api_token;
             $arr[$i]['role_id']=$val->role_id;
             $arr[$i]['approved']=$val->approved;
-            $arr[$i]['organization_name']=$val->organization->organization_name;
             if($val->meta)
             {
                foreach ($val->meta as  $metaValue) {
@@ -113,10 +137,13 @@ class ApiauthController extends VirtualTableGenController
         $arr['api_token']=$user->api_token;
         $arr['role_id']=$user->role_id;
         $arr['approved']=$user->approved;
-        $arr['organization_id']=$user->organization_id;
+        
         if(count($user->meta) != 0){
+            
             foreach ($user->meta as  $metaValue) {
-             if($metaValue->key == "phone"){
+
+                
+                if($metaValue->key == "phone"){
 
                     $arr["phone"] = $metaValue->value;
                 }
@@ -131,8 +158,12 @@ class ApiauthController extends VirtualTableGenController
                 }
                 
             }
-      }
-      return ['status'=>'success','user_data' => $arr]; 
+
+        }
+
+        
+        
+        return ['status'=>'success','user_data' => $arr,'data_list' => $arr_list]; 
     }
     public function approveUser($id)
     {      
@@ -176,7 +207,8 @@ class ApiauthController extends VirtualTableGenController
 
     public function updateUser(Request $request)
     {
-      if($request->name && $request->email)
+
+        if($request->name && $request->email)
         {
             if (!filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
 
@@ -189,7 +221,6 @@ class ApiauthController extends VirtualTableGenController
 
                   $user->name = $request->name;
                   $user->email = $request->email;
-                 // $user->organization_id = $request->organization_id;
                    if($request->role_id)
                    {         
                      $user->role_id = $request->role_id;
@@ -254,12 +285,14 @@ class ApiauthController extends VirtualTableGenController
 
                 }catch(\Exception $e)
                 {
+
                   DB::rollback();
+                  // return ['status'=>'error','message'=>'Not Update .Try Again']; 
                   throw $e;
                 }                
         }
        else{
-            return ['status'=>'error','message'=>'fill all required fields !'];
+            return ['status'=>'error','message'=>'fill all required fields!'];
         }   
     }
 
@@ -320,7 +353,6 @@ class ApiauthController extends VirtualTableGenController
                             'email' => $request->email,
                             'password' => Hash::make($request->password),
                             'role_id'=>$role,
-                            'organization_id'=>$organization_id,
                             'api_token' => $api_token
                             ]);
 
@@ -345,9 +377,9 @@ class ApiauthController extends VirtualTableGenController
                     $MetaData[2]['value'] = $request->address;
                     $MetaData[2]['user_id'] = $user->id;
 
-                     // $MetaData[3]['key'] = 'organization';
-                     // $MetaData[3]['value'] = $organization_id;
-                     // $MetaData[3]['user_id'] = $user->id;
+                     $MetaData[3]['key'] = 'organization';
+                     $MetaData[3]['value'] = $organization_id;
+                     $MetaData[3]['user_id'] = $user->id;
                     
                     UserMeta::insert($MetaData);
                     if($org_status=="new")

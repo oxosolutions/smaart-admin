@@ -58,7 +58,7 @@
 ?>
   <div class="form-group {{ $errors->has('org') ? ' has-error' : '' }}">
     {!!Form::label('org','Organization') !!}
-    {!!Form::select('organization',$org_arr,null, ['id'=>'org' ,'class'=>'form-control select2-department']) !!}
+    {!!Form::select('organization_id',$org_arr,null, ['id'=>'org' ,'class'=>'form-control select2-department']) !!}
     @if($errors->has('org'))
       <span class="help-block">
             {{ $errors->first('org') }}

@@ -37,10 +37,13 @@ class ProfileApiController extends Controller
         $responseArray = [];
         // $responseArray['departments'] = [];
         // $responseArray['ministries'] = [];
+        // dump($model->organization->organization_name);
+        // die;
         $responseArray['name']  = $model->name;
         $responseArray['email'] = $model->email;
-        $responseArray['phone'] = $model->phone;
         $responseArray['token'] = $model->api_token;
+        $responseArray['organization'] = $model->organization->organization_name;
+
         if($model->meta != null){
 
             foreach ($model->meta as $metaKey => $metaValue) {
@@ -53,15 +56,23 @@ class ProfileApiController extends Controller
                             $responseArray[$metaValue->key] = asset('profile_pic/'.$metaValue->value);
                         }
                     break;
-                    case'organization': 
-                        if($metaValue->value == '' || $metaValue->value == null){
-                            $responseArray[$metaValue->key] = "null";
-                        }else{
-                            $responseArray[$metaValue->key] = org::select(['id','organization_name'])->where('id',$metaValue->value)->get();
-                        }
+                    case'phone':
+                        $responseArray['phone'] = $metaValue->value;
+
                     break;
-                    default:
-                    $responseArray[$metaValue->key] = $metaValue->value;
+                    case'address':
+                        $responseArray['address'] = $metaValue->value;
+
+                    break;
+                    // case'organization': 
+                    //     if($metaValue->value == '' || $metaValue->value == null){
+                    //         $responseArray[$metaValue->key] = "null";
+                    //     }else{
+                    //         $responseArray[$metaValue->key] = org::select(['id','organization_name'])->where('id',$metaValue->value)->get();
+                    //     }
+                    // break;
+                    //default:
+                    //  $responseArray[$metaValue->key] = $metaValue->value;
                 }
             }
         }
@@ -122,7 +133,6 @@ class ProfileApiController extends Controller
             $model->name = $request->name;
         }
         $model->save();
-
         if( $request->phone != 'undefined' || $request->address != 'undefined'){
            
             $UserMetaPhone = UserMeta::where(['key'=>'phone', 'user_id' => $userId])->get();
@@ -140,15 +150,13 @@ class ProfileApiController extends Controller
             }else{
                 UserMeta::where(['key'=>'address', 'user_id' => $userId])->update(['value'=>$request->address]);
             }
-
-            $UserMetaOrganization = UserMeta::where(['key'=>'organization', 'user_id' => $userId])->get();
-            if (count($UserMetaOrganization) < 1){
-                $sendData = 'organization';
-                $this->checkUserDetails( $request ,$sendData);
-            }else{
-                UserMeta::where(['key'=>'organization', 'user_id' => $userId])->update(['value'=>$request->organization]);
-            }
-
+             // $UserMetaOrganization = UserMeta::where(['key'=>'organization', 'user_id' => $userId])->get();
+            // if (count($UserMetaOrganization) < 1){
+            //     $sendData = 'organization';
+            //     $this->checkUserDetails( $request ,$sendData);
+            // }else{
+            //     UserMeta::where(['key'=>'organization', 'user_id' => $userId])->update(['value'=>$request->organization]);
+            // }
 
             return ['status'=>'success','message'=>'Profile updated successfully!'];
         }else{
@@ -157,8 +165,7 @@ class ProfileApiController extends Controller
     }
     protected function checkUserDetails($request, $sendData)
     {
-        $userId = $request->user()->id;
-
+            $userId = $request->user()->id;
             $data = new UserMeta;
             $data->key = $sendData;
             $data->value = $request->$sendData;
@@ -177,7 +184,6 @@ class ProfileApiController extends Controller
     {
         $userId = $request->user()->id;
         $name = $request->file('profile_pic')->getClientOriginalName();
-
         if($request->hasFile('profile_pic')){
             $path = 'profile_pic';
             $filename = date('Y-m-d-H-i-s')."-".$request->file('profile_pic')->getClientOriginalName();
@@ -190,7 +196,7 @@ class ProfileApiController extends Controller
         }      
     }
     public function editProfile()
-   {
+    {
       return View::make('apiusers.editProfile');
-   }
+    }
 }

@@ -10,7 +10,7 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{url('pages')}}">Pages</a></li>
+        <li><a href="{{url('userpages')}}">Pages</a></li>
         <li class="active">Create Page</li>
       </ol>
     </section>

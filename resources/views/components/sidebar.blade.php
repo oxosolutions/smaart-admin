@@ -62,7 +62,19 @@
             <li class="{{Request::is('pages/create')?'active':''}}"><a href="{{ route('pages.create') }}"><i class="fa fa-circle-o"></i> Add New</a></li>
           </ul>
         </li>
-       
+       <li class="treeview {{in_array(Request::path(),array('userpages/create','userpages'))?'active':''}}">
+          <a href="#">
+            <i class="fa fa-file-o"></i>
+            <span>User Pages</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="{{Request::is('userpages')?'active':''}}"><a href="{{ route('userpages.list') }}"><i class="fa fa-circle-o"></i> List Pages</a></li>
+            <li class="{{Request::is('userpages/create')?'active':''}}"><a href="{{ route('userpages.create') }}"><i class="fa fa-circle-o"></i> Add New</a></li>
+          </ul>
+        </li>
         <li class="treeview {{in_array(Request::path(),array('dataset/create','dataset'))?'active':''}}">
           <a href="#">
             <i class="fa fa-life-ring"></i>

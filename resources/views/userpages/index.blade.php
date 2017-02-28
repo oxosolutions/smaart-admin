@@ -31,7 +31,7 @@
       <div class="row">
         <div class="col-xs-12">
           <div class="box-header">
-              <button class="btn btn-primary" onclick="window.location='{{route('pages.create')}}'">Create New Page</button>
+              <button class="btn btn-primary" onclick="window.location='{{route('userpages.create')}}'">Create New Page</button>
               <div class="dropdown" style="float: right">
                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Action
                 <span class="caret"></span></button>

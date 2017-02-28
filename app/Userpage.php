@@ -3,8 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+  use Illuminate\Database\Eloquent\SoftDeletes;
+  use Session;
+  use Auth;
 
-class UserPages extends Model
+class Userpage extends Model
 {
       use SoftDeletes;
       protected $fillable = ['page_title','content','page_image','status','created_by','page_slug','page_subtitle'];

@@ -257,7 +257,7 @@ $('#fact').DataTable({
      $('#userpages').DataTable({
       processing: true,
       serverSide: true,
-      ajax: route()+'/pages_list',
+      ajax: route()+'/userpages_list',
       order:[[0,"desc"]],
       columns: [
             { data: 'selector', name: 'selector',orderable: false, searchable: false},

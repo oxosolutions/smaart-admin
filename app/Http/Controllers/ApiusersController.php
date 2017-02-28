@@ -88,10 +88,11 @@ class ApiusersController extends VirtualTableGenController
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
                     'role_id' => $role,
+                    'organization_id'=> $organization_id,
                     'api_token' => $request->token
                 ]);
 
-        $um =   UM::create(['key'=>"organization" , 'value'=>$organization_id, 'user_id'=>$user->id]);
+        // $um =   UM::create(['key'=>"organization" , 'value'=>$organization_id, 'user_id'=>$user->id]);
        
                 DB::commit();
                if($org_status == "new")
@@ -182,50 +183,26 @@ class ApiusersController extends VirtualTableGenController
 
 
     public function storeUserMeta( Request $request){
-
-            $this->metaValidate($request);
-            if(!$request->ministry && !$request->hasFile('profile_pic') && !$request->designation && !$request->department && $request->phone =="" &&  $request->address =="" )
+          
+           $this->metaValidate($request);
+            if( !$request->hasFile('profile_pic')  && $request->phone =="" &&  $request->address =="" )
             {
-                    return redirect()->route('api.create_users_meta',$request->user_list);
+                return redirect()->route('api.create_users_meta',$request->user_list);
             }
-
             
-          DB::beginTransaction();
-            try{//create new designation if not exist
-
-              if($request->designation)
+            DB::beginTransaction();
+            try{
+              if(count($request->key)>0)
               {
-                 if(!is_numeric($request->designation))
-                 {
-                       $chkDes = DES::where(['designation'=>$request->designation])->get()->count();
-                       if($chkDes==0){
-                          $newDes =  new DES();
-                          $newDes->designation = $request->designation;
-                          $newDes->save();
-                          $request->designation = $newDes->id;
-                       }
-                  }
-                $designationMeta  = new UM();
-                $designationMeta->user_id = $request->user_list;
-                $designationMeta->key =     "designation";
-                $designationMeta->value   =  $request->designation;
-                $designationMeta->save();
+                foreach ($request->key as $key => $value) {
+                  $dynamic = new UM();
+                  $dynamic->key = $value;
+                  $dynamic->value = $request->value[$key];
+                  $dynamic->user_id = $request->user_list;
+                  $dynamic->save();
+                }
               }
-
-              if($request->ministry)
-              {
-                foreach ($request->ministry as $key => $value){
-
-                      $ministryMetaVal[] = $value;
-                  }
-
-                $minMetaVal = json_encode($ministryMetaVal);
-                $ministryMeta = new UM();
-                $ministryMeta->key = "ministry";
-                $ministryMeta->user_id = $request->user_list;
-                $ministryMeta->value = $minMetaVal;
-                $ministryMeta->save();
-              }
+              
 
               if($request->phone!="")
               {
@@ -244,22 +221,7 @@ class ApiusersController extends VirtualTableGenController
                 $adrsMeta->save();
               }
 
-              if($request->department)
-              {
-                foreach($request->department as $key => $value){
-
-                   $depValues[] =  $value;
-                }
-
-                $depJsonVal =     json_encode($depValues);
-                $departmentMeta  = new UM();
-                $departmentMeta->user_id = $request->user_list;
-                $departmentMeta->key = "department";
-                $departmentMeta->value   =  $depJsonVal;
-                $departmentMeta->save();
-              }
-                
-
+               
                 $proPic  = new UM();
                 $path = 'profile_pic';
                 if($request->hasFile('profile_pic')){
@@ -313,7 +275,12 @@ class ApiusersController extends VirtualTableGenController
         public function edit($id) {
           try{
                 $model = User::findOrfail($id);
-                return view('apiusers.edit',['model'=>$model]);
+                 $plugins = [
+                  'css' => ['fileupload','select2'],
+                  'js'  => ['fileupload','select2','custom'=>['api-user','registration']],
+                  'model'=>$model
+                ];
+                return view('apiusers.edit',$plugins);
               }catch(\Exception $e)
               {
                  Session::flash('error','No data found for this.');              
@@ -334,8 +301,10 @@ class ApiusersController extends VirtualTableGenController
                    if(!empty($request->new_password))
                    {
                        $user->password = Hash::make($request->new_password);
-                   }            
+                   }
+
                   $user->role_id = $role_id;
+                  $user->organization_id = $request->organization_id;
                   $user->api_token = $request->token;
                   $user->save();
                   DB::commit();
@@ -394,65 +363,45 @@ class ApiusersController extends VirtualTableGenController
                   return redirect()->route('api.users');
               }
               $meta = UM::select('id','key','value')->where('user_id',$id)->get();//->where();
+             
              $depChk = $minChk = $desChk = $picChk = $phChk = $adrsChk =0;
              foreach ($meta as  $value) {
+
+               if($value->key != "address" && $value->key != "phone" && $value->key != "profile_pic")
+               {
+                  $dynamic['key'][] = $value->key;
+                  $dynamic['value'][] = $value->value;
+               }
                     if($value->key == "address")
                       { 
                         $adrsChk =1;
                         $address = $value->value;
                       }elseif($adrsChk ==0){ $address ="";}
+                    
                     if($value->key == "phone")
                       {
                         $phChk = 1;
                         $phone = $value->value;
                       }elseif($phChk ==0){ $phone ="";}
 
-                    // if($value->key == "designation")
-                    //   {
-                    //     $desChk =1;
-                    //     $designation = $value->value;
-                    //   }elseif($desChk ==0){ $designation =""; }
                    if($value->key == "profile_pic")
                       { 
                         $picChk =1;
                         $profile_pic = $value->value;
                       }elseif($picChk ==0){ $profile_pic ="";}  
 
-                    // if($value->key == "ministry")
-                    //   { 
-                    //     $minData =json_decode($value->value);
-                    //     $minCount = count($minData);
-                        
-                    //         for($i=0; $i<$minCount; $i++)
-                    //         {
-                    //             $minChk  =1;
-                    //             $mdata[$minData[$i]]=$minData[$i]; 
-                    //         }
-                          
-                    //     }elseif($minChk==0){ $mdata['']=''; }
-
-                      // if($value->key == "department")
-                      // { 
-                      //   $depData =json_decode($value->value);
-                      //   $depCount = count($depData);
-                      //   for($j=0; $j<$depCount; $j++)
-                      //   { 
-                      //       $depChk =1;
-                      //       $dep[$depData[$j]]=$depData[$j]; 
-                      //   }
-                      // }elseif($depChk==0){ $dep[''] ='';  }
+                   
              }
+
                  $plugins = [
                               'css'     =>  ['fileupload','select2'],
                               'js'      =>  ['fileupload','select2','custom'=>['api-user']],
                               'model'   =>  @$meta,
                               'id'      =>  $id,
-                              //'minData' =>  @$mdata,
                               'address' =>  @$address,
-                              //'department' => @$dep,
                               'phone'   =>    @$phone,
-                             // 'designation' =>  @$designation,
-                              'profile_pic' =>  @$profile_pic
+                              'profile_pic' =>  @$profile_pic,
+                               'dynamic'=>       $dynamic
                             ];
                 return view('apiusers.editmeta',$plugins);
             }catch(\Exception $e)
@@ -464,6 +413,8 @@ class ApiusersController extends VirtualTableGenController
         }
         public function updatemeta(Request $request , $id)
         {
+           
+
          $this->metaValidate($request);
             if(!$request->hasFile('profile_pic') && $request->phone =="" &&  $request->address =="" )
             {
@@ -474,7 +425,14 @@ class ApiusersController extends VirtualTableGenController
           try{
               UM::where('user_id',$id)->delete();
               $request->user_list = $id;
-            
+
+              foreach ($request->key as $key => $value) {
+                $dynamic =   new UM();
+                $dynamic->key =  $value;
+                $dynamic->value = $request->value[$key];
+                $dynamic->user_id = $request->user_list;
+                $dynamic->save();
+                }
             
             if($request->phone !="")
             {
@@ -552,7 +510,7 @@ class ApiusersController extends VirtualTableGenController
   
     public function updateProfile(Request $request)
     {
-      User::where('id',Auth::user()->id)->update(["name"=>$request->name]);
+      User::where('id',Auth::user()->id)->update(["name"=>$request->name,"organization_id"=>$request->organization_id]);
       $user_meta = UM::where('user_id',Auth::user()->id)->get();
       $data[] = "";
       foreach ($user_meta as $key => $value) {
@@ -574,23 +532,7 @@ class ApiusersController extends VirtualTableGenController
           UM::create(['key'=> 'address','user_id'=>Auth::user()->id,"value"=>$request->address]);
        }
        
-       if (in_array('ministry',$data)){
-          UM::where(['key'=> 'ministry','user_id'=>Auth::user()->id])->update(["value"=>json_encode($request->ministry)]);
-       }else{
-          UM::create(['key'=> 'ministry','user_id'=>Auth::user()->id,"value"=>json_encode($request->ministry)]);
-       }
        
-       if (in_array('department',$data)){
-          UM::where(['key'=> 'department','user_id'=>Auth::user()->id])->update(["value"=>json_encode($request->department)]);
-       }else{
-          UM::create(['key'=> 'department','user_id'=>Auth::user()->id,"value"=>json_encode($request->department)]);
-       }
-       
-       if (in_array('designation',$data)){
-          UM::where(['key'=> 'designation','user_id'=>Auth::user()->id])->update(["value"=>$request->designation]);
-       }else{
-          UM::create(['key'=> 'designation','user_id'=>Auth::user()->id,"value"=>$request->designation]);
-       }
        
       return redirect()->route('home');
   }

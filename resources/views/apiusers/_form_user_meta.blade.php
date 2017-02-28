@@ -45,6 +45,16 @@
       </span>
     @endif
   </div>
+
+  <div class="row field_row choice">
+           
+            <div class="col-md-8 add_more choice-option" >
+                <button style="width:150px;" class="add_more_option Normal btn btn-block btn-success">
+                                Add Option
+                </button><br>
+               
+            </div>  
+  </div>
   
   <div style="clear: both"></div>
 

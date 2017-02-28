@@ -50,6 +50,18 @@
                       <span style="color:grey;font-size:12px">( <strong>Note: </strong>Leave Blank if you don't want to change the password)</span>
                     </div>
                   </div> 
+                  <?php
+                      $org_arr = App\organization::org_list();
+                      $org_arr["other"] ="other";
+                  ?>
+                    
+                   <div class="form-group">
+                    <label class="control-label col-sm-2" for="name">Organization :</label>
+                    <div class="col-sm-8">
+                      {!!Form::select('organization_id',$org_arr,@$value->organization->id, ['id'=>'org' ,'class'=>'form-control select2-department']) !!}
+                    </div>
+                  </div>
+
                   @endforeach  
                   @foreach($user_meta as $value)
                   @if($value->key == "phone" || $value->key == "address")

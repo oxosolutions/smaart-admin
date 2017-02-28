@@ -6,7 +6,7 @@ use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\DatasetsList as DL;
-use App\Visualisation as VIZ;
+use App\GeneratedVisual as VIZ;
 use App\Surrvey as SR;
 use App\User as US;
 use App\UserMeta as UM;

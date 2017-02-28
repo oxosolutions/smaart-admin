@@ -105,6 +105,7 @@ class DatasetsController extends Controller
     public function getDatasetsColumnsForSubset($id){
         $datasetDetails = DL::find($id);
         $datasetTable = DB::table($datasetDetails->dataset_table)->take($this->datasetSetting())->get();
+        
         if(empty($datasetTable)){
             return ['status'=>'success','records'=>[]];
         }
@@ -430,5 +431,7 @@ class DatasetsController extends Controller
         
         return ['status'=>'success','columns'=>$columnsArray];
     }
+
+    
 
 }

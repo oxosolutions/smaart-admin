@@ -13,4 +13,9 @@ class organization extends Model
     {
     	return self::orderBy('id')->pluck('organization_name','id');
     }
+
+    public function users()
+    {
+    	return $this->hasMany('App/organization','organization_id','id');
+    }
 }

@@ -56,6 +56,33 @@
       </span>
     @endif
   </div>
+  <div class="row field_row choice">
+        <div class="col-md-8 add_more choice-option" >
+                <button style="width:150px;" class="add_more_option Normal btn btn-block btn-success">
+                                Add Option
+                </button><br>
+               
+            </div>  
+
+  @foreach($dynamic['key'] as $keys => $val)
+   <?php $index =  $keys+1; ?>
+        <div class="cont">
+            <div class="col-md-12" style="margin-bottom:15px;">
+            <div style="display: inline-block;float: left;line-height: 2;">{{$index}}</div>
+                <div class="col-xs-6">
+                  <input class="form-control"  type="text" name="key[]" value="{{$val}}"> 
+                </div>  
+                <div class="col-xs-5">  
+                  <input class="form-control"  type="text" name="value[]" value=" {{$dynamic['value'][$keys]}}"> 
+                </div>
+                <a href="#" class="remove_field "> Remove   </a>
+            </div>
+        </div>     
+
+  @endforeach
+           
+            
+  </div>
   
   <div style="clear: both"></div>
 

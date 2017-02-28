@@ -21,7 +21,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','role_id', 'api_token',
+        'name', 'email', 'password','role_id', 'api_token','organization_id'
     ];
 
     /**
@@ -90,6 +90,11 @@ class User extends Authenticatable
     public function pages(){
 
         return $this->belongsToMany('App\Page','created_by','id');
+    }
+
+    public function organization()
+    {
+        return $this->belongsTo('App\organization');
     }
 
 }

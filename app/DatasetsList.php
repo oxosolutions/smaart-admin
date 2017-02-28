@@ -7,10 +7,9 @@ use Session;
 use Auth;
 class DatasetsList extends Model
 {
-    protected $table;
+   protected $table;
    public function __construct(){
       parent::__construct();
-
       if(Session::get('org_id') == null){
         foreach(Auth::user()->meta as $key => $value){
             if($value->key == 'organization'){

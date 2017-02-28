@@ -22,7 +22,6 @@ class Visualisation extends Model
       }else{
         $this->table = Session::get('org_id').'_visualisations';
       }
-
     }
     use SoftDeletes;
     protected $fillable = ['dataset_id','visual_name','options','settings','created_by'];
