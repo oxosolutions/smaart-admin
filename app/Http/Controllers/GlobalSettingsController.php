@@ -26,6 +26,7 @@ class GlobalSettingsController extends Controller
         $plugins['siteTagline_model']  = $this->getSiteSetting('site_tagline'); 
         $plugins['siteUrl_model']      = $this->getSiteSetting('site_url'); 
         $plugins['visual_setting']      = $this->getSiteSetting('visual_setting'); 
+        $plugins['default_setting']      = $this->getSiteSetting('default_setting'); 
 
 
     	return view('settings.index',$plugins);
@@ -297,6 +298,7 @@ class GlobalSettingsController extends Controller
     }
     public function siteValue(Request $request)
     {
+       
         try{
                  $count =GS::where('meta_key',$request->meta_type)->count();
                  if($count==0)

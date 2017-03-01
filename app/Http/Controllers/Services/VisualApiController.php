@@ -445,6 +445,7 @@ class VisualApiController extends Controller
     }
 
     public function getVisualDetails($id){
+        $default_setting = GS::select('meta_value')->where("meta_key","default_setting")->first();
 
         $model = GV::find($id);
         $vSettings = GS::where('meta_key','visual_setting')->first();
@@ -456,6 +457,7 @@ class VisualApiController extends Controller
         $returnArray['visual_settings'] = @$settings->visual_settings;
         $returnArray['chart_types'] = $model->chart_type;
         $returnArray['visual_set'] = $vSettings;
+       $returnArray['default_setting'] = $default_setting->meta_value;
         $mapData  = Map::orderBy('title','ASC')->where('status','enable')->select(['id','title','code','parent','code_albha_2','code_albha_3','status'])->get();
 
         return ['status'=>'success','data'=>$returnArray,'map_list'=> $mapData];
