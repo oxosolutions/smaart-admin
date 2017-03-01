@@ -52,8 +52,16 @@ Route::get('/userpages/{page_slug}',			['as'=>'pages.by_slug','uses'=>'Services\
 Route::post('/singlevisualEmbed', ['as'=>'single.visual','uses'=>'Services\VisualApiController@EmbedVisualById']);
 
 Route::group(['middleware'=>['auth:api','cors','log']], function(){
+
+	//UserSetting
+Route::post('/usersettings/save', ['as' => 'usersettings.save' , 'uses' => 'Services\ApiauthController@UserSettingSave']);
+Route::get('/usersettings/get', ['as' => 'usersettings.get' , 'uses' => 'Services\ApiauthController@UserSettingGet']);
+Route::get('/usersettings/edit', ['as' => 'usersettings.edit' , 'uses' => 'Services\ApiauthController@UserSettingEdit']);
+Route::post('/usersettings/update', ['as' => 'usersettings.update' , 'uses' => 'Services\ApiauthController@UserSettingUpdate']);
+
+
 	//dashboard 
-		Route::get('/dashboard', ['as' => 'dashboard' , 'uses' => 'Services\dashboardController@DashboardData']);
+		Route::get('/dashboard', ['as' => 'dashboard' , 'uses' => 'Services\DashboardController@DashboardData']);
 	// VISUAL API START HERE
 	Route::post('/singlevisual', ['as'=>'single.visual','uses'=>'Services\VisualApiController@visualById']);
 	//surrvey

@@ -390,8 +390,7 @@ class ApiusersController extends VirtualTableGenController
                         $profile_pic = $value->value;
                       }elseif($picChk ==0){ $profile_pic ="";}  
 
-                   
-             }
+              }
 
                  $plugins = [
                               'css'     =>  ['fileupload','select2'],
@@ -478,8 +477,7 @@ class ApiusersController extends VirtualTableGenController
 
                 }    
                 return redirect()->route('api.users');
-
-        }
+             }
 
         public function approveUser($from = 0, $api_token = null){
             if($from == 'email' && $api_token != null){

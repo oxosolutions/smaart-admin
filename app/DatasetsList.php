@@ -11,12 +11,7 @@ class DatasetsList extends Model
    public function __construct(){
       parent::__construct();
       if(Session::get('org_id') == null){
-        foreach(Auth::user()->meta as $key => $value){
-            if($value->key == 'organization'){
-                $this->table = $value->value.'_datasets';
-                break;
-            }
-        }
+          $this->table = Auth::user()->organization_id.'_datasets';
       }else{
         $this->table = Session::get('org_id').'_datasets';
       }
@@ -32,7 +27,7 @@ class DatasetsList extends Model
     	return $this->belongsTo('App\User','user_id','id');
     }
 
-public function createdBy(){
+    public function createdBy(){
         return $this->belongsTo('App\User','user_id','id');
       }
     public static function datasetOperations(){

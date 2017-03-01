@@ -116,11 +116,6 @@ $settings = [
 										'maxSize'	=>	['label'=>'Size Axis Max Size','type'=>'text','options'=>[],'isArray'=>'false'],
 										'isArray'	=>	'true',
 										'chartType'	=>	['all']
-									],
-		'chartColor'			=>	[
-										'colors'	=>	['label'=>'Select theme color','type'=>'select','options'=>['#F8080B','#FE03C7','#0314CF','#189502','#D35200'],'isArray'=>'false'],
-										'chartType' =>	['CustomMap'],
-										'isArray'	=>	'true'
 									]
 
 	];

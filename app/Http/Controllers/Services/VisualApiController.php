@@ -16,8 +16,9 @@ use Session;
 class VisualApiController extends Controller
 {
     public function visualList(){
-
+        
         $model = GV::all();
+        //dump();
         $resultArray = [];
         foreach($model as $key => $value){
             $tempArray = [];
@@ -29,7 +30,7 @@ class VisualApiController extends Controller
                 $tempArray['dataset'] = [];
             }
             
-            $tempArray['created_by'] = $value->createdBy->name;
+            $tempArray['created_by'] = "name-";//$value->createdBy->name;
             $tempArray['created_at'] = $value->created_at->format('Y-m-d H:i:s');
             $resultArray[] = $tempArray;
         }

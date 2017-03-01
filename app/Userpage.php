@@ -17,13 +17,8 @@ class Userpage extends Model
 	  public function __construct(){
 	      parent::__construct();
 	      if(Session::get('org_id') == null){
-	        foreach(Auth::user()->meta as $key => $value){
-	            if($value->key == 'organization'){
-	                $this->table = $value->value.'_userpages';
-	                break;
-	            }
-	        }
-	      }else{
+          $this->table = Auth::user()->organization_id.'_userpages';
+        }else{
 	        $this->table = Session::get('org_id').'_userpages';
 	      }
 	     

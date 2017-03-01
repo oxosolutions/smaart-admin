@@ -234,6 +234,7 @@ class DatasetsController extends Controller
 
         if(!empty($model)){
             $model->delete();
+            DB::select('DROP TABLE `'.$model->dataset_table.'`');
             return ['status'=>'success','message'=>'Successfully deleted!','deleted_id'=>$id];
         }else{
 
@@ -282,7 +283,7 @@ class DatasetsController extends Controller
     }
 
     public function saveNewSubset(Request $request){
-
+        
         $validate = $this->validateNewSubset($request);
         if(!$validate){
             return ['status'=>'error','message'=>'Required fields are missing!!'];
@@ -290,7 +291,24 @@ class DatasetsController extends Controller
         $model = DL::find($request->dataset_id);
         $tableName = 'data_table_'.time();
         $columns = array_keys((array)json_decode($request->subset_columns));
-        DB::select("CREATE TABLE `{$tableName}` as SELECT  ".implode(',', $columns)." FROM ".$model->dataset_table.";");
+        $where_in = '';
+        if($request->column_key != 'undefined' && $request->column_val != 'undefined'){
+            $in = explode(',',$request->column_val);
+            $in_vals = '';
+            $index = 1;
+            foreach($in as $k => $v){
+                $in_vals .= "'".$v."'";
+                if($index != count($in)){
+                    $in_vals .= ",";
+                }
+                $index++;
+            }
+            $where_in = 'where '.$request->column_key.' in('.$in_vals.')';
+
+            DB::select("CREATE TABLE `{$tableName}` as SELECT  ".implode(',', $columns)." FROM ".$model->dataset_table." ".$where_in.";");
+        }else{
+            DB::select("CREATE TABLE `{$tableName}` as SELECT  ".implode(',', $columns)." FROM ".$model->dataset_table.";");
+        }
         DB::select("ALTER TABLE `{$tableName}` ADD  `id` INT(100) PRIMARY KEY AUTO_INCREMENT FIRST;");
 
         $model = new DL();

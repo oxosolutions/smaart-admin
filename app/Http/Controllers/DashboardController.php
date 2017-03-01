@@ -18,8 +18,11 @@ class DashboardController extends Controller
 		 foreach (Auth::user()->meta as $key => $value) {
 		  		if($value->key =="organization")
 		  		{
-		  			Session::put('org_id', $value->value);
+		  			
 				}
+                Session::put('org_id', Auth::user()->organization_id);
+
+             
 
 		  } 
 		

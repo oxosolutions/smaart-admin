@@ -21,9 +21,11 @@ use Illuminate\Support\Facades\Mail;
 use App\GlobalSetting as GS;
 use App\organization as org;
 use Session;
+use App\UserMeta as um;
 
 class ApiauthController extends VirtualTableGenController
 {
+  
    public  function Authenicates(Request $request)
     {
     
@@ -44,11 +46,7 @@ class ApiauthController extends VirtualTableGenController
             }
             $model = UserMeta::select('value')->where(['user_id'=>$user->id,'key'=>'profile_pic'])->first();
             $image = (!empty($model))?$model->value:'';
-
-            
             Session::put('org_id', $user->organization_id);
-            
-           
             /*$api_token    =   str_random(20);
             $updateToken  =   User::findOrfail($user->id);
             $updateToken->api_token = $api_token;
@@ -143,8 +141,7 @@ class ApiauthController extends VirtualTableGenController
                 $approved->save();
                 DB::commit();
               Mail::to($approved->email)->send(new AfterApproveUser($approved));
-
-                return ['status'=>'success','message'=>'User Approved.']; 
+              return ['status'=>'success','message'=>'User Approved.']; 
 
               }catch(\Exception $e)
                 {
@@ -162,14 +159,12 @@ class ApiauthController extends VirtualTableGenController
                   $approved->approved = 0;
                   $approved->save();
                   DB::commit();
-                return ['status'=>'success','message'=>'User Un-Approve.']; 
-
+                  return ['status'=>'success','message'=>'User Un-Approve.']; 
                 }catch(\Exception $e)
                 {
                   DB::rollback();
                   return ['error'=>'error','message'=>'Some thing goes wrong.Try Again']; 
                   throw $e;
-
                 }
     }
 
@@ -186,7 +181,6 @@ class ApiauthController extends VirtualTableGenController
                   $id   = $request->id;
                   DB::beginTransaction();
                   $user = User::find($id);
-
                   $user->name = $request->name;
                   $user->email = $request->email;
                  // $user->organization_id = $request->organization_id;
@@ -197,10 +191,8 @@ class ApiauthController extends VirtualTableGenController
                   $user->save();
                 //meta update script
 
-
-
-                $uMeta = UserMeta::where('user_id',$id);
-                 $old_profile_pic_val ="";
+                  $uMeta = UserMeta::where('user_id',$id);
+                  $old_profile_pic_val ="";
                 if($uMeta->count()>0){
                    
                      foreach ($uMeta->get() as $key => $value) {
@@ -473,6 +465,55 @@ class ApiauthController extends VirtualTableGenController
             }
         }
    }
+
+   public function UserSettingSave(Request $request)
+   {
+
+    try{
+      $user_id = Auth::user()->id;
+      $query = um::where(['user_id'=>$user_id,'key'=>'user_settings']);
+     if($query->count()==0)
+     {
+      $setting = new um();
+      $setting->key = 'user_settings';
+      $setting->value = $request['user_settings'];
+      $setting->user_id = $user_id;
+      $setting->save();
+      return ['status'=>"success", "message"=>"user setting saved successfully"];
+    }
+    else{ 
+         $query->update(['value'=>$request['user_settings']]);
+
+        return ['status'=>"success", "message"=>"user setting updated successfully"];
+    }
+    
+    }catch(\Exception $e)
+    {
+      throw $e;
+      //return ['status'=>"error", "message"=>"Something went wrong"];
+    }
+
+      
+    }
+   public function UserSettingGet()
+   {
+      try{
+          $uId = Auth::user()->id;
+          $settings = um::select(['id','key','value','user_id'])->where(['user_id'=>$uId, 'key'=>'user_settings'])->first();
+          return ['status'=>"success", "response"=> $settings];
+     }catch(\Exception $e)
+     {
+        throw $e;     
+     }
+   }
+
+   
+  public function UserSettingUpdate()
+  {
+    um::where(['user_id'=>Auth::user()->id,'key'=>'user_settings'])->update(['value'=>$request['user_settings']]);
+
+  }
+   
 
  
 }

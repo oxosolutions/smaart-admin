@@ -13,13 +13,8 @@ class GeneratedVisual extends Model
         parent::__construct();
         $this->table = Session::get('org_id').'_generated_visuals';
         if(Session::get('org_id') == null){
-        foreach(Auth::user()->meta as $key => $value){
-            if($value->key == 'organization'){
-                $this->table = $value->value.'_generated_visuals';
-                break;
-            }
-        }
-      }else{
+            $this->table = Auth::user()->organization_id.'_generated_visuals';        
+        }else{
         $this->table = Session::get('org_id').'_generated_visuals';
       }
 
