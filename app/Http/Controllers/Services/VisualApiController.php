@@ -13,6 +13,7 @@ use App\GlobalSetting as GS;
 use App\Map;
 use App\Embed;
 use Session;
+use App\GMap;
 class VisualApiController extends Controller
 {
     public function visualList(){
@@ -308,7 +309,12 @@ class VisualApiController extends Controller
 
     protected function createMaps($columnsData, $chart){
         $mapModel = Map::find($columnsData['mapArea'][$chart]);
-        return $mapModel->map_data;
+        if($mapModel == null){
+            $mapMd = GMap::find($columnsData['mapArea'][$chart]);
+            return $mapMd->map_data;
+        }else{
+            return $mapModel->map_data;
+        }
     }
 
     protected function transpose($array) {
@@ -767,6 +773,7 @@ class VisualApiController extends Controller
         }
         $globalVisualSettings = GS::where('meta_key','visual_setting')->first();
         $responseArray['maps']  =   $mapChartsArray;
+        $responseArray['visual_name'] = $visual->visual_name;
         $responseArray['map_display_val'] = @$extraData;
         $responseArray['chart_data'] = $transposeArray;
         $responseArray['filters'] = $filtersArray;
