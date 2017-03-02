@@ -13,7 +13,7 @@ class Map extends Model
       $user = Auth::user();
        if($user->role_id ==2 || $user->role_id ==1 )
        {
-          $this->table = $user->organization_id.'_maps';        
+          $this->table = $user->organization_id.'_maps';
         }        
      
    }

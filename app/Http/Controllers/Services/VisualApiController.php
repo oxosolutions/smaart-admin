@@ -308,7 +308,13 @@ class VisualApiController extends Controller
     }
 
     protected function createMaps($columnsData, $chart){
-        $mapModel = Map::find($columnsData['mapArea'][$chart]);
+        $mapModel = null;
+        try{
+            $mapModel = Map::find($columnsData['mapArea'][$chart]);
+        }catch(\Exception $e){
+
+        }
+        
         if($mapModel == null){
             $mapMd = GMap::find($columnsData['mapArea'][$chart]);
             return $mapMd->map_data;
