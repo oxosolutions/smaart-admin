@@ -8,20 +8,25 @@
   use Auth;
   class Page extends Model
   {
-    /*public function __construct(){
+    public function __construct(){
       parent::__construct();
-      if(Session::get('org_id') == null){
-        foreach(Auth::user()->meta as $key => $value){
-            if($value->key == 'organization'){
-                $this->table = $value->value.'_pages';
-                break;
-            }
-        }
-      }else{
-        $this->table = Session::get('org_id').'_pages';
-      }
+       $user = Auth::user();
+      if($user->role_id ==2 || $user->role_id ==1)
+       {
+          $this->table = $user->organization_id.'_userpages';
+        } 
+      // if(Session::get('org_id') == null){
+      //   foreach(Auth::user()->meta as $key => $value){
+      //       if($value->key == 'organization'){
+      //           $this->table = $value->value.'_pages';
+      //           break;
+      //       } sgssandhu
+      //   }
+      // }else{
+      //   $this->table = Session::get('org_id').'_pages';
+      // }
      
-   }*/
+   }
       use SoftDeletes;
       protected $fillable = ['page_title','content','page_image','status','created_by','page_slug','page_subtitle'];
       protected $dates = ['deleted_at'];

@@ -472,14 +472,14 @@ class VisualApiController extends Controller
         $returnArray['visual_set'] = $vSettings;
         $returnArray['default_setting'] = $default_setting->meta_value;
 
-        $adminMap = DB::table('maps')->select(['id','map_data','title','code','parent','code_albha_2','code_albha_3','status'])->where('status','enable')->get();
+        $adminMap = DB::table('maps')->select(['id','title'])->where('status','enable')->get();
         foreach ($adminMap as $key => $value) {
             foreach ($value as $nkey => $nvalue) {
                     $map[$nkey]  = $nvalue; 
                 } 
                 array_push($mapArray, $map);      
         }
-        $mapData  = Map::orderBy('title','ASC')->select(['id','map_data','title','code','parent','code_albha_2','code_albha_3','status'])->where('status','enable')->get()->toArray();
+        $mapData  = Map::orderBy('title','ASC')->select(['id','title'])->where('status','enable')->get()->toArray();
        
         foreach ($mapData as $mkey => $mvalue) {
              foreach ($mvalue as $k => $v) {
