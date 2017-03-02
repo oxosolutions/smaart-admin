@@ -41,10 +41,11 @@ Route::get('/userpages/{page_slug}',			['as'=>'pages.by_slug','uses'=>'Services\
 	Route::post('/resetpass',					['as'=>'forget.token.validate','uses'=>'Services\ApiauthController@resetUserPassword']);
 });
 
-	
+Route::group(['middleware'=>['auth:api']], function(){	
 	Route::get ('/dataset/file/{id}/{type}',['as'=>'export.dataset', 'uses'=>'Services\ExportDatasetController@export' , 'route_name'=>  'Download Dataset']);
 
 	Route::get('/dataset/download/{fileName}',  ['as'=>'dataset.download','uses'=>'Services\ExportDatasetController@downloadFile']);
+});
 
 
 
@@ -52,6 +53,7 @@ Route::get('/userpages/{page_slug}',			['as'=>'pages.by_slug','uses'=>'Services\
 Route::post('/singlevisualEmbed', ['as'=>'single.visual','uses'=>'Services\VisualApiController@EmbedVisualById']);
 
 Route::group(['middleware'=>['auth:api','cors','log']], function(){
+
 
 	//UserSetting
 Route::post('/usersettings/save', ['as' => 'usersettings.save' , 'uses' => 'Services\ApiauthController@UserSettingSave']);

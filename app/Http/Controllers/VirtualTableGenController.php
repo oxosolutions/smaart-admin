@@ -106,7 +106,7 @@ class VirtualTableGenController extends Controller
           ]
         ], 
         [
-          'tab_name'=>$org_name.'_maps',
+          'tab_name'=>$org_name.'_usermaps',
           'columns'=>[
             "`code` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL",
             "`code_albha_2` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL",

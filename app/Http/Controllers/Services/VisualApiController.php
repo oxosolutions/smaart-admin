@@ -445,6 +445,7 @@ class VisualApiController extends Controller
     }
 
     public function getVisualDetails($id){
+        $mapArray = [];
         $default_setting = GS::select('meta_value')->where("meta_key","default_setting")->first();
 
         $model = GV::find($id);
@@ -457,10 +458,25 @@ class VisualApiController extends Controller
         $returnArray['visual_settings'] = @$settings->visual_settings;
         $returnArray['chart_types'] = $model->chart_type;
         $returnArray['visual_set'] = $vSettings;
-       $returnArray['default_setting'] = $default_setting->meta_value;
-        $mapData  = Map::orderBy('title','ASC')->where('status','enable')->select(['id','title','code','parent','code_albha_2','code_albha_3','status'])->get();
+        $returnArray['default_setting'] = $default_setting->meta_value;
 
-        return ['status'=>'success','data'=>$returnArray,'map_list'=> $mapData];
+        $adminMap = DB::table('maps')->select(['id','map_data','title','code','parent','code_albha_2','code_albha_3','status'])->where('status','enable')->get();
+        foreach ($adminMap as $key => $value) {
+            foreach ($value as $nkey => $nvalue) {
+                    $map[$nkey]  = $nvalue; 
+                } 
+                array_push($mapArray, $map);      
+        }
+        $mapData  = Map::orderBy('title','ASC')->select(['id','map_data','title','code','parent','code_albha_2','code_albha_3','status'])->where('status','enable')->get()->toArray();
+       
+        foreach ($mapData as $mkey => $mvalue) {
+             foreach ($mvalue as $k => $v) {
+                $umap[$k]  = $v; 
+                } 
+                array_push($mapArray, $umap);      
+        }
+
+        return ['status'=>'success','data'=>$returnArray,'map_list'=> $mapArray];
     }
     public function saveVisualData(Request $request){
 
@@ -608,11 +624,7 @@ class VisualApiController extends Controller
 
     public function generateEmbed(Request $request){
         $user = Auth::user();
-        foreach($user->meta as $key => $value){
-            if($value->key == 'organization'){
-                $org_id = $value->value;
-            }
-        }
+        $org_id = $user->organization_id;
         $exist = Embed::where(['user_id'=>$user->id,'visual_id'=>$request->visual_id])->first();
         if($exist == null){
             $model = new Embed;
