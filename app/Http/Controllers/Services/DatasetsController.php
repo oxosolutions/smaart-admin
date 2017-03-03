@@ -230,9 +230,12 @@ class DatasetsController extends Controller
 
     public function deleteDataset($id){
 
-        $model = DL::find($id);
-
-        if(!empty($model)){
+        $model = DL::find($id);   
+           if(!empty($model)){
+             if($model->dataset_file!=Null)
+                { 
+                   unlink($model->dataset_file);
+                }
             $model->delete();
             DB::select('DROP TABLE `'.$model->dataset_table.'`');
             return ['status'=>'success','message'=>'Successfully deleted!','deleted_id'=>$id];

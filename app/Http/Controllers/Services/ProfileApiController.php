@@ -122,6 +122,20 @@ class ProfileApiController extends Controller
 
     public function saveProfile(Request $request){
 
+//         if($request->hasFile('new_img')){
+//             //$path = 'profile_pic';
+//            echo $filename = date('Y-m-d-H-i-s')."-".$request->file('new_img')->getClientOriginalName();
+
+//        // dd($request->request);
+//       // dd($request->file('new_img'));
+// }
+
+        
+       
+              //dd($name = $request->file());
+              //die;
+
+
         $validate = $this->validateProfile($request);
         if(!$validate){
             return ['status'=>'error','message'=>'Required fields are missing!'];
@@ -133,6 +147,25 @@ class ProfileApiController extends Controller
             $model->name = $request->name;
         }
         $model->save();
+        if($request->hasFile('new_img')){
+            $path = 'profile_pic';
+            $filename = date('Y-m-d-H-i-s')."-".$request->file('new_img')->getClientOriginalName();
+            $request->file('new_img')->move($path, $filename);
+            $profile_pic = UserMeta::where(['key'=>'profile_pic', 'user_id' => $userId]);
+            if($profile_pic->count()==0)
+            {
+                $newProfilePic = new UserMeta;
+                $newProfilePic->key = $sendData;
+                $newProfilePic->value = $request->$sendData;
+                $newProfilePic->user_id = $userId;
+                $newProfilePic->save();
+            }else{
+                $old_pic = $profile_pic->first()->value; 
+                $path = asset('/profile_pic/'.$old_pic);
+               // unlink($path);
+             $profile_pic->update(['value' => $filename]);
+            }
+        }
         if( $request->phone != 'undefined' || $request->address != 'undefined'){
            
             $UserMetaPhone = UserMeta::where(['key'=>'phone', 'user_id' => $userId])->get();
@@ -150,13 +183,7 @@ class ProfileApiController extends Controller
             }else{
                 UserMeta::where(['key'=>'address', 'user_id' => $userId])->update(['value'=>$request->address]);
             }
-             // $UserMetaOrganization = UserMeta::where(['key'=>'organization', 'user_id' => $userId])->get();
-            // if (count($UserMetaOrganization) < 1){
-            //     $sendData = 'organization';
-            //     $this->checkUserDetails( $request ,$sendData);
-            // }else{
-            //     UserMeta::where(['key'=>'organization', 'user_id' => $userId])->update(['value'=>$request->organization]);
-            // }
+            
 
             return ['status'=>'success','message'=>'Profile updated successfully!'];
         }else{
