@@ -15,16 +15,6 @@
        {
           $this->table = $user->organization_id.'_userpages';
         } 
-      // if(Session::get('org_id') == null){
-      //   foreach(Auth::user()->meta as $key => $value){
-      //       if($value->key == 'organization'){
-      //           $this->table = $value->value.'_pages';
-      //           break;
-      //       } sgssandhu
-      //   }
-      // }else{
-      //   $this->table = Session::get('org_id').'_pages';
-      // }
      
    }
       use SoftDeletes;
@@ -35,7 +25,6 @@
       public function createdBy(){
         return $this->belongsTo('App\User','created_by','id');
       }
-
       public static function statusList(){
           return [
                   '0' => 'Not Published',

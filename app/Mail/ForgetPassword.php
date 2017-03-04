@@ -30,7 +30,6 @@ class ForgetPassword extends Mailable
      */
     public function build()
     {   
-        $subject = 'New Password for SDGINDIA';
         return $this->view('mail.forget',['user'=>$this->details['name'],'token'=>$this->details['token'],'desc'=>$this->details['description']])
                     ->subject($this->details['subject']);
     }

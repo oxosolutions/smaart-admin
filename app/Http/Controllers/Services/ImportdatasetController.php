@@ -246,7 +246,7 @@ class ImportdatasetController extends Controller
             $finalArray = [];
             $headers = [];
             $data = Excel::load($filePath, function($reader){ })->get();
-            foreach($data as $key => $value){
+            foreach($data[0] as $key => $value){
                 $FileData[] = $value->all();
             }
             $i = 1;
@@ -258,7 +258,11 @@ class ImportdatasetController extends Controller
             }
             
             foreach($FileData as $values){
-                $finalArray[] = array_combine($assoc, array_values($values));
+                try{
+                    $finalArray[] = array_combine($assoc, array_values($values));
+                }catch(\Exception $e){
+                    continue;
+                }
             }
             $headers = array_combine($assoc, array_values($headers));
             DB::select("CREATE TABLE `{$tableName}` ( " . implode(', ', $columns) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");

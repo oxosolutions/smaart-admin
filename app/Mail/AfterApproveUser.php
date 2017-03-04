@@ -35,6 +35,6 @@ class AfterApproveUser extends Mailable
                                     'userEmail' => $this->details['email'],
                                     'user' => $this->details['name']
 
-            ])->subject('Admin Approved');
+            ])->subject('Your account is approved!');
     }
 }

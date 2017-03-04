@@ -291,13 +291,14 @@ class DatasetsController extends Controller
         if(!$validate){
             return ['status'=>'error','message'=>'Required fields are missing!!'];
         }
+        $deleteStatus = 0;
         $model = DL::find($request->dataset_id);
         $tableName = 'data_table_'.time();
         $columns = array_keys((array)json_decode($request->subset_columns));
         $where_in = '';
         if($request->column_key != 'undefined' && $request->column_val != 'undefined'){
             $in = explode(',',$request->column_val);
-            $in_vals = '';
+            $in_vals = "";
             $index = 1;
             foreach($in as $k => $v){
                 $in_vals .= "'".$v."'";
@@ -306,14 +307,17 @@ class DatasetsController extends Controller
                 }
                 $index++;
             }
-            $where_in = 'where '.$request->column_key.' in('.$in_vals.')';
-
-            DB::select("CREATE TABLE `{$tableName}` as SELECT  ".implode(',', $columns)." FROM ".$model->dataset_table." ".$where_in.";");
+            $where_in = 'where '.$request->column_key.' not in('.$in_vals.') and id != 1';
+            DB::select("CREATE TABLE `{$tableName}` as SELECT  ".implode(',', $columns)." FROM ".$model->dataset_table.";");
+            $deleteStatus = 1;
+            //DB::select("CREATE TABLE `{$tableName}` as SELECT  ".implode(',', $columns)." FROM ".$model->dataset_table." ".$where_in.";");
         }else{
             DB::select("CREATE TABLE `{$tableName}` as SELECT  ".implode(',', $columns)." FROM ".$model->dataset_table.";");
         }
         DB::select("ALTER TABLE `{$tableName}` ADD  `id` INT(100) PRIMARY KEY AUTO_INCREMENT FIRST;");
-
+        if($deleteStatus == 1){
+            DB::select("DELETE FROM `{$tableName}` ".$where_in.";");
+        }
         $model = new DL();
         $model->dataset_name = $request->subset_name;
         $model->dataset_records = '{}';
@@ -366,6 +370,10 @@ class DatasetsController extends Controller
     public function validateColums($id){
 
         $model = DL::find($id);
+        if($model->dataset_columns == '' || $model->dataset_columns == null){
+            return ['status'=>'error','message'=>'dataset not defined yet!','defined'=>'false'];
+        }
+        
         if(!empty($model)){
             
             $wrongDataRows = [];

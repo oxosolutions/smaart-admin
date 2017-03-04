@@ -42,7 +42,8 @@ class ProfileApiController extends Controller
         $responseArray['name']  = $model->name;
         $responseArray['email'] = $model->email;
         $responseArray['token'] = $model->api_token;
-        $responseArray['organization'] = $model->organization->organization_name;
+
+        $responseArray['organization'] = @$model->organization->organization_name;
 
         if($model->meta != null){
 

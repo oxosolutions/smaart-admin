@@ -61,19 +61,32 @@ class ApiauthController extends VirtualTableGenController
     public function listUser()
     {   
       $i =0;
-      if(Auth::user()->role_id ==1)
+      $role_id = Auth::user()->role_id;
+      if($role_id == 1)
       {
         $org_id  = Auth::user()->organization_id;
-        $org_user  = User::where(['organization_id'=>$org_id,'role_id'=>2])->get();
+        $org_user  = User::orderBy('id','Desc')->where(['organization_id'=>$org_id,'role_id'=>2])->get();
+      }
+      else if($role_id == 3){
+        $org_user  = User::orderBy('id','Desc')->whereNotIn('role_id',[3])->get();
+      }
+      else{
+        return ['status'=>'error','Have not permisson to view'];
+      }
+        $arr = array();
         foreach($org_user as  $val)
         {
-            $arr[$i]['id']   =  $val->id;
-            $arr[$i]['name'] =$val->name;
-            $arr[$i]['email'] =$val->email;
-            $arr[$i]['api_token']=$val->api_token;
-            $arr[$i]['role_id']=$val->role_id;
-            $arr[$i]['approved']=$val->approved;
-            $arr[$i]['organization_name']=$val->organization->organization_name;
+            $arr[$i]['id']                =   $val->id;
+            $arr[$i]['name']              =   $val->name;
+            $arr[$i]['email']             =   $val->email;
+            $arr[$i]['api_token']         =   $val->api_token;
+            $arr[$i]['role_id']           =   $val->role_id;
+            $arr[$i]['approved']          =   $val->approved;
+            if($role_id == 1)
+            {
+              $arr[$i]['organization_name'] =   $val->organization->organization_name;
+            }
+
             if($val->meta)
             {
                foreach ($val->meta as  $metaValue) {
@@ -97,9 +110,9 @@ class ApiauthController extends VirtualTableGenController
         $i++;
         }//end main loop
         return ['status'=>'success','user_list'=>$arr];
-      }else{
-        return ['status'=>'error','Have not permisson to view'];
-      }
+      // }else{
+      //   return ['status'=>'error','Have not permisson to view'];
+      // }
     }
 
     public function editUser($id)
@@ -174,7 +187,6 @@ class ApiauthController extends VirtualTableGenController
       if($request->name && $request->email)
         {
             if (!filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
-
                 return ['status'=>'error','message'=>'Invalid email format!'];
              }
              try{
@@ -270,8 +282,6 @@ class ApiauthController extends VirtualTableGenController
 
     public function Register(Request $request)
     {
-
-
         $role = 2;
         $org_status ="used";
       if($request->organization =="others")
