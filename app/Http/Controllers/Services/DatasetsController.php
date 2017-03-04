@@ -233,8 +233,12 @@ class DatasetsController extends Controller
         $model = DL::find($id);   
            if(!empty($model)){
              if($model->dataset_file!=Null)
-                { 
-                   unlink($model->dataset_file);
+                {   
+                   try{
+                        unlink($model->dataset_file);
+                   }catch(\Exception $e){
+                        
+                   }
                 }
             $model->delete();
             DB::select('DROP TABLE `'.$model->dataset_table.'`');

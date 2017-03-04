@@ -87,8 +87,8 @@
                   <table border="0" cellpadding="0" cellspacing="0" style="border-collapse:separate;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%;">
                     <tr>
                       <td style="font-family:sans-serif;font-size:14px;vertical-align:top;">
-                        {{-- <p style="font-family:sans-serif;font-size: 42px;font-weight: 700;color: #168dc5;margin:0;text-align: center;">SMAART Framework</p> --}}
-                        <p style="font-family:sans-serif;font-size: 23px;font-weight: normal;color: #999;margin:0;text-align: center;">Track Sustainable Development Goals</p>
+                        <p style="font-family:sans-serif;font-size: 42px;font-weight: 700;color: #168dc5;margin:0;text-align: center;">SMAART Framework</p>
+                        {{-- <p style="font-family:sans-serif;font-size: 23px;font-weight: normal;color: #999;margin:0;text-align: center;">Track Sustainable Development Goals</p> --}}
                       </td>
                     </tr>
                   </table>

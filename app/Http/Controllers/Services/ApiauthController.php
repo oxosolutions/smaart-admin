@@ -282,13 +282,18 @@ class ApiauthController extends VirtualTableGenController
 
     public function Register(Request $request)
     {
+      //dd($request->request);
         $role = 2;
         $org_status ="used";
+
+try{
+      DB::beginTransaction();
       if($request->organization =="others")
       {
-         $checkOrg = UserMeta::where(['key'=>'organization','value'=>$request->organization_name]);//->count();
-          
-          if($checkOrg->count()==0)
+       //  $checkOrg = UserMeta::where(['key'=>'organization','value'=>$request->organization_name]);//->count();
+         // User::where('organization_id',)
+        $org = org::where('organization_name',$request->organization_name);
+          if($org->count()==0)
           {
             $data = array('organization_name' => $request->organization_name);  
             $inserted = org::create($data);
@@ -316,7 +321,7 @@ class ApiauthController extends VirtualTableGenController
 
                 return ['status'=>'error','message'=>'Invalid email format!'];
              }
-                try{
+                //try{
                     $user = User::create([
                             'name' => $request->name,
                             'email' => $request->email,
@@ -352,6 +357,8 @@ class ApiauthController extends VirtualTableGenController
                      // $MetaData[3]['user_id'] = $user->id;
                     
                     UserMeta::insert($MetaData);
+
+                    DB::commit();
                     if($org_status=="new")
                     {
                       $this->generateTable($organization_id);
@@ -371,18 +378,30 @@ class ApiauthController extends VirtualTableGenController
 
                     }
                     return ['status'=>'successful','message'=>'successfully registered!', "token"=>$api_token];
-                }catch(\Exception $e){
-                    if($e instanceOf \Illuminate\Database\QueryException){
+                // }catch(\Exception $e){
+                //     if($e instanceOf \Illuminate\Database\QueryException){
+                //         return ['status'=>'error','message'=>'Email already in use!'];
+                //     }else{
+                //         throw $e;
+                //         return ['status'=>'error','message'=>'Some thing go wrong!'];
+                //     }
+                // }
+        }
+       else{
+            return ['status'=>'error','message'=>'fill all required fields!'];
+        }
+      
+}catch(\Exception $e)
+{
+   if($e instanceOf \Illuminate\Database\QueryException){
                         return ['status'=>'error','message'=>'Email already in use!'];
                     }else{
                         throw $e;
                         return ['status'=>'error','message'=>'Some thing go wrong!'];
                     }
-                }
-        }
-       else{
-            return ['status'=>'error','message'=>'fill all required fields!'];
-        }
+  
+}
+
    }
    public function UserList()
    {

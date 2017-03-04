@@ -155,6 +155,7 @@ class ProfileApiController extends Controller
             $profile_pic = UserMeta::where(['key'=>'profile_pic', 'user_id' => $userId]);
             if($profile_pic->count()==0)
             {
+                $sendData ="profile_pic";
                 $newProfilePic = new UserMeta;
                 $newProfilePic->key = $sendData;
                 $newProfilePic->value = $request->$sendData;

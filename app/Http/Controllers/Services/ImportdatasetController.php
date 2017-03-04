@@ -226,8 +226,9 @@ class ImportdatasetController extends Controller
     protected function storeInDatabase($filename, $origName, $source, $orName){
         
         $filePath = $filename;
+
         if($source == 'url'){
-            $randName = 'downloaded_dataset_'.time().'.csv';
+            $randName = 'downloaded_dataset_'.time().'.'.File::extension($filename);
             $path = 'datasets/';
             copy($filename, $path.$randName);
             $filePath = 'datasets/'.$randName;
@@ -245,9 +246,18 @@ class ImportdatasetController extends Controller
             $assoc = [];
             $finalArray = [];
             $headers = [];
-            $data = Excel::load($filePath, function($reader){ })->get();
-            foreach($data[0] as $key => $value){
-                $FileData[] = $value->all();
+            $sheetCount = 0;
+            $data = Excel::load($filePath, function($reader) use (&$sheetCount){ 
+                $sheetCount = $reader->getSheetCount();
+            })->get();
+            if($sheetCount > 1){
+                foreach($data[0] as $key => $value){
+                    $FileData[] = $value->all();
+                }
+            }else{
+                foreach($data as $key => $value){
+                    $FileData[] = $value->all();
+                }
             }
             $i = 1;
             foreach($FileData[0] as $key  => $value){

@@ -317,7 +317,11 @@ class ApiauthController extends VirtualTableGenController
         $org_status ="used";
       if($request->organization =="others")
       {
-         $checkOrg = UserMeta::where(['key'=>'organization','value'=>$request->organization_name]);//->count();
+
+
+
+         //$checkOrg = UserMeta::where(['key'=>'organization','value'=>$request->organization_name]);//->count();
+        $checkOrg =  user::where(' organization_id',$request->organization_name);
           
           if($checkOrg->count()==0)
           {
