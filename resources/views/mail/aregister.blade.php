@@ -2,7 +2,7 @@
 @section('content')
 
 <p style="font-family:sans-serif;font-size:14px;font-weight:normal;margin:0;Margin-bottom:15px;"><b>Hello Admin</b></p>
-<p style="font-family:sans-serif;font-size:14px;font-weight:normal;margin:0;Margin-bottom:15px;">New User is registered at SDG India.</p>
+<p style="font-family:sans-serif;font-size:14px;font-weight:normal;margin:0;Margin-bottom:15px;">New User is registered at SMAART Framework.</p>
 <p style="font-family:sans-serif;font-size:14px;font-weight:normal;margin:0;Margin-bottom:15px;">Following are the details of the user</p>
 <ul>
 	<li>Name: {{$userName}}</li>
@@ -19,7 +19,7 @@
 		  <tbody>
 			<tr>
 			  <td style="font-family:sans-serif;font-size:14px;vertical-align:top;background-color:#ffffff;border-radius:5px;text-align:center;background-color:#3498db;">
-<a href="http://projects.fhts.ac.in/sdgindia/admin/public/approve/email/{{$api_token}}" target="_blank" style="text-decoration:underline;background-color:#ffffff;border:solid 1px #3498db;border-radius:5px;box-sizing:border-box;color:#3498db;cursor:pointer;display:inline-block;font-size:14px;font-weight:bold;margin:0;padding:12px 25px;text-decoration:none;text-transform:capitalize;background-color:#3498db;border-color:#3498db;color:#ffffff;">Approve User</a>
+<a href="http://smaartframework.com/admin/public/approve/email/{{$api_token}}" target="_blank" style="text-decoration:underline;background-color:#ffffff;border:solid 1px #3498db;border-radius:5px;box-sizing:border-box;color:#3498db;cursor:pointer;display:inline-block;font-size:14px;font-weight:bold;margin:0;padding:12px 25px;text-decoration:none;text-transform:capitalize;background-color:#3498db;border-color:#3498db;color:#ffffff;">Approve User</a>
 </td>
 			</tr>
 		  </tbody>
@@ -31,7 +31,7 @@
 
 <p style="font-family:sans-serif;font-size:14px;font-weight:normal;margin:0;Margin-bottom:15px;">or copy and paste the following link to your browser's address bar.
 </p>
-<p style="font-family:sans-serif;font-size:14px;font-weight:900;margin:0;Margin-bottom:15px;"><b>http://projects.fhts.ac.in/sdgindia/admin/public/approve/email/{{$api_token}}</b></p>
+<p style="font-family:sans-serif;font-size:14px;font-weight:900;margin:0;Margin-bottom:15px;"><b>http://smaartframework.com/admin/public/approve/email/{{$api_token}}</b></p>
 <p style="font-family:sans-serif;font-size:14px;font-weight:normal;margin:0;Margin-bottom:15px;">Alternative you can login to admin panel to manage users. </p>
 
 
