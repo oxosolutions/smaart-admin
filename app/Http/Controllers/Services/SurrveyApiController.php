@@ -5,53 +5,211 @@ namespace App\Http\Controllers\Services;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Surrvey;
-use App\SurrveyQuestion as SQ;
+use App\SurveyQuestion as SQ;
 use Auth;
 use App\UserMeta as um;
 use DB;
+use App\SurveyQuestionGroup as GROUP;
+use App\SurveySetting as SSETTING;
 
 class SurrveyApiController extends Controller
 {
+	//SAVE & EDIT SURVEY GROUP QUESTION
+	public function save_survey_data(Request $request)
+	{
+		$survey_id = $request['survey_id'];
+		$grp = GROUP::where('survey_id',$survey_id);
+		$sq = SQ::where('survey_id', $survey_id);		
+		$data = json_decode($request['survey_data'],true);
+		try{
+				DB::beginTransaction();
+				if($grp->count() > 0)
+				{
+					$grp->forceDelete();
+					$msg = "Update Successfully Survey Group Question";
+				}
+				else{
+						$msg = "Successfully Create Survey Group & Questions";
+				}
+				if($sq->count() > 0)
+				{
+					$sq->forceDelete();
+				}
+				foreach($data as $key => $value) {
+					//group 
+					$grp = new GROUP();
+					$grp->survey_id 	=	$survey_id;//$request['survey_id'];
+					$grp->title 		=	$value["group_name"]; 
+					$grp->description 	=	$value["group_description"]; 
+					$grp->save();
+					foreach ($value['group_questions'] as $key => $val) {
+					// group Question				 
+						$sq = 	 new SQ();
+						$sq->question = $val["question"];
+						unset($val["question_text"]);
+						$sq->answer = 	json_encode($val);
+						$sq->survey_id = $survey_id;
+						$sq->group_id = $grp->id;
+						$sq->save();
+					}
+				}
+				DB::commit();
+				return ['status'=>"success", "message"=>$msg];
+			}catch(\Exception $e){
+				DB::rollback();
+				throw $e;
+			}				
+	}
+// DRAW SURVEY 
 
-	
+	// FOR VIEW GROUP & QUESTION 
+	public function view_survey_data($id)
+	{
+	try{
+			Surrvey::findORfail($id);
+			$sdata = Surrvey::find($id);		
+			$survey['id'] 			= 	$sdata->id;
+			$survey['survey_name'] 		= 	$sdata->name;
+	  		$survey['created_by']	= 	$sdata->created_by;
+	  		$survey['user_name']	= 	$sdata->creat_by->name;
+	  		$survey['description'] 	=	$sdata->description;
+	  		$survey['status'] 		= 	$sdata->status;
+	  		if(count($sdata->group)>0){
+				foreach ($sdata->group as $key => $grp) {
+					$survey['group'][$key]['group_id'] = $grp->id;
+					$survey['group'][$key]['survey_id'] = $grp->survey_id;
+					$survey['group'][$key]['group_name'] = $grp->title;
+		    		$survey['group'][$key]['group_description'] =$grp->description;			
+					foreach ($grp->question as $qkey => $ques) {
+						$answer = json_decode($ques->answer,true);
+						foreach ($answer as $anskey => $ansVal) {
+							$survey['group'][$key]['group_questions'][$qkey][$anskey] =$ansVal;
+						}
+						$survey['group'][$key]['group_questions'][$qkey]['survey_id']  = $ques->survey_id;
+		        		$survey['group'][$key]['group_questions'][$qkey]['question']  = $ques->question;
+		        		$survey['group'][$key]['group_questions'][$qkey]['group_id']  = $ques->group_id;
+					}			
+				}
+			}else{
 
+				$survey['group'] =[];
+				$survey['question']=[];
+			}
+
+			return ['status'=>'success','response'=>$survey];	
+		}catch(\Exception $e)
+		{
+			return ['status'=>'error','message'=>"Something goes wrong"];	
+		}	
+	}
+	public function generate_survey($id)
+	{
+		try{
+			Surrvey::findORfail($id);
+			$sdata = Surrvey::find($id);	
+			//dd($sdata->creat_by->roles->name);	
+			$survey['survey_id'] 			= 	$sdata->id;
+			$survey['survey_name'] 		= 	$sdata->name;
+	  		$survey['survey_author_id']	= 	$sdata->created_by;
+	  		$survey['survey_author_name']	= 	$sdata->creat_by->name;
+	  		$survey['survey_author_role_id']	= 	$sdata->creat_by->role_id;
+	  		$survey['survey_author_role_name']	= 	$sdata->creat_by->roles->name;
+
+	  		$survey['survey_description'] 	=	$sdata->description;
+	  		$survey['survey_status'] 		= 	$sdata->status;
+	  		if(count($sdata->setting) >0)
+	  		{
+	  			foreach ($sdata->setting as $key => $value) {	  		
+		            $survey['survey_settings'][$value->key]= $value->value;
+	            }
+	        }
+	  		if(count($sdata->group)>0){
+				foreach ($sdata->group as $key => $grp) {
+					$survey['survey_group'][$key]['group_id'] = $grp->id;
+					$survey['survey_group'][$key]['survey_id'] = $grp->survey_id;
+					$survey['survey_group'][$key]['title'] = $grp->title;
+		    		$survey['survey_group'][$key]['description'] =$grp->description;			
+					foreach ($grp->question as $qkey => $ques) {
+						$answer = json_decode($ques->answer,true);
+						foreach ($answer as $anskey => $ansVal) {
+							$survey['survey_group'][$key]['question'][$qkey][$anskey] =$ansVal;
+						}
+						$survey['survey_group'][$key]['question'][$qkey]['survey_id']  = $ques->survey_id;
+		        		$survey['survey_group'][$key]['question'][$qkey]['question']  = $ques->question;
+		        		$survey['survey_group'][$key]['question'][$qkey]['group_id']  = $ques->group_id;
+					}			
+				}
+			}else{
+				$survey['survey_group'] =[];
+				$survey['survey_question']=[];
+			}
+			return ['status'=>'success','response'=>$survey];	
+		}catch(\Exception $e)
+		{
+			throw $e;
+			return ['status'=>'error','message'=>"Something goes wrong"];	
+		}	
+	}
+
+
+
+// SAVE SETTING 
+	protected function save_survey_setting($data)
+    {
+		$ssetting = new SSETTING();
+		$ssetting->survey_id = $data['survey_id'];
+		$ssetting->key 	= $data['key'];
+		$ssetting->value = $data['value'];
+		$ssetting->save();
+    }
+// SAVE SURVEY & SETTING
 	public function surrvey_save(Request $request)
     {
-    	 	
 
-    	try{
+		try{
 			$user_id =	Auth::user()->id;
-    	    $org = um::select('value')->where(['user_id'=>$user_id,'key'=>'organization'])->first(); 
-			$org_id = $org->value;
+			$org_id = Auth::user()->organization_id;
             $surrvey = new Surrvey();
             $surrvey->name = $request->name;
             $surrvey->description = $request->description;
-            $surrvey->created_by = Auth::user()->id;
+            $status = '0';
+			if($request->enableDisable=="true")
+            {           	
+            	 $status ='1';
+            }         
+            $surrvey->status = $status;
+			$surrvey->created_by = Auth::user()->id;
             $surrvey->save();
-            	return ['status'=>'success', 'response'=>'successfully created surrvey'];
+           	$sid = $surrvey->id;
+          	$ssdata =	json_decode($request->settings,true);
+          	$this->setting_save($ssdata, $sid);
+    	    return ['status'=>'success', 'survey_id'=> $sid, 'response'=>'successfully created surrvey'];
             }catch(\Exception $e)
             {
-                return ['status'=>'error', 'response'=>'Something goes wrong Try Again'];
+            	throw $e;
+            	
+                //return ['status'=>'error', 'response'=>'Something goes wrong Try Again'];
 
             }   
     		
     }
+    // SURVEY LIST
     public function surrvey_list()
     {
            $model = Surrvey::select(['id','name','description','status','created_by'])->orderBy('id','desc')->get();
            return ['status'=>"success", "response"=>$model];
     }
-
+    // SURVEY ENABLE & DISABLE 
     public function enableDisable($id)
 	{
 		try
 		{
 			$status = Surrvey::select('status')->where('id',$id)->first();
-			if($status->status=="enable"){
-				Surrvey::select('status')->where('id',$id)->update(['status'=>'disable']);
-			}else if($status->status=="disable")
+			if($status->status=="1"){
+				Surrvey::select('status')->where('id',$id)->update(['status'=>'0']);
+			}else if($status->status=="0")
 			{
-				Surrvey::select('status')->where('id',$id)->update(['status'=>'enable']);
+				Surrvey::select('status')->where('id',$id)->update(['status'=>'1']);
 
 			 }
 			return ['status'=>'success', 'message'=>"successfully change status"];
@@ -63,42 +221,118 @@ class SurrveyApiController extends Controller
 		}
 
 	}
-
+// SURVEY DELETE
 	public function delSurrvey($id)
 	{
 		try{
-			Surrvey::where('id',$id)->delete();
+			DB::beginTransaction();
+			Surrvey::where('id',$id)->forceDelete();
+			$grp = GROUP::where('survey_id',$id);
+			$sq = SQ::where('survey_id', $id);
+			if($grp->count() > 0)
+			{
+				$grp->forceDelete();
+			}
+			if($sq->count() > 0)
+			{
+				$sq->forceDelete();
+			}
+
+		$setting = 	SSETTING::where('survey_id', $id);
+		if($setting->count() > 0)
+		{
+			$setting->forceDelete();
+		}
+			DB::commit();
 			return ['status'=>'success', 'message'=>"successfully Delete Surrvey"];
 
 		}catch(\Exception $e)
 		{
+			DB::rollback();
 			return ['status'=>'error', 'message'=>"Something goes wrong Try Again"];
 		}
 
 	}
-
+//  EDIT SURVEY & SETTING
 	public function surrvey_edit($id)
     	{
         try{
             Surrvey::findORfail($id);
-            $model =  Surrvey::select(['id','name','description','status','created_by'])->where('id',$id)->first();
-            	return['status'=>'success' ,'response'=>$model];  
+            $model = Surrvey::find($id);
+            $survey['id'] =	$model->id;
+            $survey['name'] =	$model->name;
+            $survey['description'] =	$model->description;
+            $survey['status'] =	$model->status;
+            foreach ($model->setting as $key => $value) {
+            $survey[$value->key]= $value->value;
+            }
+         
+            	return['status'=>'success' ,'response'=>$survey];  
             }catch(\Exception $e)
             {
+            	throw $e;
+            	
            		 return['status'=>'error' ,'response'=>"Something goes wrong Try Again"];  
             }    
     	}
-	public function surrvey_update(Request $request )
+    	protected function setting_save($ssdata,$sid )
+    	{
+    		foreach ($ssdata as $key => $value) {
+		          		if($key == "survey_custom_error_messages_list" && $ssdata['survey_custom_error_message_status'] != null)
+          		{
+          			$value = json_encode($value);
+          			$settingdata = ['survey_id'=>$sid,'key'=>$key, 'value'=>$value];
+          			$this->save_survey_setting($settingdata);
+          		}else if($ssdata['survey_custom_error_message_status'] == null && $key =="survey_custom_error_messages_list")
+          		{
+
+          		}elseif($key =="authorized_roles" && $value !=null)
+          		{
+          			$settingdata = ['survey_id'=>$sid,'key'=>$key, 'value'=>json_encode($value)];
+          			$this->save_survey_setting($settingdata);
+
+          		}else if($key =="authorized_users" && $value !=null)
+          		{
+          			$settingdata = ['survey_id'=>$sid,'key'=>$key, 'value'=>json_encode($value)];
+          			$this->save_survey_setting($settingdata);
+          		}
+				else{
+          			$settingdata = ['survey_id'=>$sid,'key'=>$key, 'value'=>$value];
+          			$this->save_survey_setting($settingdata);
+	          		}
+          		}
+    	}
+//  UPDATE SURVEY & SETTING
+	public function survey_update(Request $request )
 	    {
+
 	        try{
+	        	DB::beginTransaction();
 	            Surrvey::findORfail($request->id);
-	            Surrvey::where('id',$request->id)->update(['name'=>$request->name, 'description'=>$request->description,'status'=>$request->status]);
-            	return ['status'=>'success', 'response'=>'successfully created surrvey'];
+	            	$status = "0";
+	            if($request->enableDisable=="true")
+	            {
+	            	$status = "1";
+	            }
+	            Surrvey::where('id',$request->id)->update(['name'=>$request->name, 'description'=>$request->description,'status'=>$status]);
+	            $ssetting = SSETTING::where('survey_id',$request->id);
+	            	if($ssetting->count() > 0){
+	            		$ssetting->forceDelete();
+	            	}
+	            	$sid = $request->id;
+		          	$ssdata =	json_decode($request->settings,true);
+		          	$this->setting_save($ssdata, $sid);
+
+		          DB::commit();		
+            	return ['status'=>'success', 'response'=>'successfully updated surrvey'];
 	        }catch(\Exception $e)
 	        {
-            	return ['status'=>'success', 'response'=>'Something goes wrong Try Again'];
+	        	DB::rollback();
+	        	throw $e;
+	        	return ['status'=>'success', 'response'=>'Something goes wrong Try Again'];
 	        }
 	    }
+	// OLD API    
     public function surrveyData($surrvey_id)
     {
     		$model = Surrvey::where('id',$surrvey_id)->first();
@@ -149,7 +383,6 @@ class SurrveyApiController extends Controller
 			if($model->error_message_value   !=null){
 				$array['error_message_value'] = json_decode($model->error_message_value,true);
 			}
-
 			
 		foreach ($model->questions as $key => $value) {
 			$ans = json_decode($value->answer,true);

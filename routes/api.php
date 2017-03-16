@@ -1,13 +1,9 @@
 <?php
 
 use Illuminate\Http\Request;
-
-
 	
 Route::get('/sql','Services\ImportdatasetController@runSqlFile');
 Route::group(['prefix' => 'v1'], function () {
-
-
 
 	//get organization list without api_token
 	Route::get('organizationList',['as'=> 'organization' , 'uses'=>'Services\organization@allOrganization']);
@@ -66,14 +62,22 @@ Route::post('/usersettings/update', ['as' => 'usersettings.update' , 'uses' => '
 		Route::get('/dashboard', ['as' => 'dashboard' , 'uses' => 'Services\DashboardController@DashboardData']);
 	// VISUAL API START HERE
 	Route::post('/singlevisual', ['as'=>'single.visual','uses'=>'Services\VisualApiController@visualById']);
+	
 	//surrvey
 	Route::post('surrvey/save', ['as'=>'surrvey.surrvey_save', 'uses'=>'Services\SurrveyApiController@surrvey_save', 'route_name'=> 'Survey Created']);
 	Route::get('surrvey/list', ['as'=>'apisurrvey.list', 'uses'=>'Services\SurrveyApiController@surrvey_list' , 'route_name'=> 'Survey List View']);
 	Route::get('surrvey/enableDisable/{id}', ['as'=>'apisurrvey.status', 'uses'=>'Services\SurrveyApiController@enableDisable']);
 	Route::get('surrvey/del/{id}', ['as'=>'apisurrvey.del', 'uses'=>'Services\SurrveyApiController@delSurrvey']);
 	Route::get('surrvey/edit/{id}', ['as'=>'apisurrvey.edit', 'uses'=>'Services\SurrveyApiController@surrvey_edit']);
-	Route::post('surrvey/update', ['as'=>'apisurrvey.update', 'uses'=>'Services\SurrveyApiController@surrvey_update' , 'route_name'=> 'Survey Update']);
+	Route::post('survey/update', ['as'=>'apisurrvey.update', 'uses'=>'Services\SurrveyApiController@survey_update' , 'route_name'=> 'Survey Update']);
+	//SURRVEY GROUP 
+	Route::post('survey/data', ['as'=>'apisurrvey.data', 'uses'=>'Services\SurrveyApiController@save_survey_data' , 'route_name'=> 'Created Question']);
 
+	Route::get('survey/view/{id}', ['as'=>'apisurrvey.data', 'uses'=>'Services\SurrveyApiController@view_survey_data']);
+	Route::get('generate_survey/{id}', ['as'=>'apisurrvey.data', 'uses'=>'Services\SurrveyApiController@generate_survey']);
+	
+//role list 
+	Route::get('role/list', ['as'=>'role.list', 'uses'=>'Services\ApiauthController@roleList']);
 	
 	Route::get('surrveyData/{id}',['as'=>'surrvey.data','uses'=>'Services\SurrveyApiController@surrveyData']);
 

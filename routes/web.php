@@ -174,7 +174,13 @@
 		Route::get('/visual/edit/{id}',['as'=>'visual.edit','uses'=>'VisualController@edit']);
 		Route::patch('/visual/update/{id}',['as'=>'visual.update','uses'=>'VisualController@update']);
 
+
+//DRAW SURVEY 
+	Route::get('draw_survey/{id}',['as'=>'survey.draw', 'uses'=>'DrawSurveyController@draw_survey']);
+	Route::post('survey/filled',['as'=>'survey.store', 'uses'=>'DrawSurveyController@draw_survey']);
+		
 	//Form Builder 
+
 		Route::get('surrvey_setting/{id}',['as'=>'surrvey.setting', 'uses'=>'FormBuilderController@surrvey_setting']);
 		Route::post('surrvey_setting/save/{id}',['as'=>'setting.save', 'uses'=>'FormBuilderController@save_setting']);
 

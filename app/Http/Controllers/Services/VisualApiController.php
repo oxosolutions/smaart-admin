@@ -663,6 +663,8 @@ class VisualApiController extends Controller
         $dataset_id = $visual->dataset_id;
         $columns = json_decode($visual->columns, true);
         $chartType = json_decode($visual->chart_type, true);
+        $embedCss = @$columns['embedCss'];
+        $embedJS = @$columns['embedJS'];
         $countCharts = '';
         if($columns == null){
             return ['status'=>'error','message'=>'No settings found!'];
@@ -788,6 +790,7 @@ class VisualApiController extends Controller
         $responseArray['settings'] = $columns['visual_settings'];
         $responseArray['titles'] = $columns['title'];
         $responseArray['status'] = 'success';
+        $responseArray['css_js'] = ['css'=>$embedCss,'js'=>$embedJS];
         return $responseArray;
     }
 }

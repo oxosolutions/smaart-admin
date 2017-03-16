@@ -22,6 +22,7 @@ use App\GlobalSetting as GS;
 use App\organization as org;
 use Session;
 use App\UserMeta as um;
+use App\Role;
 
 class ApiauthController extends VirtualTableGenController
 {
@@ -57,6 +58,12 @@ class ApiauthController extends VirtualTableGenController
             return ['status'=>'error','message'=>'Invalid email or password!'];
         }
  
+    }
+//role list
+   public function roleList()
+    {
+      $roles = Role::role_list();
+      return ['status'=>'success', 'roles'=>$roles];
     }
     public function listUser()
     {   

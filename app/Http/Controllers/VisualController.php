@@ -40,7 +40,12 @@ class VisualController extends Controller
 
     			})
     			->editColumn('created_by', function($model){
-    				return $model->createdBy->name;
+                    try{
+    				    return $model->createdBy->name;
+                    }catch(\Exception $e)
+                    {
+                      return '<i style=\'color:red;\'>No user exist now.</i>';   
+                    }
     			})
     		   	->addColumn('actions', function($model){
                     return view('visual._actions', ['model'=>$model])->render();

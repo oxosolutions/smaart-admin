@@ -5,26 +5,20 @@ use Yajra\Datatables\Datatables;
 
 use Illuminate\Http\Request;
 use App\Surrvey;
-use App\SurrveyQuestion as SQ;
+use App\SurveyQuestion as SQ;
 USE Auth;
 use Session;
 use Carbon\Carbon as tm;
 use DB;
 class FormBuilderController extends Controller
 {
-    public function __construct(Request $request)
-    {
-      
-    }
       public function surrvey_setting($id)
       {
-
         $model = Surrvey::where('id',$id)->first();
-
         $plugins = [
                         'js' => ['custom'=>['surrvey_setting']],
                         'model'=>$model
-            ];
+                    ];
         return view('formbuilder.surrvey_setting', $plugins);
 
       }
@@ -91,12 +85,9 @@ class FormBuilderController extends Controller
       Session::flash('success','Setting Save  Successfully.');
               return redirect()->route('surrvey.index');    
   }
-    public function create_surrvey()
-    {
-      Session::put('', 'value');
-      dump(Session::all());
-     
-       return view('formbuilder.add');
+    public function create_surrvey(){
+
+        return view('formbuilder.add');
     }
  // protected function modelSurrveyValidate($request){
         
@@ -214,16 +205,16 @@ class FormBuilderController extends Controller
 
     public function create($id)
     {
-         
-       $model = SQ::where('surrvey_id',$id);
+        
+       $model = SQ::where('survey_id',$id);
        $quesData ="";
       if($model->count()>0){
         $quesData = $model->get();
          }
          $plugins = [
                     'js' => ['custom'=>['builder']],
-                    'surrvey_id'=>$id,
-                    'question'=>$quesData
+                    'surrvey_id'  => $id,
+                    'question'    => $quesData
         ];
         //print_r($plugins);
        
@@ -245,11 +236,13 @@ class FormBuilderController extends Controller
 // Save update Question
     public function save(Request $request)
      {  
-          $this->modelValidate($request);
+           // dd($request->request);
 
-     // dd($request->request);
+          //$this->modelValidate($request);
+
+       
          $sid = $request->surrvey_id;
-         $SQ =  SQ::where('surrvey_id',$sid);
+         $SQ =  SQ::where('survey_id',$sid);
         if($SQ->count() > 0)
           {
             $SQ->delete();
@@ -336,15 +329,15 @@ class FormBuilderController extends Controller
             }
 
             $sq =  new SQ();
-            $sq->surrvey_id = $sid;
+            $sq->survey_id = $sid;
             $sq->question = $ques;
             $sq->answer  = json_encode($array);
             $sq->save();
     	}
-            
+            dd($array);
 
         Session::flash('success','Surrvey Question Create Successfully');
-            return redirect()->route('surrvey.index');
+           // return redirect()->route('surrvey.index');
     }
 
      public function get_ques($id)

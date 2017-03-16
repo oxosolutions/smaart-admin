@@ -33,4 +33,17 @@ class Surrvey extends Model
    {
    		return $this->hasMany('App\SurrveyQuestion','surrvey_id','id');
    }
+   public function setting()
+   {
+      return $this->hasMany('App\SurveySetting','survey_id','id');
+   }
+   public function group()
+   {
+      return $this->hasMany('App\SurveyQuestionGroup','survey_id','id');
+   }
+
+   public function creat_by()
+   {
+      return $this->belongsTo('App\User','created_by','id')->select(['name','role_id']);
+   }
 }

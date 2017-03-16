@@ -30,25 +30,11 @@ class VirtualTableGenController extends Controller
         [
           'tab_name'=>$org_name.'_surveys',
           'columns'=>[
-        "`surrvey_table` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL",
+        "`survey_table` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL",
         "`name` varchar(255) COLLATE utf8_unicode_ci NOT NULL",
         "`created_by` int(11) NOT NULL",
         "`description` text COLLATE utf8_unicode_ci",
-        "`status` enum('enable','disable') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'disable'",
-        "`authentication_required` enum('enable','disable') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'disable'",
-        "`authentication_type` enum('role_based','individual_based') COLLATE utf8_unicode_ci DEFAULT NULL",
-        "`authorize` text COLLATE utf8_unicode_ci",
-        "`scheduling` enum('enable','disable') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'disable'",
-        "`start_date` datetime DEFAULT NULL",
-        "`expire_date` datetime DEFAULT NULL",
-        "`timer_status` enum('enable','disable') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'disable'",
-        "`timer_type` enum('expire_time','durnation') COLLATE utf8_unicode_ci DEFAULT NULL",
-        "`timer_durnation` time DEFAULT NULL",
-        "`response_limit_status` enum('enable','disable') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'disable'",
-        "`response_limit` int(11) DEFAULT NULL",
-        "`response_limit_type` enum('per_user','per_ip_address') COLLATE utf8_unicode_ci DEFAULT NULL",
-        "`error_messages` enum('enable','disable') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'disable'",
-        "`error_message_value` text COLLATE utf8_unicode_ci",
+        "`status` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '0'",
         "`created_at` timestamp NULL DEFAULT NULL",
         "`updated_at` timestamp NULL DEFAULT NULL",
         "`deleted_at` timestamp NULL DEFAULT NULL"
@@ -69,7 +55,7 @@ class VirtualTableGenController extends Controller
         [
           'tab_name'=>$org_name.'_survey_question_groups',
           'columns'=>[
-            "`surrvey_id` int(10) UNSIGNED NOT NULL",
+            "`survey_id` int(10) UNSIGNED NOT NULL",
             "`title` varchar(255) COLLATE utf8_unicode_ci NOT NULL",
             "`description` text COLLATE utf8_unicode_ci",
             "`created_at` timestamp NULL DEFAULT NULL",
@@ -157,6 +143,17 @@ class VirtualTableGenController extends Controller
 			  "`deleted_at` timestamp NULL DEFAULT NULL",
 			  "`created_at` timestamp NULL DEFAULT NULL",
 			  "`updated_at` timestamp NULL DEFAULT NULL"
+          ]
+        ],
+        [
+          'tab_name'=>$org_name.'_survey_settings',
+          'columns'=>[
+          "`key` varchar(255) COLLATE utf8_unicode_ci NOT NULL",
+        "`value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL",
+        "`survey_id` int(11) NOT NULL",
+        "`deleted_at` timestamp NULL DEFAULT NULL",
+        "`created_at` timestamp NULL DEFAULT NULL",
+        "`updated_at` timestamp NULL DEFAULT NULL"
           ]
         ]
 

@@ -55,6 +55,10 @@ class User extends Authenticatable
         }
         return false;
     }
+    public function roles()
+    {
+        return $this->belongsTo('App\Role','role_id','id')->select('name');
+    }
     private function getUserRole()
     {
         return $this->role()->getResults();
@@ -96,5 +100,7 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\organization');
     }
+
+    
 
 }
