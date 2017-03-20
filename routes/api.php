@@ -10,8 +10,8 @@ Route::group(['prefix' => 'v1'], function () {
 	Route::group(['middleware'=>['cors','log']], function(){
 	Route::post('/dataset/save',['as'=>'dataset.save','uses'=>'Services\SaveServeController@saveDataset']);
 
-Route::get('/userpages',						['as'=>'pages.list','uses'=>'Services\UserPagesApiController@getAllPages' , 'route_name'=>  'View Pages']);
-Route::get('/userpages/{page_slug}',			['as'=>'pages.by_slug','uses'=>'Services\UserPagesApiController@getPageBySlug']);
+	Route::get('/userpages',						['as'=>'pages.list','uses'=>'Services\UserPagesApiController@getAllPages' , 'route_name'=>  'View Pages']);
+	Route::get('/userpages/{page_slug}',			['as'=>'pages.by_slug','uses'=>'Services\UserPagesApiController@getPageBySlug']);
 
 
 	Route::post('/logs_filter','Services\LogApiController@logFilter');
@@ -37,33 +37,36 @@ Route::get('/userpages/{page_slug}',			['as'=>'pages.by_slug','uses'=>'Services\
 	Route::post('/resetpass',					['as'=>'forget.token.validate','uses'=>'Services\ApiauthController@resetUserPassword']);
 });
 
-Route::group(['middleware'=>['auth:api']], function(){	
-	Route::get ('/dataset/file/{id}/{type}',['as'=>'export.dataset', 'uses'=>'Services\ExportDatasetController@export' , 'route_name'=>  'Download Dataset']);
+	Route::group(['middleware'=>['auth:api']], function(){	
+		Route::get ('/dataset/file/{id}/{type}',['as'=>'export.dataset', 'uses'=>'Services\ExportDatasetController@export' , 'route_name'=>  'Download Dataset']);
 
-	Route::get('/dataset/download/{fileName}',  ['as'=>'dataset.download','uses'=>'Services\ExportDatasetController@downloadFile']);
-});
+		Route::get('/dataset/download/{fileName}',  ['as'=>'dataset.download','uses'=>'Services\ExportDatasetController@downloadFile']);
+	});
 
+	Route::post('/activateApp',['as'=>'activate.app','uses'=>'Services\AppApiController@activateApp']);
 
+	// VISUAL   API END  HERE
+	Route::post('/singlevisualEmbed', ['as'=>'single.visual','uses'=>'Services\VisualApiController@EmbedVisualById']);
 
-// VISUAL   API END  HERE
-Route::post('/singlevisualEmbed', ['as'=>'single.visual','uses'=>'Services\VisualApiController@EmbedVisualById']);
-
-Route::group(['middleware'=>['auth:api','cors','log']], function(){
+	Route::group(['middleware'=>['auth:api','cors','log']], function(){
 
 
 	//UserSetting
-Route::post('/usersettings/save', ['as' => 'usersettings.save' , 'uses' => 'Services\ApiauthController@UserSettingSave']);
-Route::get('/usersettings/get', ['as' => 'usersettings.get' , 'uses' => 'Services\ApiauthController@UserSettingGet']);
-Route::get('/usersettings/edit', ['as' => 'usersettings.edit' , 'uses' => 'Services\ApiauthController@UserSettingEdit']);
-Route::post('/usersettings/update', ['as' => 'usersettings.update' , 'uses' => 'Services\ApiauthController@UserSettingUpdate']);
+	Route::post('/usersettings/save', ['as' => 'usersettings.save' , 'uses' => 'Services\ApiauthController@UserSettingSave']);
+	Route::get('/usersettings/get', ['as' => 'usersettings.get' , 'uses' => 'Services\ApiauthController@UserSettingGet']);
+	Route::get('/usersettings/edit', ['as' => 'usersettings.edit' , 'uses' => 'Services\ApiauthController@UserSettingEdit']);
+	Route::post('/usersettings/update', ['as' => 'usersettings.update' , 'uses' => 'Services\ApiauthController@UserSettingUpdate']);
 
 
 	//dashboard 
-		Route::get('/dashboard', ['as' => 'dashboard' , 'uses' => 'Services\DashboardController@DashboardData']);
+	Route::get('/dashboard', ['as' => 'dashboard' , 'uses' => 'Services\DashboardController@DashboardData']);
 	// VISUAL API START HERE
 	Route::post('/singlevisual', ['as'=>'single.visual','uses'=>'Services\VisualApiController@visualById']);
 	
 	//surrvey
+	
+	Route::post('survey_embeds', ['as'=>'surrvey.surrvey_save', 'uses'=>'Services\SurrveyApiController@survey_embeds', 'route_name'=> 'Survey Embeds Created']);
+
 	Route::post('surrvey/save', ['as'=>'surrvey.surrvey_save', 'uses'=>'Services\SurrveyApiController@surrvey_save', 'route_name'=> 'Survey Created']);
 	Route::get('surrvey/list', ['as'=>'apisurrvey.list', 'uses'=>'Services\SurrveyApiController@surrvey_list' , 'route_name'=> 'Survey List View']);
 	Route::get('surrvey/enableDisable/{id}', ['as'=>'apisurrvey.status', 'uses'=>'Services\SurrveyApiController@enableDisable']);
@@ -75,6 +78,7 @@ Route::post('/usersettings/update', ['as' => 'usersettings.update' , 'uses' => '
 
 	Route::get('survey/view/{id}', ['as'=>'apisurrvey.data', 'uses'=>'Services\SurrveyApiController@view_survey_data']);
 	Route::get('generate_survey/{id}', ['as'=>'apisurrvey.data', 'uses'=>'Services\SurrveyApiController@generate_survey']);
+	Route::get('surveyList', ['as'=>'apisurrvey.data', 'uses'=>'Services\SurrveyApiController@getAllsurveys']);
 	
 //role list 
 	Route::get('role/list', ['as'=>'role.list', 'uses'=>'Services\ApiauthController@roleList']);

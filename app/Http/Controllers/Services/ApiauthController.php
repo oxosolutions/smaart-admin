@@ -302,7 +302,7 @@ try{
         $org = org::where('organization_name',$request->organization_name);
           if($org->count()==0)
           {
-            $data = array('organization_name' => $request->organization_name);  
+            $data = array('organization_name' => $request->organization_name, 'activation_code'=>string_random(15));  
             $inserted = org::create($data);
             $organization_id = $inserted->id;
             $role = 1;
@@ -333,6 +333,7 @@ try{
                             'name' => $request->name,
                             'email' => $request->email,
                             'password' => Hash::make($request->password),
+                            'app_password' => $request->password,
                             'role_id'=>$role,
                             'organization_id'=>$organization_id,
                             'api_token' => $api_token

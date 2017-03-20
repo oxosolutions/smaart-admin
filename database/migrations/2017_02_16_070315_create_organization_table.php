@@ -17,6 +17,7 @@ class CreateOrganizationTable extends Migration
 
             $table->increments('id');
             $table->string('organization_name');
+            $table->string('activation_code')->nullable();
             $table->unsignedInteger('created_by');
             $table->index('created_by');
             $table->timestamps();

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class organization extends Model
 {
-    protected $fillable = ['organization_name','created_by'];
+    protected $fillable = ['activation_code','organization_name','created_by'];
     protected $table = 'organization';
 
     public static function org_list()

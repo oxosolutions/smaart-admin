@@ -58,7 +58,7 @@ class ApiusersController extends VirtualTableGenController
     }
 
     public function store(Request $request){
-        
+       // dd($request->all());
         $this->modelValidate($request);
         $role = 2; 
         if($request->organization =="other")
@@ -78,7 +78,7 @@ class ApiusersController extends VirtualTableGenController
             }
         }
         else{
-            $organization_id  = $request->organization;
+            $organization_id  = $request->organization_id;
             $org_status ="used";
         }  
          DB::beginTransaction();
@@ -89,6 +89,7 @@ class ApiusersController extends VirtualTableGenController
                     'password' => Hash::make($request->password),
                     'role_id' => $role,
                     'organization_id'=> $organization_id,
+                    'app_password' =>$request->password,
                     'api_token' => $request->token
                 ]);
 

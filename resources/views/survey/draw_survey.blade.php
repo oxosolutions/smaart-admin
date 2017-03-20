@@ -1,79 +1,148 @@
-<h1>Draw Survey</h1>
-<?php
-			$survey['survey_id'] 			= 	$sdata->id;
-			$survey['survey_name'] 		= 	$sdata->name;
-	  		$survey['survey_author_id']	= 	$sdata->created_by;
-	  		$survey['survey_author_name']	= 	$sdata->creat_by->name;
-	  		$survey['survey_author_role_id']	= 	$sdata->creat_by->role_id;
-	  		$survey['survey_author_role_name']	= 	$sdata->creat_by->roles->name;
-
-	  		$survey['survey_description'] 	=	$sdata->description;
-	  		$survey['survey_status'] 		= 	$sdata->status;
-	  		if(count($sdata->setting) >0)
-	  		{
-	  			foreach ($sdata->setting as $key => $value) {	  		
-		            $survey['survey_settings'][$value->key]= $value->value;
-	            }
-	        }
-	  		if(count($sdata->group)>0){
-				foreach ($sdata->group as $key => $grp) {
-					$survey['survey_group'][$key]['group_id'] = $grp->id;
-					$survey['survey_group'][$key]['survey_id'] = $grp->survey_id;
-					$survey['survey_group'][$key]['title'] = $grp->title;
-		    		$survey['survey_group'][$key]['description'] =$grp->description;			
-					foreach ($grp->question as $qkey => $ques) {
-						$answer = json_decode($ques->answer,true);
-						foreach ($answer as $anskey => $ansVal) {
-							$survey['survey_group'][$key]['question'][$qkey][$anskey] =$ansVal;
-						}
-						$survey['survey_group'][$key]['question'][$qkey]['survey_id']  = $ques->survey_id;
-		        		$survey['survey_group'][$key]['question'][$qkey]['question']  = $ques->question;
-		        		$survey['survey_group'][$key]['question'][$qkey]['group_id']  = $ques->group_id;
-					}			
-				}
-			}
-
-				
-				?>
-
-
-  {!! Form::open(['route' => 'survey.store', 'files'=>true]) !!}
-<h3> Survey Name : {{$sdata->name}}</h3>
- @if(count($sdata->group)>0)
-				@foreach ($sdata->group as $key => $grp) 
-					<h3 style="color:green;">Group Title: {{$grp->title}}</h3>
-		    		<p style="color:brown;"> Group Description: {{$grp->description}}</p> 			
-					@foreach ($grp->question as $qkey => $ques) 
-
-						<h3 style="color:orange">Question:- {{$ques->question}}</h3>
-						<?php $answer = json_decode($ques->answer,true);
-
-						 ?>
-						
-						
-						@foreach ($answer as $anskey => $ansVal) 
-						
-								@if($anskey=="question_type" && $ansVal=="text")
-									<input type="text" placeholder="fill Question" >
-									@elseif($anskey=="question_type" && $ansVal=="checkbox")
-										<?php $type ="checkbox" ?>
-									@endif
-									@if(@$type=="checkbox")
-										@if($anskey=="extraOptions")
-											
-										@foreach($ansVal as $optKey =>  $optVal)
-											{{$optVal}}<input type="checkbox" value="{{$optKey}}">
-										@endforeach
-										@endif
-									@else
-							@endif
-								
-						@endforeach
-						 {{dump($answer)}}	
-				@endforeach
+@extends('layouts.survey')
+@section('content')
+	<style type="text/css">
+		.error_main_div{
+			padding: 10px;
+			border: 2px dashed #ededed;
+			text-align: center;
+		}
+		.error_main_div h1{
+			font-size: 100px;
+			padding: 0px;
+		}
+		.erroe_main_div h2{
+			font-size: 80px
+		}
+		.wrapper{
+			    min-height: 648px;
+		}
+	</style>
+	@if(@$err_msg)
+			@foreach($err_msg as $key => $value)
+				<div class="survey-wrapper" style="margin-top: 35px;">
+					<div class="survey-header">
+						<div class="wrapper-row">
+							<h1 class="survey-title">OOPS..!  Something Went Wrong</h1>
+							<h3 class="survey-description"></h3>
+						</div> <!-- wrapper-row -->
+					</div> <!-- survey-header -->
+					<div class="survey-content">
+						<div class="wrapper-row">
+							<center><h1 style="padding: 80px;margin: 50px;border: 5px dashed #ededed; font-size: 50px">{{$value}}</h1></center>
+						</div>
+					</div>
+				</div>
+				@break
 			@endforeach
-@endif
+	@else
+		<div id="survey_{{$sdata->id}}" class="survey-wrapper">
+		
+			{!! Form::open(['route' => 'survey.store','id'=>"survey_form_".$sdata->id, 'class'=>'survey-form','files'=>true]) !!}
+			
+				<input type="hidden" name="survey_id" value="{{$sdata->id}}" >
+				
+				<div id="survey_header_{{$sdata->id}}" class="survey-header">
+					<div class="wrapper-row">
+						<h1 class="survey-title">{{$sdata->name}}</h1>
+						<h3 class="survey-description">{{$sdata->description}}</h3>
+					</div> <!-- wrapper-row -->
+				</div> <!-- survey-header -->
+				
+				<div id="survey_content_{{$sdata->id}}" class="survey-content">
+					<div class="wrapper-row">
+				
+						@if(count($sdata->group)>0)
+							@foreach ($sdata->group as $key => $survey_group)
+								<div id="survey_group_{{$survey_group->id}}" class="survey-group"> 
+								
+									<div id="group_header_{{$survey_group->id}}" class="group-header">
+										<div class="content-row">
+											<h2 class="group-title">{{$survey_group->title}}</h1>
+											<h4 class="group-description">{{$survey_group->description}}</h3>
+										</div> <!-- content-row -->
+									</div> <!-- group-header -->
+									
+									<div id="group_content_{{$survey_group->id}}" class="group-content">
+										<div class="content-row">
+										<?php //dd($survey_group->question); ?>
+										
+											@foreach ($survey_group->question as $field_key => $field) 
+												<?php 
+												$field_id = 'sid'.$field->survey_id.'_gid'.$field->group_id.'_qid'.$field->id;
+												$field_meta = json_decode($field->answer,true);
+												
+												// 1. Required Field Star
+												// 2. required Field Class
+												?>
+												
+												<div id="field_{{$field_id}}" class="field-wrapper field-wrapper-{{$field_meta['question_id']}} field-wrapper-type-{{$field_meta['question_type']}}">
 
-	<div class="box-footer">
-	{!! Form::submit('Save Survey', ['class' => 'btn btn-primary']) !!}
-	</div>
+													
+													<div id="field_label_{{$field_meta['question_id']}}" class="field-label">
+														<label for="input_{{$field_meta['question_id']}}">
+															<h4 class="field-title">{{$field->question}}</h4>
+															<p class="field-description">{{$field_meta['question_desc']}}</p>
+														</label>
+													</div> <!-- field-label -->
+													
+													<div  id="field_{{$field_meta['question_id']}}" class="field {{$field_meta['question_type']}} field-type-{{$field_meta['question_type']}}">
+													
+														@if($field_meta['question_type'] =="text")
+															<input name="{{$field_meta['question_id']}}" id="input_{{$field_meta['question_id']}}" type="text" placeholder="" >
+														@elseif($field_meta["extraOptions"] && $field_meta['question_type'] =="checkbox" )
+																@foreach($field_meta["extraOptions"] as $option_key =>  $option_value)
+																	<div id="field_option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option">
+																		<input id="option_{{$field_meta['question_id']}}_{{$option_key}}" name="{{$field_meta['question_id']}}[]" type="checkbox" value="{{$option_key}}">
+																		<label for="option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option-label"> {{$option_value}}</label>
+																	</div>
+																@endforeach
+
+														@elseif($field_meta["extraOptions"] && $field_meta['question_type'] =="radio" )
+															@foreach($field_meta["extraOptions"] as $option_key =>  $option_value)
+																<div id="field_option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option">
+																	<input id="option_{{$field_meta['question_id']}}_{{$option_key}}" name="{{$field_meta['question_id']}}" type="radio" value="{{$option_key}}">
+																	<label for="option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option-label"> {{$option_value}}</label>
+																</div>
+															@endforeach
+														@elseif($field_meta["extraOptions"] && $field_meta['question_type'] =="dropdown" )
+															<select name="{{$field_meta['question_id']}}" >
+															@foreach($field_meta["extraOptions"] as $option_key =>  $option_value)
+																<option value="{{$option_key}}"> {{$option_value}} </option>
+															@endforeach
+															</select>
+
+														@endif
+													</div> <!-- field -->
+													
+												</div> <!-- field-wrapper -->
+											@endforeach
+
+										</div> <!-- content-row -->
+									</div> <!-- group-content -->
+									
+									<div id="group_footer_{{$survey_group->id}}" class="group-footer">
+										<div class="content-row">
+										</div> <!-- content-row -->
+									</div> <!-- group-footer -->
+
+									
+								</div> <!-- survey-group -->
+							@endforeach
+						@endif
+						
+					</div> <!-- wrapper-row -->
+				</div> <!-- survey-content -->
+				
+				<div id="survey_footer_{{$sdata->id}}" class="survey-footer">
+					<div class="wrapper-row">
+					
+						{!! Form::submit('Save Survey', ['id'=>"survey_submit_".$sdata->id, 'class'=>'survey-submit button submit-button']) !!}
+						
+					</div> <!-- wrapper-row -->
+				</div> <!-- survey-footer -->
+				
+			{!! Form::close() !!}
+		</div><!-- survey-wrapper -->
+	@endif
+
+@endsection

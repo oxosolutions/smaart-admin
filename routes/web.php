@@ -8,7 +8,8 @@
 			['user_name' => 'SGS Sandhu']
 			); 
 		});
-		
+		Route::get('/survey/auth',['as'=>'survey.auth','uses'=>'DrawSurveyController@login']);
+		Route::post('/survey/do_auth',['as'=>'survey.do_auth','uses'=>'DrawSurveyController@do_auth']);
 		Route::get('/correctCsv',['as'=>'datasets.list','uses'=>'DataSetsController@correctCsv']);
 
 
@@ -21,6 +22,10 @@
 			Route::get('/search_log',['as'=>'log.search','uses'=>'LogsystemController@search_log']);	
 
 		});
+
+		Route::get('s/{id}',['as'=>'survey.draw', 'uses'=>'DrawSurveyController@draw_survey']);
+		Route::post('survey/filled',['as'=>'survey.store', 'uses'=>'DrawSurveyController@survey_store']);
+
 
 		Route::group(['middleware'=>['auth','approve','log']], function(){
 		
@@ -176,8 +181,8 @@
 
 
 //DRAW SURVEY 
-	Route::get('draw_survey/{id}',['as'=>'survey.draw', 'uses'=>'DrawSurveyController@draw_survey']);
-	Route::post('survey/filled',['as'=>'survey.store', 'uses'=>'DrawSurveyController@draw_survey']);
+	Route::get('survey/view/{sid}/{uid}',['as'=>'survey.views', 'uses'=>'DrawSurveyController@view_filled_survey']);
+
 		
 	//Form Builder 
 

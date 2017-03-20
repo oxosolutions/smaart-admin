@@ -3,7 +3,7 @@
 | 
 <a href="{{route('surrvey.setting',$model->id)}}" >Setting</a>
 | @if(!empty($model->surrvey_table) || $model->surrvey_table !=null)
-<a href="{{route('surrvey.user',$model->surrvey_table)}}" >Filled User List </a>
+<a href="{{route('survey.draw',$model->id)}}" >Fill Survey</a>
 @else
 Still Not Filled
 @endif

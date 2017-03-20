@@ -41,9 +41,11 @@ class ProfileApiController extends Controller
         // die;
         $responseArray['name']  = $model->name;
         $responseArray['email'] = $model->email;
+
         $responseArray['token'] = $model->api_token;
 
         $responseArray['organization'] = @$model->organization->organization_name;
+        $responseArray['activation_code'] = @$model->organization->activation_code;
 
         if($model->meta != null){
 

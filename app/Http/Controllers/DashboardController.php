@@ -12,6 +12,9 @@ class DashboardController extends Controller
 {
 
     public function index(){
+        if(Session::get('survey_logined')!='' || Session::get('survey_logined') != null ){
+            return redirect()->route('survey.draw',['id'=>Session::get('token')]);
+        }
     	if(Auth::user()->approved == 0){
     		return redirect('not-approved');
     	}

@@ -11,12 +11,37 @@ use App\UserMeta as um;
 use DB;
 use App\SurveyQuestionGroup as GROUP;
 use App\SurveySetting as SSETTING;
+use App\SurveyEmbed as SEMBED;
 
 class SurrveyApiController extends Controller
 {
+	//embeds  surrvey
+	public function survey_embeds(Request $request)
+	{
+		$token  = str_random(15);
+		$user = Auth::user();
+		$count = SEMBED::where(['user_id'=>$user->id, 'survey_id'=>$request->survey_id])->first();
+		if($count==null){
+
+			$sembed = new SEMBED();
+			$sembed->user_id = $user->id;
+			$sembed->org_id = $user->organization_id;
+			$sembed->survey_id =  $request->survey_id;
+			$sembed->embed_token = $token; 
+			$sembed->save();	
+			return ['status'=>'success', 'token'=>$token, 'message'=>'Successfully save survey embed'];
+
+		}else{
+			
+			return ['status'=>'error', 'message'=>'already created','token'=>$count->embed_token];
+		}
+	}
+
+
 	//SAVE & EDIT SURVEY GROUP QUESTION
 	public function save_survey_data(Request $request)
 	{
+		
 		$survey_id = $request['survey_id'];
 		$grp = GROUP::where('survey_id',$survey_id);
 		$sq = SQ::where('survey_id', $survey_id);		
@@ -46,7 +71,7 @@ class SurrveyApiController extends Controller
 					// group Question				 
 						$sq = 	 new SQ();
 						$sq->question = $val["question"];
-						unset($val["question_text"]);
+						unset($val["question"]);
 						$sq->answer = 	json_encode($val);
 						$sq->survey_id = $survey_id;
 						$sq->group_id = $grp->id;
@@ -69,36 +94,37 @@ class SurrveyApiController extends Controller
 			Surrvey::findORfail($id);
 			$sdata = Surrvey::find($id);		
 			$survey['id'] 			= 	$sdata->id;
-			$survey['survey_name'] 		= 	$sdata->name;
+			$survey['survey_name'] 	= 	$sdata->name;
 	  		$survey['created_by']	= 	$sdata->created_by;
 	  		$survey['user_name']	= 	$sdata->creat_by->name;
 	  		$survey['description'] 	=	$sdata->description;
 	  		$survey['status'] 		= 	$sdata->status;
 	  		if(count($sdata->group)>0){
 				foreach ($sdata->group as $key => $grp) {
-					$survey['group'][$key]['group_id'] = $grp->id;
-					$survey['group'][$key]['survey_id'] = $grp->survey_id;
-					$survey['group'][$key]['group_name'] = $grp->title;
+					$survey['group'][$key]['group_id'] 			= $grp->id;
+					$survey['group'][$key]['survey_id'] 		= $grp->survey_id;
+					$survey['group'][$key]['group_name'] 		= $grp->title;
 		    		$survey['group'][$key]['group_description'] =$grp->description;			
 					foreach ($grp->question as $qkey => $ques) {
 						$answer = json_decode($ques->answer,true);
 						foreach ($answer as $anskey => $ansVal) {
 							$survey['group'][$key]['group_questions'][$qkey][$anskey] =$ansVal;
 						}
-						$survey['group'][$key]['group_questions'][$qkey]['survey_id']  = $ques->survey_id;
-		        		$survey['group'][$key]['group_questions'][$qkey]['question']  = $ques->question;
-		        		$survey['group'][$key]['group_questions'][$qkey]['group_id']  = $ques->group_id;
+						$survey['group'][$key]['group_questions'][$qkey]['survey_id']  	= $ques->survey_id;
+		        		$survey['group'][$key]['group_questions'][$qkey]['question']  	= $ques->question;
+		        		$survey['group'][$key]['group_questions'][$qkey]['group_id']  	= $ques->group_id;
 					}			
 				}
 			}else{
 
-				$survey['group'] =[];
-				$survey['question']=[];
+				$survey['group'] 	=[];
+				$survey['question']	=[];
 			}
 
 			return ['status'=>'success','response'=>$survey];	
 		}catch(\Exception $e)
 		{
+			throw $e;
 			return ['status'=>'error','message'=>"Something goes wrong"];	
 		}	
 	}

@@ -42,7 +42,9 @@ class organizationController extends Controller
     }
 
     public function store(Request $request){
-      $data = array('organization_name' => $request->organization_name);  
+     
+     $activation_code =str_random(15);
+      $data = array('organization_name' => $request->organization_name, 'activation_code'=>$activation_code);  
       $inserted = ORG::create($data);
       if ($inserted){
         Session::flash('success','Successfully created!');
