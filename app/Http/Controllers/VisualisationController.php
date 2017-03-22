@@ -202,7 +202,8 @@ class VisualisationController extends Controller
                             'embedJS'       =>    @$columns['embedJS'],
                             'datasetRecords'=>    DL::find($dataset_id)
                         ];
-        // dd($array_data);
+        dd($datatableName->dataset_table);
+        dd(json_decode($visual->columns, true));
         return view('embedVisual.index')->with('data',$array_data);
     }
 }

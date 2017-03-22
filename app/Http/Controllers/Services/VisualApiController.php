@@ -731,9 +731,12 @@ class VisualApiController extends Controller
                 case'count':
                     $tempArray = [];
                     $resultData = [];
-                    foreach($columns['columns_two'][$key] as $colKey => $colVal){
-                        $resultData[$colVal] = $this->generateCountColumns($colVal,$datatableName->dataset_table,$request->type == 'filter'?true:false,json_decode($request->filter_array,true),json_decode($request->filter_array_multi, true),json_decode($request->range_filters,true));
-                    }
+                    $resultData[$value] = $this->generateCountColumns($value,$datatableName->dataset_table,$request->type == 'filter'?true:false,json_decode($request->filter_array,true),json_decode($request->filter_array_multi, true),json_decode($request->range_filters,true));
+                    if($chartType[$key] != 'CustomMap'){
+	                    foreach($columns['columns_two'][$key] as $colKey => $colVal){
+	                        $resultData[$colVal] = $this->generateCountColumns($colVal,$datatableName->dataset_table,$request->type == 'filter'?true:false,json_decode($request->filter_array,true),json_decode($request->filter_array_multi, true),json_decode($request->range_filters,true));
+	                    }
+	                }
                     $resultCorrectData = $this->correctDataforCount($resultData,$datasetColumns);
                     $columnData = $resultCorrectData;
                 break;

@@ -84,6 +84,16 @@ SURVEY HEADER
     margin: 0 0 10px 0;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
+/***************************************
+SURVEY ERROR MESSAGES
+***************************************/
+
+
+/***************************************
+SURVEY SUCCESS MESSAGES
+***************************************/
+
+
 
 /***************************************
 SURVEY CONTENT
@@ -327,4 +337,5 @@ SURVEY FOOTER
     color: #ffffff;
     background-color: #121212;
 }
+
 
