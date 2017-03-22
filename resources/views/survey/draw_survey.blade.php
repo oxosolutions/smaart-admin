@@ -14,26 +14,34 @@
 			font-size: 80px
 		}
 		.wrapper{
-			    min-height: 648px;
+			min-height: 648px;
+		}
+		.survey-error-messages{
+			color: red;
+			text-align: center;
+			border: 2px dashed red;
+			padding: 65px;
+			margin: 50px;
+			font-size: 25px
 		}
 	</style>
 	@if(@$err_msg)
-			@foreach($err_msg as $key => $value)
-				<div class="survey-wrapper" style="margin-top: 35px;">
-					<div class="survey-header">
-						<div class="wrapper-row">
-							<h1 class="survey-title">OOPS..!  Something Went Wrong</h1>
-							<h3 class="survey-description"></h3>
-						</div> <!-- wrapper-row -->
-					</div> <!-- survey-header -->
-					<div class="survey-content">
-						<div class="wrapper-row">
-							<center><h1 style="padding: 80px;margin: 50px;border: 5px dashed #ededed; font-size: 50px">{{$value}}</h1></center>
-						</div>
+		@foreach($err_msg as $key => $error_message)
+			<div class="survey-wrapper" style="margin-top: 35px;">
+				<div class="survey-header">
+					<div class="wrapper-row">
+						<h1 class="survey-title">OOPS..!  Something Went Wrong</h1>
+						<h3 class="survey-description"></h3>
+					</div> <!-- wrapper-row -->
+				</div> <!-- survey-header -->
+				<div class="survey-content">
+					<div class="wrapper-row ">
+						<h1 class="survey-error-messages">{{$error_message}}</h1>
 					</div>
 				</div>
-				@break
-			@endforeach
+			</div>
+			@break
+		@endforeach
 	@else
 		<div id="survey_{{$sdata->id}}" class="survey-wrapper">
 		
@@ -48,7 +56,7 @@
 					</div> <!-- wrapper-row -->
 				</div> <!-- survey-header -->
 				@if ($message = Session::get('successfullSaveSurvey'))
-					<div id="survey_saved_{{$sdata->id}}" class="survey-header">
+					<div id="survey_success_{{$sdata->id}}" class="survey-success-messages">
 						<div class="wrapper-row">
 							<h1 class="survey-title">Success</h1>
 							<h3 class="survey-description">{{Session::get('successfullSaveSurvey')}}</h3>
@@ -151,6 +159,7 @@
 				@endif
 				
 			{!! Form::close() !!}
+			
 		</div><!-- survey-wrapper -->
 	@endif
 

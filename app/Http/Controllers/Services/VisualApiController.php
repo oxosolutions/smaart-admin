@@ -766,7 +766,6 @@ class VisualApiController extends Controller
                         $columnData[] = $arrayData;
                     }
                     if($chartType[$key] == 'CustomMap'){
-                        
                         $extraData = array_column($datasetData, $columns['viewData'][$key]);
                         array_unshift($extraData,$datasetColumns[$columns['viewData'][$key]]);
                     }
@@ -789,7 +788,6 @@ class VisualApiController extends Controller
         }
         $globalVisualSettings = GS::where('meta_key','visual_setting')->first();
         $responseArray['maps']  =   $mapChartsArray;
-        $responseArray['visual_name'] = $visual->visual_name;
         $responseArray['map_display_val'] = @$extraData;
         $responseArray['chart_data'] = $transposeArray;
         $responseArray['filters'] = $filtersArray;
@@ -798,7 +796,6 @@ class VisualApiController extends Controller
         $responseArray['settings'] = $columns['visual_settings'];
         $responseArray['titles'] = $columns['title'];
         $responseArray['status'] = 'success';
-        $responseArray['css_js'] = ['css'=>$embedCss,'js'=>$embedJS];
         return $responseArray;
     }
 }
