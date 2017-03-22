@@ -207,9 +207,12 @@ class VisualApiController extends Controller
                 case'count':
                     $tempArray = [];
                     $resultData = [];
-                    foreach($columns['columns_two'][$key] as $colKey => $colVal){
-                        $resultData[$colVal] = $this->generateCountColumns($colVal,$datatableName->dataset_table,$request->type == 'filter'?true:false,json_decode($request->filter_array,true),json_decode($request->filter_array_multi, true),json_decode($request->range_filters,true));
-                    }
+                    $resultData[$value] = $this->generateCountColumns($value,$datatableName->dataset_table,$request->type == 'filter'?true:false,json_decode($request->filter_array,true),json_decode($request->filter_array_multi, true),json_decode($request->range_filters,true));
+                    if($chartType[$key] != 'CustomMap'){
+	                    foreach($columns['columns_two'][$key] as $colKey => $colVal){
+	                        $resultData[$colVal] = $this->generateCountColumns($colVal,$datatableName->dataset_table,$request->type == 'filter'?true:false,json_decode($request->filter_array,true),json_decode($request->filter_array_multi, true),json_decode($request->range_filters,true));
+	                    }
+	                }
                     $resultCorrectData = $this->correctDataforCount($resultData,$datasetColumns);
                     $columnData = $resultCorrectData;
                 break;
@@ -239,7 +242,6 @@ class VisualApiController extends Controller
                         $columnData[] = $arrayData;
                     }
                     if($chartType[$key] == 'CustomMap'){
-                        
                         $extraData = array_column($datasetData, $columns['viewData'][$key]);
                         array_unshift($extraData,$datasetColumns[$columns['viewData'][$key]]);
                     }
@@ -397,21 +399,23 @@ class VisualApiController extends Controller
             }
 
         }
-        $result->groupBy($column);
+        $result->groupBy($column)->where('id','!=',1);
         $result = $result->get()->toArray();
-
         /*if($filters == true && $filterArray != null){
         
             $result = DB::table($table)->select([DB::raw('COUNT(id) as count'),$column])->where($filterArray)->groupBy($column)->get()->toArray();
         }else{
             $result = DB::table($table)->select([DB::raw('COUNT(id) as count'),$column])->groupBy($column)->get()->toArray();
         }*/
-
         return $result;
     }
 
     protected function correctDataforCount($dataForProcess,$datasetColumns){
         
+        if(empty($dataForProcess)){
+            return [];
+        }
+
         $dataProce = [];
         foreach($dataForProcess as $colKey => $value){
             $temp = [];
@@ -421,13 +425,16 @@ class VisualApiController extends Controller
             $dataProce[$colKey] = $temp;
         }
         $dataForProcess = $dataProce;
+
         $columns = [];
         $tempArray = [];
         foreach($dataForProcess as $ky => $vl){
             $tempArray[] = array_column($vl, $ky);
         }
+
         $columnOne = call_user_func_array('array_merge',$tempArray);
         $addColumn = $columnOne;
+
         array_unshift($addColumn, 'String');
         $columns[] = $addColumn;
 
@@ -435,7 +442,7 @@ class VisualApiController extends Controller
             $tempArray = [];
             foreach($columnOne as $key => $value){
                 $key = array_search($value, array_column($v, $k));
-                if($key == false){
+                if($key === false){
                     $tempArray[] = 0;
                 }else{
                     $tempArray[] = $v[$key]['count'];
@@ -710,9 +717,7 @@ class VisualApiController extends Controller
         }
         $dataProce = [];
         foreach($datasetData as $colKey => $value){
-           
-            $dataProce[] = (array)$value;
-        
+            $dataProce[] = (array)$value;       
         }
         $datasetData = $dataProce;
         $datasetColumns = (array)DB::table($datatableName->dataset_table)->where('id',1)->first();

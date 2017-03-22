@@ -139,9 +139,9 @@ class DrawSurveyController extends Controller
 						}
 			}*/
         if(!empty($errors)){
-            return view('survey.draw_survey',['err_msg'=>$errors]);
+            return view('survey.draw_survey',['err_msg'=>$errors,'token'=>$token]);
         }else{
-            return view('survey.draw_survey',['sdata'=>$survey_data]);
+            return view('survey.draw_survey',['sdata'=>$survey_data,'token'=>$token]);
         }
 
     	
@@ -150,7 +150,14 @@ class DrawSurveyController extends Controller
     public function survey_store(Request $request)
     {
 		$table = 'survey_data_'.$request->survey_id;
-		$uid = Auth::user()->id;
+        $data = SEMBED::where('embed_token',$request->code)->first();
+        if($data == null){
+            $errors[] = 'Survey id not valid!';
+            return view('survey.draw_survey',['err_msg'=>$errors]);
+        }
+
+		$uid = $data->user_id;
+        Session::put('org_id',$data->org_id);
 		if(!Schema::hasTable($table))
     	{
     		$ques_data = SQ::select(['answer'])->where('survey_id',$request->survey_id)->get();
@@ -179,8 +186,10 @@ class DrawSurveyController extends Controller
     	}
 		$insert["created_by"] = $uid;
     	$insert["ip_address"] = $request->ip();
+        unset($insert['code']);
     	DB::table($table)->insert($insert);
-    	dd($request->all());
+        Session::flash('successfullSaveSurvey','Survey saved successfully!');
+        return redirect()->route('survey.draw',['id'=>$request->code]);
     }
 
     public function view_filled_survey($sid , $uid)

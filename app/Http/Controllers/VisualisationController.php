@@ -6,8 +6,11 @@ use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\Visualisation as VS;
 use Auth;
+use App\DatasetsList as DL;
+use App\GeneratedVisual as GV;
 use Session;
 use DB;
+use App\Embed;
 use App\LogSystem as LOG;
 use Carbon\Carbon AS TM;
 class VisualisationController extends Controller
@@ -177,4 +180,29 @@ class VisualisationController extends Controller
         // }    
 
       }
+
+    public function embedVisualization(Request $request){
+        $model = Embed::where('embed_token',$request->id)->first();
+        Session::put('org_id',$model->org_id);
+        $visual = GV::find($model->visual_id);
+        $dataset_id = $visual->dataset_id;
+        $columns = json_decode($visual->columns, true);
+        $chartType = json_decode($visual->chart_type, true);
+        $embedCss = @$columns['embedCss'];
+        $embedJS = @$columns['embedJS'];
+        $datatableName = DL::find($dataset_id);
+        
+        $array_data  = [
+                            'model'         =>    Embed::where('embed_token',$request->id)->first(),
+                            'visual'        =>    GV::find($model->visual_id),
+                            'dataset_id'    =>    $visual->dataset_id,
+                            'columns'       =>    json_decode($visual->columns, true),
+                            'chartType'     =>    json_decode($visual->chart_type, true),
+                            'embedCss'      =>    @$columns['embedCss'],
+                            'embedJS'       =>    @$columns['embedJS'],
+                            'datasetRecords'=>    DL::find($dataset_id)
+                        ];
+        // dd($array_data);
+        return view('embedVisual.index')->with('data',$array_data);
+    }
 }

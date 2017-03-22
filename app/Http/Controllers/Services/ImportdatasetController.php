@@ -278,6 +278,7 @@ class ImportdatasetController extends Controller
             DB::select("CREATE TABLE `{$tableName}` ( " . implode(', ', $columns) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
             DB::select("ALTER TABLE `{$tableName}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
             DB::table($tableName)->insert($headers);
+            DB::connection()->disableQueryLog();
             DB::table($tableName)->insert($finalArray);
             $model = new DL;
             $model->dataset_table = $tableName;

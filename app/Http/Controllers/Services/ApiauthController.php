@@ -302,7 +302,7 @@ try{
         $org = org::where('organization_name',$request->organization_name);
           if($org->count()==0)
           {
-            $data = array('organization_name' => $request->organization_name, 'activation_code'=>string_random(15));  
+            $data = array('organization_name' => $request->organization_name, 'activation_code'=>rand(15,100000));  
             $inserted = org::create($data);
             $organization_id = $inserted->id;
             $role = 1;

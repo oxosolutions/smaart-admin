@@ -24,6 +24,9 @@
 		});
 
 		Route::get('s/{id}',['as'=>'survey.draw', 'uses'=>'DrawSurveyController@draw_survey']);
+
+		Route::get('v/{id}',['as'=>'draw.visualisation','uses'=>'VisualisationController@embedVisualization']);
+
 		Route::post('survey/filled',['as'=>'survey.store', 'uses'=>'DrawSurveyController@survey_store']);
 
 
