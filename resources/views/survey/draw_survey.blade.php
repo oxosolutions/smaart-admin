@@ -24,24 +24,28 @@
 			margin: 50px;
 			font-size: 25px
 		}
+		.survey-success-messages{
+			color: #666666;
+		}
+
 	</style>
 	@if(@$err_msg)
-		@foreach($err_msg as $key => $error_message)
-			<div class="survey-wrapper" style="margin-top: 35px;">
-				<div class="survey-header">
-					<div class="wrapper-row">
-						<h1 class="survey-title">OOPS..!  Something Went Wrong</h1>
-						<h3 class="survey-description"></h3>
-					</div> <!-- wrapper-row -->
-				</div> <!-- survey-header -->
-				<div class="survey-content">
-					<div class="wrapper-row ">
-						<h1 class="survey-error-messages">{{$error_message}}</h1>
+			@foreach($err_msg as $key => $error_message)
+				<div class="survey-wrapper" style="margin-top: 35px;">
+					<div class="survey-header">
+						<div class="wrapper-row">
+							<h1 class="survey-title">OOPS..!  Something Went Wrong</h1>
+							<h3 class="survey-description"></h3>
+						</div> <!-- wrapper-row -->
+					</div> <!-- survey-header -->
+					<div class="survey-content">
+						<div class="wrapper-row ">
+							<h1 class="survey-error-messages">{{$error_message}}</h1>
+						</div>
 					</div>
 				</div>
-			</div>
-			@break
-		@endforeach
+				@break
+			@endforeach
 	@else
 		<div id="survey_{{$sdata->id}}" class="survey-wrapper">
 		
@@ -51,7 +55,7 @@
 				<input type="hidden" name="code" value="{{$token}}" />
 				<div id="survey_header_{{$sdata->id}}" class="survey-header">
 					<div class="wrapper-row">
-						<h1 class="survey-title">{{$sdata->name}}</h1>
+						<h1 class="survey-title">{{$sdata->name}} </h1>
 						<h3 class="survey-description">{{$sdata->description}}</h3>
 					</div> <!-- wrapper-row -->
 				</div> <!-- survey-header -->
@@ -151,16 +155,15 @@
 				@if (!Session::get('successfullSaveSurvey'))
 					<div id="survey_footer_{{$sdata->id}}" class="survey-footer">
 						<div class="wrapper-row">
-						
-							{!! Form::submit('Save Survey', ['id'=>"survey_submit_".$sdata->id, 'class'=>'survey-submit button submit-button']) !!}
+							{!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+                			{!! Form::button('Cancel', ['class' => 'btn btn-primary','onclick'=>'window.location.reload()']) !!}
 							
 						</div> <!-- wrapper-row -->
 					</div> <!-- survey-footer -->
 				@endif
 				
-			{!! Form::close() !!}
-			
 		</div><!-- survey-wrapper -->
 	@endif
+			
 
 @endsection

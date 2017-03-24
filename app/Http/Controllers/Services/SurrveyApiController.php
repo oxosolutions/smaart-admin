@@ -12,9 +12,101 @@ use DB;
 use App\SurveyQuestionGroup as GROUP;
 use App\SurveySetting as SSETTING;
 use App\SurveyEmbed as SEMBED;
+use Illuminate\Support\Facades\Schema;
+use App\organization as org;
+use Session;
 
 class SurrveyApiController extends Controller
 {
+
+	public function save_survey_filled_data(Request $request)
+	{
+		dump($request->all());
+		$org_id = org::select('id')->where('activation_code' ,$request->activation_code)->first()->id;
+		Session::put('org_id', $org_id);
+		$data = json_decode($request->export,true);
+		$surveyid = $data[0]["surveyid"];
+		$table = 'survey_data_'.$surveyid;
+		if(!Schema::hasTable($table))
+    	{
+    		$ques_data = SQ::select(['answer'])->where('survey_id',$surveyid)->get();
+    		foreach ($ques_data as $key => $value) {
+    		 $ans = json_decode($value->answer);
+    		 $colums[] =   "`$ans->question_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL";
+    		}
+			$colums[] =    "`ip_address` varchar(255) NULL DEFAULT  NULL";
+			$colums[] =    "`survey_start_on` timestamp NULL DEFAULT  NULL";
+			$colums[] =    "`survey_completed_on` timestamp NULL DEFAULT  NULL";
+			$colums[] =    "`survey_status` int(1) NULL DEFAULT  NULL";
+			$colums[] =    "`survey_submited_by` varchar(255) NULL DEFAULT  NULL";
+			$colums[] =    "`survey_submited_from` varchar(255) NULL DEFAULT  NULL";
+			$colums[] =    "`mac_address` varchar(255) NULL DEFAULT  NULL";
+			$colums[] =    "`imei` varchar(255) NULL DEFAULT  NULL";
+			$colums[] =    "`unique_id` varchar(255) NULL DEFAULT  NULL";
+			$colums[] =    "`created_by` int(11)  NULL";
+			$colums[] =    "`created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP";
+
+
+			DB::select("CREATE TABLE `{$table}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+        	DB::select("ALTER TABLE `{$table}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
+        	Surrvey::where('id',$surveyid)->update(['surrvey_table'=>$table]);
+		}
+		foreach ($data as $key => $value) {
+				
+			
+			//dd($value['starton']);
+			// $insert['survey_start_on'] =date("Y-m-d", strtotime($value['starton']));
+			// $insert['survey_completed_on'] =$value['endon'];
+			// if($value['status'] =="completed")
+			// {
+			// 	$status =1;
+			// }else{
+			// 	$status = 0;
+			// }
+			// $insert['survey_status'] = $status;
+			// $insert['survey_submited_by'] =$value[];
+			// $insert['survey_submited_from'] =$value[];
+			// $insert['mac_address'] =$value[];
+			// $insert['imei'] =$value[];
+			// $insert['unique_id'] =$value[];
+
+			foreach ($value['answers'] as $key => $value) {
+				
+				if(is_array($value["answer"]))
+				{
+					$ansdata="";
+						foreach ($value["answer"] as $ansKey => $ansValue) {
+							$ansdata[] = $ansKey;
+						}
+					$ans = json_encode($ansdata);
+				}else{
+					$ans = $value["answer"];
+				}
+				
+				$insert[$value['questkey']] = $ans;
+				$insert["ip_address"] = $request->ip();
+				
+			}
+			
+			DB::table($table)->insert($insert);
+		
+		}
+
+		
+	}
+//VIEW SURVEY SAVED DATA 
+	public function view_survey_saved_data($sid)
+	{
+		try{
+		Surrvey::findORfail($sid);
+		$table = Surrvey::select('surrvey_table')->where('id',$sid)->first()->surrvey_table;
+		$data = DB::table($table)->get();
+		return ['status'=>'success', 'data'=> $data];
+		}catch(\Exception $e)
+		{
+			return ['status'=>'error', 'message'=>'something goes wrong try again'];	
+		}
+	} 
 	//embeds  surrvey
 	public function survey_embeds(Request $request)
 	{
@@ -32,7 +124,6 @@ class SurrveyApiController extends Controller
 			return ['status'=>'success', 'token'=>$token, 'message'=>'Successfully save survey embed'];
 
 		}else{
-			
 			return ['status'=>'error', 'message'=>'already created','token'=>$count->embed_token];
 		}
 	}

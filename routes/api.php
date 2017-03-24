@@ -4,38 +4,40 @@ use Illuminate\Http\Request;
 	
 Route::get('/sql','Services\ImportdatasetController@runSqlFile');
 Route::group(['prefix' => 'v1'], function () {
+	Route::post('survey_filled_data', ['as'=>'survey.filled', 'uses'=>'Services\SurrveyApiController@save_survey_filled_data', 'route_name'=> 'Survey filled']);
+
 
 	//get organization list without api_token
 	Route::get('organizationList',['as'=> 'organization' , 'uses'=>'Services\organization@allOrganization']);
 	Route::group(['middleware'=>['cors','log']], function(){
-	Route::post('/dataset/save',['as'=>'dataset.save','uses'=>'Services\SaveServeController@saveDataset']);
+		Route::post('/dataset/save',['as'=>'dataset.save','uses'=>'Services\SaveServeController@saveDataset']);
 
-	Route::get('/userpages',						['as'=>'pages.list','uses'=>'Services\UserPagesApiController@getAllPages' , 'route_name'=>  'View Pages']);
-	Route::get('/userpages/{page_slug}',			['as'=>'pages.by_slug','uses'=>'Services\UserPagesApiController@getPageBySlug']);
+		Route::get('/userpages',						['as'=>'pages.list','uses'=>'Services\UserPagesApiController@getAllPages' , 'route_name'=>  'View Pages']);
+		Route::get('/userpages/{page_slug}',			['as'=>'pages.by_slug','uses'=>'Services\UserPagesApiController@getPageBySlug']);
 
 
-	Route::post('/logs_filter','Services\LogApiController@logFilter');
-	Route::post('/auth','Services\ApiauthController@Authenicates');
-	Route::post('/register',					['as'=>'register','uses'=>'Services\ApiauthController@Register']);
-	Route::get('/goals/list',					['as'=>'goals.list','uses'=>'Services\GoalApiController@goalsList' ,'route_name'=>  'View Goal List']);
-	Route::get('/goalData/{id}',			    'Services\GoalApiController@goalData');
-	Route::get('/pages',						['as'=>'pages.list','uses'=>'Services\PagesApiController@getAllPages' , 'route_name'=>  'View Pages']);
-	Route::get('/pages/{page_slug}',			['as'=>'pages.by_slug','uses'=>'Services\PagesApiController@getPageBySlug']);
-	Route::get('/profile/ministries',			['as'=>'ministries','uses'=>'Services\MinistryApiController@Ministries']);
-	Route::get('/departments',					['as'=>'departments','uses'=>'Services\DepartmentApiController@departments' ]);
-	Route::get('/designation/list',				['as'=>'Designation.list','uses'=>'Services\DesignationApiController@DesignitionList' ,'route_name'=>  'View  Designation List']);
-	Route::get('/department/list',				['as'=>'department.list','uses'=>'Services\DepartmentApiController@departmentList' ,'route_name'=>  'View Department List']);
-	Route::get('/department/{id}',				['as'=>'department.single','uses'=>'Services\DepartmentApiController@singleDepartment']);
-	Route::get('/resources/list',				['as'=>'Resources.list','uses'=>'Services\ResourcesApiController@ResourcesList' , 'route_name'=>  'View Resources List']);
-	Route::get('/ministry/list',				['as'=>'ministry.list','uses'=>'Services\MinistryApiController@ministryList' , 'route_name'=>  'View Ministries List']);
-	Route::get('/ministry/{id}',				['as'=>'ministry.single','uses'=>'Services\MinistryApiController@singleMinistry']);
-	Route::get('/goals/{id}',					['as'=>'goal.single','uses'=>'Services\GoalApiController@singleGoal']);
-	Route::get('/schema',						['as'=>'Services\SchemaApiController','uses'=>'Services\SchemaApiController@allSchema' , 'route_name'=>  'View Schemes List']);
-	Route::get('/indicators',					['as'=>'indicators','uses'=>'Services\IndicatorsController@indicators' , 'route_name'=>  'View Indicators List']);
-	Route::post('/forget',						['as'=>'forget.password','uses'=>'Services\ApiauthController@forgetPassword']);
-	Route::get('/validateForgetToken/{token}',	['as'=>'forget.token.validate','uses'=>'Services\ApiauthController@validateForgetPassToken']);
-	Route::post('/resetpass',					['as'=>'forget.token.validate','uses'=>'Services\ApiauthController@resetUserPassword']);
-});
+		Route::post('/logs_filter','Services\LogApiController@logFilter');
+		Route::post('/auth','Services\ApiauthController@Authenicates');
+		Route::post('/register',					['as'=>'register','uses'=>'Services\ApiauthController@Register']);
+		Route::get('/goals/list',					['as'=>'goals.list','uses'=>'Services\GoalApiController@goalsList' ,'route_name'=>  'View Goal List']);
+		Route::get('/goalData/{id}',			    'Services\GoalApiController@goalData');
+		Route::get('/pages',						['as'=>'pages.list','uses'=>'Services\PagesApiController@getAllPages' , 'route_name'=>  'View Pages']);
+		Route::get('/pages/{page_slug}',			['as'=>'pages.by_slug','uses'=>'Services\PagesApiController@getPageBySlug']);
+		Route::get('/profile/ministries',			['as'=>'ministries','uses'=>'Services\MinistryApiController@Ministries']);
+		Route::get('/departments',					['as'=>'departments','uses'=>'Services\DepartmentApiController@departments' ]);
+		Route::get('/designation/list',				['as'=>'Designation.list','uses'=>'Services\DesignationApiController@DesignitionList' ,'route_name'=>  'View  Designation List']);
+		Route::get('/department/list',				['as'=>'department.list','uses'=>'Services\DepartmentApiController@departmentList' ,'route_name'=>  'View Department List']);
+		Route::get('/department/{id}',				['as'=>'department.single','uses'=>'Services\DepartmentApiController@singleDepartment']);
+		Route::get('/resources/list',				['as'=>'Resources.list','uses'=>'Services\ResourcesApiController@ResourcesList' , 'route_name'=>  'View Resources List']);
+		Route::get('/ministry/list',				['as'=>'ministry.list','uses'=>'Services\MinistryApiController@ministryList' , 'route_name'=>  'View Ministries List']);
+		Route::get('/ministry/{id}',				['as'=>'ministry.single','uses'=>'Services\MinistryApiController@singleMinistry']);
+		Route::get('/goals/{id}',					['as'=>'goal.single','uses'=>'Services\GoalApiController@singleGoal']);
+		Route::get('/schema',						['as'=>'Services\SchemaApiController','uses'=>'Services\SchemaApiController@allSchema' , 'route_name'=>  'View Schemes List']);
+		Route::get('/indicators',					['as'=>'indicators','uses'=>'Services\IndicatorsController@indicators' , 'route_name'=>  'View Indicators List']);
+		Route::post('/forget',						['as'=>'forget.password','uses'=>'Services\ApiauthController@forgetPassword']);
+		Route::get('/validateForgetToken/{token}',	['as'=>'forget.token.validate','uses'=>'Services\ApiauthController@validateForgetPassToken']);
+		Route::post('/resetpass',					['as'=>'forget.token.validate','uses'=>'Services\ApiauthController@resetUserPassword']);
+	});
 
 	Route::group(['middleware'=>['auth:api']], function(){	
 		Route::get ('/dataset/file/{id}/{type}',['as'=>'export.dataset', 'uses'=>'Services\ExportDatasetController@export' , 'route_name'=>  'Download Dataset']);
@@ -64,6 +66,10 @@ Route::group(['prefix' => 'v1'], function () {
 	Route::post('/singlevisual', ['as'=>'single.visual','uses'=>'Services\VisualApiController@visualById']);
 	
 	//surrvey
+
+
+Route::get('view_survey_saved_data/{id}' , ['as'=>'survey.savedata' , 'uses'=>'Services\SurrveyApiController@view_survey_saved_data']);
+
 	
 	Route::post('survey_embeds', ['as'=>'surrvey.surrvey_save', 'uses'=>'Services\SurrveyApiController@survey_embeds', 'route_name'=> 'Survey Embeds Created']);
 

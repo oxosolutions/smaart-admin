@@ -8,6 +8,9 @@ use App\Surrvey;
 use Auth;
 use App\organization as ORG;
 use App\User;
+use Session;
+use App\SurveyQuestionGroup as SQG;
+use App\SurveyQuestion as SQ;
 class AppApiController extends Controller
 {
     public function getAllsurveys(){
@@ -65,9 +68,71 @@ class AppApiController extends Controller
 		if($model == null){
 			return ['status'=>'error','message'=>'Wrong activation key!'];
 		}
-
+		Session::put('org_id',$model->id);
 		$users = User::where('organization_id',$model->id)->get();
+		$surveyData = Surrvey::get();
+		$groupsData = SQG::get();
+		$surveyQuestions = SQ::get();
+		foreach ($surveyQuestions as $key => $value) {
+			$questionData[$key]['question_id'] = $value->id;
+			$ansData = json_decode($value->answer,true);
+			$questionData[$key]["question_key"] =  @$ansData["question_id"];
+    		$questionData[$key]["question_order"]	=  "";
+    		$questionData[$key]['question_text'] = $value->question;
+    		$questionData[$key]["question_desc"] = @$ansData['question_desc'];
+    		$questionData[$key]["question_type"] = @$ansData['question_type'];
+    		$questionData[$key]["question_message"]= "";
+    		$questionData[$key]["required"]=  @$ansData['required'];
+     		$option=null;
+     		$ary = [];
+		if(array_key_exists('extraOptions', $ansData))
+		{
+			$i=0;
+    		 foreach ($ansData['extraOptions'] as $optKey => $optValue) {
+    		 	//dump($optKey);
+    			$option["option_type"] = $ansData['question_type'];
+				$option["option_text"] = $optValue;
+       			$option["option_value"] =  $optKey;
+        		$option["option_next"] = 	"";
+        		$option["option_prompt"] = "";
+        		array_push( $ary , $option);
+    		}
+    	}
+			if($option==null)
+			{
+			   	$option["option_type"]= "";
+				$option["option_text"] ="";
+				$option["option_value"] =$ansData['extraOptions'];
+				$option["option_next"] = "";
+				$option["option_prompt"]= "";
+			}
+    	
+    
+    		$questionData[$key]["answers"][0]=  @$ary;
+    // "question_type": "text",
+    // "question_message": "",
+    // "required": 0,
+    // "answers": [
+    //   {
+    //     "option_type": "text",
+    //     "option_text": "",
+    //     "option_value": "",
+    //     "option_next": "108",
+    //     "option_prompt": ""
+    //   }
+    // ]
+   
 
-		return ['status'=>'success','users'=>$users];
+			// foreach ($ansData as $ansKey => $ansValue) {
+			// 	$questionData[$key][$ansKey] = $ansValue;
+			// }
+			$questionData[$key]['group_id'] = $value->group_id;
+			$questionData[$key]['survey_id'] = $value->survey_id;
+			$questionData[$key]['created_at'] = $value->created_at;
+			$questionData[$key]['updated_at'] = $value->updated_at;
+			$questionData[$key]['deleted_at'] = $value->deleted_at;
+		}
+		Session::forget('org_id');
+		return ['status'=>'success','questions'=>$questionData ,'users'=>$users,'surveys'=>$surveyData,'groups'=>$groupsData];
 	}
 }

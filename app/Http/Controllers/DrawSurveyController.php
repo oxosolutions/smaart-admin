@@ -30,7 +30,7 @@ class DrawSurveyController extends Controller
     }
 
     public function draw_survey($token)
-    {
+    {//2017-03-24T17:00:00.000Z
     	$data = SEMBED::where('embed_token',$token)->first();
         if($data == null){
             $errors[] = 'Survey id not valid!';
@@ -71,16 +71,19 @@ class DrawSurveyController extends Controller
         }else{
             $errors[] = ucfirst($messages_list['survey_status']);
         }
+        
         $scheduling_status = $this->getSettings($survey_settings,'survey_scheduling_status');
         if(($scheduling_status == 1 || $scheduling_status == '1') && $scheduling_status != null){
             $today_date = date('Y-m-d H:i');
-            $survey_start_date = $this->getSettings($survey_settings,'survey_start_date');
-            $survey_expiry_date = $this->getSettings($survey_settings,'survey_expiry_date');
+        $survey_start_date = $this->getSettings($survey_settings,'survey_start_date');
+        $survey_expiry_date = $this->getSettings($survey_settings,'survey_expiry_date');
+
             if($today_date < $survey_start_date){
                 $errors[] = $messages_list['survey_not_started'];
             }elseif($today_date > $survey_expiry_date){
                 $errors[] = $messages_list['survey_expired'];
             }
+            
         }
     	/*if($this->get_setting($sid,'survey_custom_error_message_status')!=null)
     	{

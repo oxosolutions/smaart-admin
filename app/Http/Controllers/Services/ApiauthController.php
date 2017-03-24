@@ -293,25 +293,25 @@ class ApiauthController extends VirtualTableGenController
         $role = 2;
         $org_status ="used";
 
-try{
+      try{
       DB::beginTransaction();
       if($request->organization =="others")
       {
-       //  $checkOrg = UserMeta::where(['key'=>'organization','value'=>$request->organization_name]);//->count();
-         // User::where('organization_id',)
-        $org = org::where('organization_name',$request->organization_name);
-          if($org->count()==0)
-          {
-            $data = array('organization_name' => $request->organization_name, 'activation_code'=>rand(15,100000));  
-            $inserted = org::create($data);
-            $organization_id = $inserted->id;
-            $role = 1;
-             $org_status ="new";
-          }
-          else{
-                $organization_id  = $org->first()->id;
-                $org_status ="used";
-          }
+       		//  $checkOrg = UserMeta::where(['key'=>'organization','value'=>$request->organization_name]);//->count();
+         	// User::where('organization_id',)
+	        $org = org::where('organization_name',$request->organization_name);
+	          if($org->count()==0)
+	          {
+	            $data = array('organization_name' => $request->organization_name, 'activation_code'=>rand(15,100000));  
+	            $inserted = org::create($data);
+	            $organization_id = $inserted->id;
+	            $role = 1;
+	             $org_status ="new";
+	          }
+	          else{
+	                $organization_id  = $org->first()->id;
+	                $org_status ="used";
+	          }
       }else{
         $organization_id  = $request->organization;
             $org_status ="used";

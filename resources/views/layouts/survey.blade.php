@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 <html>
+<style type="text/css">
+	.footer{
+		width: 100%;
+	    max-width: 980px;
+	    margin: 0 auto !important;
+	}
+</style>
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,6 +22,13 @@
 			<div class="main">
 				@yield('content')
 			</div>
+			<div class="survey-footer footer" style="background: grey;color: white;">
+				<div class="wrapper-row ">
+				
+					&copy; copyright 2017 
+					
+				</div> <!-- wrapper-row -->
+			</div> <!-- survey-footer -->		
 		</div>
 	</body>
 </html>

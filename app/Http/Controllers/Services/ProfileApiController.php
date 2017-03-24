@@ -41,7 +41,7 @@ class ProfileApiController extends Controller
         // die;
         $responseArray['name']  = $model->name;
         $responseArray['email'] = $model->email;
-
+        $responseArray['app_pass'] = $model->app_password;
         $responseArray['token'] = $model->api_token;
 
         $responseArray['organization'] = @$model->organization->organization_name;
@@ -143,12 +143,13 @@ class ProfileApiController extends Controller
         if(!$validate){
             return ['status'=>'error','message'=>'Required fields are missing!'];
         }
-
+        
         $userId = $request->user()->id;
         $model = User::find($userId);
         if($request->name != 'undefined'){
             $model->name = $request->name;
         }
+        $model->app_password = $request->app_pass;
         $model->save();
         if($request->hasFile('new_img')){
             $path = 'profile_pic';

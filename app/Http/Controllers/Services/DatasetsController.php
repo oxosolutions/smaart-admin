@@ -275,6 +275,9 @@ class DatasetsController extends Controller
             }
             
         }
+        if(!empty(json_decode($request->deletedRows))){
+            DB::table($table)->whereIn('id',json_decode($request->deletedRows))->delete();
+        }
         return ['status'=>'success','message'=>'Dataset updated successfully!','dataset_id'=>$request->dataset_id];
     }
 

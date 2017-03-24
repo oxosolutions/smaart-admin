@@ -13,7 +13,7 @@ class SurveyQuestion extends Model
    	protected $fillable = [ 'survey_id', 'answer', 'question'];
     protected $dates = ['deleted_at'];
     protected $softDelete = true;
-
+    protected $table;
     public function __construct()
     {
     	parent::__construct();

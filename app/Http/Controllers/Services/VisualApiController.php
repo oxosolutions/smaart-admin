@@ -353,8 +353,8 @@ class VisualApiController extends Controller
                 $min = min($allData);
                 $max = max($allData);
                 $filter['column_name'] = $columnNames[$value];
-                $filter['column_min'] = $min;
-                $filter['column_max'] = $max;
+                $filter['column_min'] = (int)$min;
+                $filter['column_max'] = (int)$max;
                 $filter['column_type'] = $columnsWithType['filter_'.$index]['type'];
             }else{
                 $filter['column_name'] = $columnNames[$value];
@@ -796,6 +796,7 @@ class VisualApiController extends Controller
         $responseArray['settings'] = $columns['visual_settings'];
         $responseArray['titles'] = $columns['title'];
         $responseArray['status'] = 'success';
+        $responseArray['css_js'] = ['css'=>$embedCss,'js'=>$embedJS];
         return $responseArray;
     }
 }
