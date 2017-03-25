@@ -189,7 +189,7 @@ class DrawSurveyController extends Controller
     			$insert[$key] = $request->$key;
     		}
     	}
-        $insert['survey_started_on']  =  $request->started_on;
+       // $insert['survey_started_on']  =  $request->started_on;
 		$insert["created_by"] = $uid;
     	$insert["ip_address"] = $request->ip();
         unset($insert['code']);

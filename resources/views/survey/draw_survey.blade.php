@@ -52,7 +52,7 @@
 			{{Auth::user()->name}}
 		@endif
 			{!! Form::open(['route' => 'survey.store','id'=>"survey_form_".$sdata->id, 'class'=>'survey-form','files'=>true]) !!}
-				<input type="text" name="started_on" value="<?php echo date('YmdHisu'); ?>" >
+				<input type="hidden" name="started_on" value="<?php echo date('YmdHisu'); ?>" >
 				<input type="hidden" name="survey_id" value="{{$sdata->id}}" >
 				<input type="hidden" name="code" value="{{$token}}" />
 				<div id="survey_header_{{$sdata->id}}" class="survey-header">
