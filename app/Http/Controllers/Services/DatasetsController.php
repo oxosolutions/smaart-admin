@@ -14,7 +14,8 @@ class DatasetsController extends Controller
 
     public function create_dataset(Request $request)
     {
-        $tableName = 'data_table_'.time();
+        $org_id = Auth::user()->organization_id;
+        $tableName = $org_id.'_data_table_'.time();
         $dl = new DL;
         $dl->dataset_name = $request->dataset_name;
         $dl->dataset_table = $tableName;

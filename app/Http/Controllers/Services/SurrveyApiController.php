@@ -15,6 +15,7 @@ use App\SurveyEmbed as SEMBED;
 use Illuminate\Support\Facades\Schema;
 use App\organization as org;
 use Session;
+use MyFuncs;
 
 class SurrveyApiController extends Controller
 {
@@ -26,36 +27,40 @@ class SurrveyApiController extends Controller
 		Session::put('org_id', $org_id);
 		$data = json_decode($request->export,true);
 		$surveyid = $data[0]["surveyid"];
-		$table = 'survey_data_'.$surveyid;
+		$table = $org_id.'_survey_data_'.$surveyid;
 		if(!Schema::hasTable($table))
     	{
-    		$ques_data = SQ::select(['answer'])->where('survey_id',$surveyid)->get();
-    		foreach ($ques_data as $key => $value) {
-    		 $ans = json_decode($value->answer);
-    		 $colums[] =   "`$ans->question_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL";
-    		}
-			$colums[] =    "`ip_address` varchar(255) NULL DEFAULT  NULL";
-			$colums[] =    "`survey_start_on` timestamp NULL DEFAULT  NULL";
-			$colums[] =    "`survey_completed_on` timestamp NULL DEFAULT  NULL";
-			$colums[] =    "`survey_status` int(1) NULL DEFAULT  NULL";
-			$colums[] =    "`survey_submited_by` varchar(255) NULL DEFAULT  NULL";
-			$colums[] =    "`survey_submited_from` varchar(255) NULL DEFAULT  NULL";
-			$colums[] =    "`mac_address` varchar(255) NULL DEFAULT  NULL";
-			$colums[] =    "`imei` varchar(255) NULL DEFAULT  NULL";
-			$colums[] =    "`unique_id` varchar(255) NULL DEFAULT  NULL";
-			$colums[] =    "`created_by` int(11)  NULL";
-			$colums[] =    "`created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP";
+    		//MyFuncs::create_survey_table($surveyid, $org_id);
+    		MyFuncs::create_survey_table($surveyid , $org_id);
 
 
-			DB::select("CREATE TABLE `{$table}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-        	DB::select("ALTER TABLE `{$table}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
-        	Surrvey::where('id',$surveyid)->update(['surrvey_table'=>$table]);
+   //  		$ques_data = SQ::select(['answer'])->where('survey_id',$surveyid)->get();
+   //  		foreach ($ques_data as $key => $value) {
+   //  		 $ans = json_decode($value->answer);
+   //  		 $colums[] =   "`$ans->question_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL";
+   //  		}
+			// $colums[] =    "`ip_address` varchar(255) NULL DEFAULT  NULL";
+			// $colums[] =    "`survey_start_on` timestamp NULL DEFAULT  NULL";
+			// $colums[] =    "`survey_completed_on` timestamp NULL DEFAULT  NULL";
+			// $colums[] =    "`survey_status` int(1) NULL DEFAULT  NULL";
+			// $colums[] =    "`survey_submited_by` varchar(255) NULL DEFAULT  NULL";
+			// $colums[] =    "`survey_submited_from` varchar(255) NULL DEFAULT  NULL";
+			// $colums[] =    "`mac_address` varchar(255) NULL DEFAULT  NULL";
+			// $colums[] =    "`imei` varchar(255) NULL DEFAULT  NULL";
+			// $colums[] =    "`unique_id` varchar(255) NULL DEFAULT  NULL";
+			// $colums[] =    "`created_by` int(11)  NULL";
+			// $colums[] =    "`created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP";
+
+
+			// DB::select("CREATE TABLE `{$table}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+   //      	DB::select("ALTER TABLE `{$table}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
+   //      	Surrvey::where('id',$surveyid)->update(['surrvey_table'=>$table]);
 		}
 		foreach ($data as $key => $value) {
 				
 			
 			//dd($value['starton']);
-			// $insert['survey_start_on'] =date("Y-m-d", strtotime($value['starton']));
+			//8888 $insert['survey_start_on'] =date("Y-m-d", strtotime($value['starton']));
 			// $insert['survey_completed_on'] =$value['endon'];
 			// if($value['status'] =="completed")
 			// {

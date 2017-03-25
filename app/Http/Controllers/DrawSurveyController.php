@@ -14,6 +14,7 @@ use App\SurveySetting as SSETTING;
 use Illuminate\Support\Facades\Schema;
 use App\SurveyEmbed as SEMBED;
 use Session;
+use MyFuncs;
 
 
 class DrawSurveyController extends Controller
@@ -152,29 +153,30 @@ class DrawSurveyController extends Controller
 
     public function survey_store(Request $request)
     {
-		$table = 'survey_data_'.$request->survey_id;
         $data = SEMBED::where('embed_token',$request->code)->first();
         if($data == null){
             $errors[] = 'Survey id not valid!';
             return view('survey.draw_survey',['err_msg'=>$errors]);
         }
-
-		$uid = $data->user_id;
+        $table = $data->org_id.'_survey_data_'.$data->survey_id;
+        $uid = $data->user_id;
         Session::put('org_id',$data->org_id);
 		if(!Schema::hasTable($table))
     	{
-    		$ques_data = SQ::select(['answer'])->where('survey_id',$request->survey_id)->get();
-    		foreach ($ques_data as $key => $value) {
-    		 $ans = json_decode($value->answer);
-    		 $colums[] =   "`$ans->question_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL";
-    		}
-			$colums[] =    "`created_by` int(11)  NULL";
-			$colums[] =    "`created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP";
-			$colums[] =    "`ip_address` varchar(255) NULL DEFAULT  NULL";
+            MyFuncs::create_survey_table($data->survey_id , $data->org_id);
 
-			DB::select("CREATE TABLE `{$table}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-        	DB::select("ALTER TABLE `{$table}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
-        	Surrvey::where('id',$request->survey_id)->update(['surrvey_table'=>$table]);
+   //  		$ques_data = SQ::select(['answer'])->where('survey_id',$request->survey_id)->get();
+   //  		foreach ($ques_data as $key => $value) {
+   //  		 $ans = json_decode($value->answer);
+   //  		 $colums[] =   "`$ans->question_id` text COLLATE utf8_unicode_ci DEFAULT NULL";
+   //  		}
+			// $colums[] =    "`created_by` int(11)  NULL";
+			// $colums[] =    "`created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP";
+			// $colums[] =    "`ip_address` varchar(255) NULL DEFAULT  NULL";
+
+			// DB::select("CREATE TABLE `{$table}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+   //      	DB::select("ALTER TABLE `{$table}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
+   //      	Surrvey::where('id',$request->survey_id)->update(['survey_table'=>$table]);
 		}
 
     	foreach ($request->all() as $key => $value) {

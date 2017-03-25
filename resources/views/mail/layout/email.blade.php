@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>SMAART Framework</title>
+    <title>SMAART&trade; Framework</title>
     <style type="text/css">
     /* -------------------------------------
         INLINED WITH https://putsmail.com/inliner
@@ -77,7 +77,7 @@
         <td class="container" style="font-family:sans-serif;font-size:14px;vertical-align:top;display:block;max-width:580px;padding:10px;width:580px;Margin:0 auto !important;">
           <div class="content" style="box-sizing:border-box;display:block;Margin:0 auto;max-width:580px;padding:10px;">
             <!-- START CENTERED WHITE CONTAINER -->
-            <span class="preheader" style="color:transparent;display:none;height:0;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;visibility:hidden;width:0;">Track Sustainable Development Goals</span>
+            <span class="preheader" style="color:transparent;display:none;height:0;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;visibility:hidden;width:0;">SMAART Framework</span>
             
 			
 			<table class="main" style="border-collapse:separate;mso-table-lspace:0pt;mso-table-rspace:0pt;border-radius:3px;width:100%;">
@@ -87,7 +87,7 @@
                   <table border="0" cellpadding="0" cellspacing="0" style="border-collapse:separate;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%;">
                     <tr>
                       <td style="font-family:sans-serif;font-size:14px;vertical-align:top;">
-                        <p style="font-family:sans-serif;font-size: 42px;font-weight: 700;color: #168dc5;margin:0;text-align: center;">SMAART Framework</p>
+                        <p style="font-family:sans-serif;font-size: 42px;font-weight: 700;color: #168dc5;margin:0;text-align: center;">SMAART&trade; Framework</p>
                         {{-- <p style="font-family:sans-serif;font-size: 23px;font-weight: normal;color: #999;margin:0;text-align: center;">Track Sustainable Development Goals</p> --}}
                       </td>
                     </tr>

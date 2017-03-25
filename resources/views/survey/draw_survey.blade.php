@@ -40,7 +40,7 @@
 					</div> <!-- survey-header -->
 					<div class="survey-content">
 						<div class="wrapper-row ">
-							<h1 class="survey-error-messages">{{$error_message}}</h1>
+							<h1 class="survey-error-messages"><?php echo $error_message; ?></h1>
 						</div>
 					</div>
 				</div>
@@ -48,15 +48,18 @@
 			@endforeach
 	@else
 		<div id="survey_{{$sdata->id}}" class="survey-wrapper">
-		
+		@if(Auth::check()!=false)
+			{{Auth::user()->name}}
+		@endif
 			{!! Form::open(['route' => 'survey.store','id'=>"survey_form_".$sdata->id, 'class'=>'survey-form','files'=>true]) !!}
 			
 				<input type="hidden" name="survey_id" value="{{$sdata->id}}" >
 				<input type="hidden" name="code" value="{{$token}}" />
 				<div id="survey_header_{{$sdata->id}}" class="survey-header">
 					<div class="wrapper-row">
-						<h1 class="survey-title">{{$sdata->name}} </h1>
-						<h3 class="survey-description">{{$sdata->description}}</h3>
+
+						<h1 class="survey-title"><?php echo $sdata->name; ?> </h1> 
+						<h3 class="survey-description"><?php echo $sdata->description; ?></h3>
 					</div> <!-- wrapper-row -->
 				</div> <!-- survey-header -->
 				@if ($message = Session::get('successfullSaveSurvey'))
@@ -68,6 +71,7 @@
 					</div>
 				@else
 					<div id="survey_content_{{$sdata->id}}" class="survey-content">
+
 						<div class="wrapper-row">
 					
 							@if(count($sdata->group)>0)
@@ -76,8 +80,8 @@
 									
 										<div id="group_header_{{$survey_group->id}}" class="group-header">
 											<div class="content-row">
-												<h2 class="group-title">{{$survey_group->title}}</h1>
-												<h4 class="group-description">{{$survey_group->description}}</h3>
+												<h2 class="group-title"><?php echo $survey_group->title; ?></h1>
+												<h4 class="group-description"><?php echo $survey_group->description; ?></h3>
 											</div> <!-- content-row -->
 										</div> <!-- group-header -->
 										
@@ -99,8 +103,8 @@
 														
 														<div id="field_label_{{$field_meta['question_id']}}" class="field-label">
 															<label for="input_{{$field_meta['question_id']}}">
-																<h4 class="field-title">{{$field->question}}</h4>
-																<p class="field-description">{{$field_meta['question_desc']}}</p>
+																<h4 class="field-title"><?php echo $field->question ?></h4>
+																<p class="field-description"><?php echo $field_meta['question_desc']; ?></p>
 															</label>
 														</div> <!-- field-label -->
 														
@@ -108,11 +112,13 @@
 														
 															@if($field_meta['question_type'] =="text")
 																<input name="{{$field_meta['question_id']}}" id="input_{{$field_meta['question_id']}}" type="text" placeholder="" >
+																@elseif($field_meta['question_type'] =="text_only")
+																<textarea  name="{{$field_meta['question_id']}}" id="textarea_{{$field_meta['question_id']}}"> </textarea>
 															@elseif($field_meta["extraOptions"] && $field_meta['question_type'] =="checkbox" )
 																	@foreach($field_meta["extraOptions"] as $option_key =>  $option_value)
 																		<div id="field_option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option">
 																			<input id="option_{{$field_meta['question_id']}}_{{$option_key}}" name="{{$field_meta['question_id']}}[]" type="checkbox" value="{{$option_key}}">
-																			<label for="option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option-label"> {{$option_value}}</label>
+																			<label for="option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option-label"> <?php echo $option_value; ?></label>
 																		</div>
 																	@endforeach
 
@@ -120,13 +126,13 @@
 																@foreach($field_meta["extraOptions"] as $option_key =>  $option_value)
 																	<div id="field_option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option">
 																		<input id="option_{{$field_meta['question_id']}}_{{$option_key}}" name="{{$field_meta['question_id']}}" type="radio" value="{{$option_key}}">
-																		<label for="option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option-label"> {{$option_value}}</label>
+																		<label for="option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option-label"> <?php echo $option_value; ?></label>
 																	</div>
 																@endforeach
 															@elseif($field_meta["extraOptions"] && $field_meta['question_type'] =="dropdown" )
 																<select name="{{$field_meta['question_id']}}" >
 																@foreach($field_meta["extraOptions"] as $option_key =>  $option_value)
-																	<option value="{{$option_key}}"> {{$option_value}} </option>
+																	<option value="{{$option_key}}"> <?php echo $option_value; ?> </option>
 																@endforeach
 																</select>
 
@@ -147,21 +153,32 @@
 										
 									</div> <!-- survey-group -->
 								@endforeach
+								
+								@else
+								<div class="survey-content">
+									<div class="wrapper-row ">
+										<h1 class="survey-error-messages">NO QUESTION EXIST!</h1>
+									</div>
+								</div>
+
 							@endif
 							
 						</div> <!-- wrapper-row -->
 					</div> <!-- survey-content -->
+
+
 				@endif
-				@if (!Session::get('successfullSaveSurvey'))
+				
+				@if (!Session::get('successfullSaveSurvey') && count($sdata->group)>0 )
 					<div id="survey_footer_{{$sdata->id}}" class="survey-footer">
 						<div class="wrapper-row">
-							{!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                			{!! Form::button('Cancel', ['class' => 'btn btn-primary','onclick'=>'window.location.reload()']) !!}
+							{!! Form::submit('Save', ['class' => 'button']) !!}
+                			{!! Form::button('Cancel', ['class' => 'button','onclick'=>'window.location.reload()']) !!}
 							
 						</div> <!-- wrapper-row -->
 					</div> <!-- survey-footer -->
 				@endif
-				
+
 		</div><!-- survey-wrapper -->
 	@endif
 			

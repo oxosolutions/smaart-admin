@@ -29,7 +29,7 @@ class RegisterNewUser extends Mailable
      */
     public function build()
     {
-        $subject = 'Thanks For Register with us!';
+        $subject = 'Thanks for register with us!';
         return $this->view('mail.register',
                                             [
                                                 'user'=>$this->userDet

@@ -86,6 +86,9 @@ Route::get('view_survey_saved_data/{id}' , ['as'=>'survey.savedata' , 'uses'=>'S
 	Route::get('generate_survey/{id}', ['as'=>'apisurrvey.data', 'uses'=>'Services\SurrveyApiController@generate_survey']);
 	Route::get('surveyList', ['as'=>'apisurrvey.data', 'uses'=>'Services\SurrveyApiController@getAllsurveys']);
 	
+	//file manager
+	Route::get('sharedFile', ['as'=>'shared.file', 'uses'=>'Services\FileManagerController@listFiles']);
+
 //role list 
 	Route::get('role/list', ['as'=>'role.list', 'uses'=>'Services\ApiauthController@roleList']);
 	
@@ -145,6 +148,8 @@ Route::get('view_survey_saved_data/{id}' , ['as'=>'survey.savedata' , 'uses'=>'S
 	Route::post('/saveVisualSettings',			['as'=>'save.visual.settings','uses'=>'Services\VisualApiController@saveVisualSettings' ,'route_name'=>  'Save Visual Setting']);
 	Route::get('/getVisualList/{dataset_id}',	['as'=>'visual.list.byDataset','uses'=>'Services\VisualApiController@getVisualsFromDatsetID' ]);
 	Route::post('/generateEmbedToken',			['as'=>'generate.embed','uses'=>'Services\VisualApiController@generateEmbed']);
-		
+
+	Route::post('/uplaodFile',['as'=>'file_manager.upload','uses'=>'Services\FileManagerController@uploadFile']);
+	
 	});
 });

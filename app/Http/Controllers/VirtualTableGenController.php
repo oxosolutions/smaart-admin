@@ -43,7 +43,7 @@ class VirtualTableGenController extends Controller
         [
           'tab_name'=>$org_name.'_survey_questions',
           'columns'=>[
-          "`surrvey_id` int(10) UNSIGNED NOT NULL",
+          "`survey_id` int(10) UNSIGNED NOT NULL",
           "`answer` text COLLATE utf8_unicode_ci NOT NULL",
           "`question` varchar(255) COLLATE utf8_unicode_ci NOT NULL",
           "`group_id` int(10) UNSIGNED NOT NULL",
@@ -149,7 +149,7 @@ class VirtualTableGenController extends Controller
           'tab_name'=>$org_name.'_survey_settings',
           'columns'=>[
           "`key` varchar(255) COLLATE utf8_unicode_ci NOT NULL",
-        "`value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL",
+        "`value` text COLLATE utf8_unicode_ci DEFAULT NULL",
         "`survey_id` int(11) NOT NULL",
         "`deleted_at` timestamp NULL DEFAULT NULL",
         "`created_at` timestamp NULL DEFAULT NULL",

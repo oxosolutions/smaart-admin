@@ -57,7 +57,7 @@ return [
 
     'from' => [
         'address' => 'info@sdgindia.com',
-        'name' => 'SMAART Framework',
+        'name' => 'SMAART™ Framework',
     ],
 
     /*

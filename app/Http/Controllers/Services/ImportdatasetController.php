@@ -226,6 +226,8 @@ class ImportdatasetController extends Controller
     protected function storeInDatabase($filename, $origName, $source, $orName){
         
         $filePath = $filename;
+        $org_id =  Auth::user()->organization_id;
+
 
         if($source == 'url'){
             $randName = 'downloaded_dataset_'.time().'.'.File::extension($filename);
@@ -241,7 +243,7 @@ class ImportdatasetController extends Controller
             return $this->runSqlFile($filePath ,$origName , $orName);
             // return ['status'=>'true','id'=>'','message'=>'Dataset sql upload successfully!'];
         }elseif(File::extension($filename)=="xlsx" || File::extension($filename)=="xls"){
-            $tableName = 'data_table_'.time();
+            $tableName = $org_id.'_data_table_'.time();
             $columns = [];
             $assoc = [];
             $finalArray = [];
@@ -294,7 +296,7 @@ class ImportdatasetController extends Controller
 
             DB::beginTransaction();
             $model = new MySQLWrapper();
-            $tableName = 'data_table_'.time();
+            $tableName = $org_id.'_data_table_'.time();
             
             $result = $model->wrapper->createTableFromCSV($filePath,$tableName,',','"', '\\', 0, array(), 'generate','\r\n');
             

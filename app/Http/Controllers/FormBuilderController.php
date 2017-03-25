@@ -10,6 +10,7 @@ USE Auth;
 use Session;
 use Carbon\Carbon as tm;
 use DB;
+use MyFuncs;
 class FormBuilderController extends Controller
 {
       public function surrvey_setting($id)
@@ -86,8 +87,8 @@ class FormBuilderController extends Controller
               return redirect()->route('surrvey.index');    
   }
     public function create_surrvey(){
-
-        return view('formbuilder.add');
+            
+      return view('formbuilder.add');
     }
  // protected function modelSurrveyValidate($request){
         
@@ -205,7 +206,6 @@ class FormBuilderController extends Controller
 
     public function create($id)
     {
-        
        $model = SQ::where('survey_id',$id);
        $quesData ="";
       if($model->count()>0){

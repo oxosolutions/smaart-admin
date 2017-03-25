@@ -170,6 +170,7 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         //Laravel\Passport\PassportServiceProvider::class,
         PHPMySQLWrapper\MySQLWrapper\PHPMySQLWrapperProvider::class,
+        App\Providers\HelperServiceProvider::class,
         // Logsystem\Logrecord\LogsystemServiceProvider::class,
 
         /*
@@ -250,6 +251,7 @@ return [
         'Activity'  => Spatie\Activitylog\ActivitylogFacade::class,
 
         'MySQLWrapper' => PHPMySQLWrapper\MySQLWrapper\Wrapper::class,
+        'MyFuncs' => App\Helpers\MyFuncs::class,
 
     ],
 

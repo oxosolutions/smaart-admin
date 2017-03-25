@@ -1,6 +1,8 @@
 <?php
 
-
+Route::get('/func', function () {
+    return MyFuncs::full_name("John","Doe");
+});
 
 		Route::get('/viewemail',function(){
 			return view('mail.layout.email',

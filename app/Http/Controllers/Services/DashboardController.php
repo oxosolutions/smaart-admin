@@ -10,6 +10,7 @@ use App\GeneratedVisual as VIZ;
 use App\Surrvey as SR;
 use App\User as US;
 use App\UserMeta as UM;
+use App\organization as ORG;
 
 	class DashboardController extends Controller
 	{
@@ -34,7 +35,7 @@ use App\UserMeta as UM;
 						
 			}
 
-
+				$data['organization_detail'] = ORG::where('id',$org_id)->first();
 				$data['user_profile'] =  US::where('id', Auth::user()->id)->get();
 				$data['user_meta'] =  	[
 									'profile_pic' => $profile_pic,
