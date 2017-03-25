@@ -37,17 +37,18 @@ class FileManagerController extends Controller
                     'name'          =>  $value->getFilename(),
                     'type'          =>  $value->getExtension(),
                     'size'          =>  $value->getSize(),
-                    'size_mb'       =>  $file_mb,
+                    'size_mb'       =>  round($file_mb,2),
                     'size_kb'       =>  $file_kb,
+                    'slug'          =>  'slug_'.rand('15',1000000),
                     'server_path'   =>  $value->getRealPath(),
                     'url'           =>  asset($value->getPathname()),
                     'modified_at'   =>  date('Y-m-d h:i:s',$value->getMTime()),
-                    'permission'    =>  json_encode(array(
-                                                    'readable'      => $value->isReadable(),
-                                                    'writable'      => $value->isWritable()
-                                                ))
+                    'permission'    =>  ''
                 );
-                
+            //to save the files into database
+
+                // $fm = FM::create($data);
+                // $fm->save();
                 $newdata[] = $data;
         }
         foreach($dirList as $key => $subDir){
@@ -59,17 +60,18 @@ class FileManagerController extends Controller
                         'name'          =>  $value->getFilename(),
                         'type'          =>  $value->getExtension(),
                         'size'          =>  $value->getSize(),
-                        'size_mb'       =>  $file_mb,
+                        'size_mb'       =>  round($file_mb,2),
                         'size_kb'       =>  $file_kb,
+                        'slug'          =>  'slug_'.rand('15',1000000),
                         'server_path'   =>  $value->getRealPath(),
                         'url'           =>  asset($value->getPathname()),
                         'modified_at'   =>  date('Y-m-d h:i:s',$value->getMTime()),
-                        'permission'    =>  array(
-                                                        'readable'      => $value->isReadable(),
-                                                        'writable'      => $value->isWritable()
-                                                    )
+                        'permission'    => ''
                     );
-                    
+                //to save the files into database
+                
+                    // $fm = FM::create($data);
+                    // $fm->save();
                     $newdata[] = $data;
                     return['status' => 'success','response' => $newdata];
             }

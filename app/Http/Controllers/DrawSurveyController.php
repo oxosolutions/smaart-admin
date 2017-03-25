@@ -189,6 +189,7 @@ class DrawSurveyController extends Controller
     			$insert[$key] = $request->$key;
     		}
     	}
+        $insert['survey_started_on']  =  $request->started_on;
 		$insert["created_by"] = $uid;
     	$insert["ip_address"] = $request->ip();
         unset($insert['code']);
@@ -200,7 +201,7 @@ class DrawSurveyController extends Controller
     public function view_filled_survey($sid , $uid)
     {	
 
-    	$table = "survey_data_".$sid;
+    	$table = "_survey_data_".$sid;
     	$data = DB::table($table)->where('created_by',$uid)->first();
     	$Ques = SQ::where('survey_id',$sid)->get();
 //dump($data->SID13_GID1_QID1);

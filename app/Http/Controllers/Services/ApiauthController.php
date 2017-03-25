@@ -302,7 +302,7 @@ class ApiauthController extends VirtualTableGenController
 	        $org = org::where('organization_name',$request->organization_name);
 	          if($org->count()==0)
 	          {
-	            $data = array('organization_name' => $request->organization_name, 'activation_code'=>rand(15,100000));  
+	            $data = array('organization_name' => $request->organization_name, 'activation_code'=>rand(15,10000000000));  
 	            $inserted = org::create($data);
 	            $organization_id = $inserted->id;
 	            $role = 1;

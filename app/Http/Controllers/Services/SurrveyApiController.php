@@ -20,6 +20,23 @@ use MyFuncs;
 class SurrveyApiController extends Controller
 {
 
+// 	public function view_survey_result( )
+// 	{
+// 		$org_id = Auth::user()->organization_id;
+// 		$table = $org_id."_survey_data_54";
+//     	$data = DB::table($table)->get();
+// //     	$Ques = SQ::where('survey_id',$sid)->get();
+// // //dump($data->SID13_GID1_QID1);
+// //     	foreach ($Ques as $key => $value) {
+// //     		# code...
+// //     		echo "<br>Question :".$value->question.'<br>';
+// //     		$ans = json_decode($value->answer);
+// //     		  $qid = $ans->question_id;
+// //     		  echo "Answer ".$data->$qid.'<br><br>';
+// //     	}	
+// return ['status'=>"success" , "data"=>$data];	
+// 	}
+
 	public function save_survey_filled_data(Request $request)
 	{
 		dump($request->all());
@@ -109,6 +126,8 @@ class SurrveyApiController extends Controller
 		return ['status'=>'success', 'data'=> $data];
 		}catch(\Exception $e)
 		{
+			throw $e;
+			
 			return ['status'=>'error', 'message'=>'something goes wrong try again'];	
 		}
 	} 

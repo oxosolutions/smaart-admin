@@ -64,7 +64,7 @@ class AppApiController extends Controller
 	public function activateApp(Request $request){
 
 		$activationCode = $request->activation_key;
-		$model = ORG::where('activation_code',$activationCode)->first();
+		$model = ORG::where('activation_code',$k)->first();
 		if($model == null){
 			return ['status'=>'error','message'=>'Wrong activation key!'];
 		}

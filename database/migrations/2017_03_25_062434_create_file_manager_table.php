@@ -20,6 +20,7 @@ class CreateFileManagerTable extends Migration
                 $tab->string('size');
                 $tab->string('server_path');
                 $tab->string('url');
+                $tab->string('slug');
                 $tab->dateTime('modified_at');
                 $tab->string('permission');
                 $tab->timestamps();

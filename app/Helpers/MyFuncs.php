@@ -22,16 +22,17 @@ class MyFuncs{
     		 $colums[] =   "`$ans->question_id` text COLLATE utf8_unicode_ci DEFAULT NULL";
     		}
 			$colums[] =    "`ip_address` varchar(255) NULL DEFAULT  NULL";
-			$colums[] =    "`survey_start_on` timestamp NULL DEFAULT  NULL";
+			$colums[] =    "`survey_started_on` varchar(255) NULL DEFAULT  NULL";
 			$colums[] =    "`survey_completed_on` timestamp NULL DEFAULT  NULL";
 			$colums[] =    "`survey_status` int(1) NULL DEFAULT  NULL";
-			$colums[] =    "`survey_submited_by` varchar(255) NULL DEFAULT  NULL";
-			$colums[] =    "`survey_submited_from` varchar(255) NULL DEFAULT  NULL";
+			$colums[] =    "`survey_submitted_by` varchar(255) NULL DEFAULT  NULL";
+			$colums[] =    "`survey_submitted_from` varchar(255) NULL DEFAULT  NULL";
 			$colums[] =    "`mac_address` varchar(255) NULL DEFAULT  NULL";
 			$colums[] =    "`imei` varchar(255) NULL DEFAULT  NULL";
 			$colums[] =    "`unique_id` varchar(255) NULL DEFAULT  NULL";
 			$colums[] =    "`created_by` int(11)  NULL";
 			$colums[] =    "`created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP";
+			$colums[] =    "`deleted_at` timestamp NULL DEFAULT NULL";
 
 
 			DB::select("CREATE TABLE `{$table}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
