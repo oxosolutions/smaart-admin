@@ -11,6 +11,7 @@ use App\User;
 use Session;
 use App\SurveyQuestionGroup as SQG;
 use App\SurveyQuestion as SQ;
+use App\FileManager as FM;
 class AppApiController extends Controller
 {
     public function getAllsurveys(){
@@ -64,7 +65,7 @@ class AppApiController extends Controller
 	public function activateApp(Request $request){
 
 		$activationCode = $request->activation_key;
-		$model = ORG::where('activation_code',$k)->first();
+		$model = ORG::where('activation_code',$activationCode)->first();
 		if($model == null){
 			return ['status'=>'error','message'=>'Wrong activation key!'];
 		}
@@ -73,9 +74,44 @@ class AppApiController extends Controller
 		$surveyData = Surrvey::get();
 		$groupsData = SQG::get();
 		$surveyQuestions = SQ::get();
+		$media ="";
+		
 		foreach ($surveyQuestions as $key => $value) {
+			
 			$questionData[$key]['question_id'] = $value->id;
 			$ansData = json_decode($value->answer,true);
+
+			if(str_contains($ansData['question_desc'], ['[image_', '[audio_' ] ))
+			{	
+			 	$descData = 	explode(' ', $ansData['question_desc']);
+			 	foreach ($descData as $deskey => $desValue) {
+
+			 		 if(starts_with($desValue, '[image_'))
+			 		 {
+			 		 	 $newDec = str_replace('[', '', $desValue);
+			 		 	  $finalDes = str_replace(']', '', $newDec);
+			 			 $url = FM::select('url')->where('media',$finalDes);
+				 		 if($url->count()>0)
+				 		 {
+				 		  $urls =	$url->first()->url;
+				 		  $media[$finalDes] = $urls;
+				 		 }
+			 		 }
+			 		 elseif(starts_with($desValue, '[audio_'))
+			 		 {
+			 		 	 $newDec = str_replace('[', '', $desValue);
+			 		 	  $finalDes = str_replace(']', '', $newDec);
+			 			 $url = FM::select('url')->where('media',$finalDes);
+				 		 if($url->count()>0)
+				 		 {
+				 		  $urls =	$url->first()->url;
+				 		  $media[$finalDes] = $urls;
+				 		 }
+			 		 }
+			 	}
+
+			}
+			
 			$questionData[$key]["question_key"] =  @$ansData["question_id"];
     		$questionData[$key]["question_order"]	=  "";
     		$questionData[$key]['question_text'] = $value->question;
@@ -89,7 +125,6 @@ class AppApiController extends Controller
 		{
 			$i=0;
     		 foreach ($ansData['extraOptions'] as $optKey => $optValue) {
-    		 	//dump($optKey);
     			$option["option_type"] = $ansData['question_type'];
 				$option["option_text"] = $optValue;
        			$option["option_value"] =  $optKey;
@@ -132,7 +167,38 @@ class AppApiController extends Controller
 			$questionData[$key]['updated_at'] = $value->updated_at;
 			$questionData[$key]['deleted_at'] = $value->deleted_at;
 		}
+		 
 		Session::forget('org_id');
-		return ['status'=>'success','questions'=>$questionData ,'users'=>$users,'surveys'=>$surveyData,'groups'=>$groupsData];
+		return ['status'=>'success','media'=>$media ,'questions'=>$questionData ,'users'=>$users,'surveys'=>$surveyData,'groups'=>$groupsData];
 	}
+protected function get_media($parm , $find)
+{
+	if(str_contains($parm,  $find ))
+			{	
+							 $descData = 	explode(' ', $parm);
+							 	foreach ($descData as $deskey => $desValue) {
+
+							 		 if(starts_with($desValue,  $find))
+							 		 {
+							 		 	 $newDec = str_replace('[', '', $desValue);
+							 		 	  $finalDes = str_replace(']', '', $newDec);
+							 		 	 // dump($finalDes);
+							 			 $url = FM::select('url')->where('media',$finalDes);
+								 		 if($url->count()>0)
+								 		 {
+								 		 	
+								 		  $urls =	$url->first()->url;
+								 		  //dump($urls);
+								 		  $media[$finalDes] = $urls;
+								 		 	
+								 		 }
+
+							 		 }
+							 		 
+							 	}
+
+			}
+
+}
+
 }

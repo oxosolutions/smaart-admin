@@ -30,5 +30,11 @@
 				</div> <!-- wrapper-row -->
 			</div> <!-- survey-footer -->		
 		</div>
+		<script src="{{asset('/bower_components/admin-lte/plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
+
+		<script src="{{asset('/js/survey.js')}}" type="text/javascript">  </script>
+
+
+
 	</body>
 </html>

@@ -1,1 +1,0 @@
-https://itunesconnect.apple.com/login?targetUrl=%2FWebObjects%2FiTunesConnect.woa&authResult=FAILED

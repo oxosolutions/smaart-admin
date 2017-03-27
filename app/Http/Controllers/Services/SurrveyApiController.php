@@ -20,23 +20,6 @@ use MyFuncs;
 class SurrveyApiController extends Controller
 {
 
-// 	public function view_survey_result( )
-// 	{
-// 		$org_id = Auth::user()->organization_id;
-// 		$table = $org_id."_survey_data_54";
-//     	$data = DB::table($table)->get();
-// //     	$Ques = SQ::where('survey_id',$sid)->get();
-// // //dump($data->SID13_GID1_QID1);
-// //     	foreach ($Ques as $key => $value) {
-// //     		# code...
-// //     		echo "<br>Question :".$value->question.'<br>';
-// //     		$ans = json_decode($value->answer);
-// //     		  $qid = $ans->question_id;
-// //     		  echo "Answer ".$data->$qid.'<br><br>';
-// //     	}	
-// return ['status'=>"success" , "data"=>$data];	
-// 	}
-
 	public function save_survey_filled_data(Request $request)
 	{
 		dump($request->all());
@@ -47,50 +30,21 @@ class SurrveyApiController extends Controller
 		$table = $org_id.'_survey_data_'.$surveyid;
 		if(!Schema::hasTable($table))
     	{
-    		//MyFuncs::create_survey_table($surveyid, $org_id);
     		MyFuncs::create_survey_table($surveyid , $org_id);
+		}
+		else{
+			MyFuncs::alter_survey_table($surveyid , $org_id);
 
-
-   //  		$ques_data = SQ::select(['answer'])->where('survey_id',$surveyid)->get();
-   //  		foreach ($ques_data as $key => $value) {
-   //  		 $ans = json_decode($value->answer);
-   //  		 $colums[] =   "`$ans->question_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL";
-   //  		}
-			// $colums[] =    "`ip_address` varchar(255) NULL DEFAULT  NULL";
-			// $colums[] =    "`survey_start_on` timestamp NULL DEFAULT  NULL";
-			// $colums[] =    "`survey_completed_on` timestamp NULL DEFAULT  NULL";
-			// $colums[] =    "`survey_status` int(1) NULL DEFAULT  NULL";
-			// $colums[] =    "`survey_submited_by` varchar(255) NULL DEFAULT  NULL";
-			// $colums[] =    "`survey_submited_from` varchar(255) NULL DEFAULT  NULL";
-			// $colums[] =    "`mac_address` varchar(255) NULL DEFAULT  NULL";
-			// $colums[] =    "`imei` varchar(255) NULL DEFAULT  NULL";
-			// $colums[] =    "`unique_id` varchar(255) NULL DEFAULT  NULL";
-			// $colums[] =    "`created_by` int(11)  NULL";
-			// $colums[] =    "`created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP";
-
-
-			// DB::select("CREATE TABLE `{$table}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-   //      	DB::select("ALTER TABLE `{$table}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
-   //      	Surrvey::where('id',$surveyid)->update(['surrvey_table'=>$table]);
 		}
 		foreach ($data as $key => $value) {
 				
 			
-			//dd($value['starton']);
-			//8888 $insert['survey_start_on'] =date("Y-m-d", strtotime($value['starton']));
-			// $insert['survey_completed_on'] =$value['endon'];
-			// if($value['status'] =="completed")
-			// {
-			// 	$status =1;
-			// }else{
-			// 	$status = 0;
-			// }
-			// $insert['survey_status'] = $status;
-			// $insert['survey_submited_by'] =$value[];
-			// $insert['survey_submited_from'] =$value[];
-			// $insert['mac_address'] =$value[];
-			// $insert['imei'] =$value[];
-			// $insert['unique_id'] =$value[];
+		// $insert["survey_completed_on"] = date('YmdHisu');
+  //       $insert["survey_submitted_by"] = $survey_submitted_by;
+  //       $insert["survey_status"] = 1;
+  //       $insert["unique_id"] = date('YmdHisu').''.str_random(5);
+		// $insert["created_by"] = $uid;
+  //   	$insert["ip_address"] = $request->ip();
 
 			foreach ($value['answers'] as $key => $value) {
 				
@@ -107,6 +61,12 @@ class SurrveyApiController extends Controller
 				
 				$insert[$value['questkey']] = $ans;
 				$insert["ip_address"] = $request->ip();
+				$insert["unique_id"] = date('YmdHis').''.substr((string)microtime(), 2, 6).''.rand(1000,9999); 
+				$insert["survey_submitted_from"] = "APP";
+				$insert["survey_completed_on"] = date('YmdHis').substr((string)microtime(), 2, 6);
+
+
+
 				
 			}
 			
@@ -121,8 +81,18 @@ class SurrveyApiController extends Controller
 	{
 		try{
 		Surrvey::findORfail($sid);
-		$table = Surrvey::select('surrvey_table')->where('id',$sid)->first()->surrvey_table;
+		$table = Surrvey::select('survey_table')->where('id',$sid)->first()->survey_table;
 		$data = DB::table($table)->get();
+		foreach ($data as $key => $value) {
+			foreach ($value as $aKey => $ansValue) {
+				
+					if(is_array(json_decode($ansValue,true)))
+					{
+						$data[$key]->$aKey = implode(', ', json_decode($ansValue,true));
+					}
+
+			}
+		}
 		return ['status'=>'success', 'data'=> $data];
 		}catch(\Exception $e)
 		{

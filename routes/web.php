@@ -25,7 +25,7 @@ Route::get('/func', function () {
 
 		});
 
-		Route::get('s/{id}',['as'=>'survey.draw', 'uses'=>'DrawSurveyController@draw_survey']);
+		Route::get('s/{id}/{skip?}',['as'=>'survey.draw', 'uses'=>'DrawSurveyController@draw_survey']);
 
 		Route::get('v/{id}',['as'=>'draw.visualisation','uses'=>'VisualisationController@embedVisualization']);
 

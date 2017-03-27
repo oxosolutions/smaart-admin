@@ -30,7 +30,7 @@ class DrawSurveyController extends Controller
         return $keyArray[array_search($keyValue, array_column($settingsArray, 'key'))]['value'];
     }
 
-    public function draw_survey($token)
+    public function draw_survey($token, $skip_auth = null)
     {//2017-03-24T17:00:00.000Z
     	$data = SEMBED::where('embed_token',$token)->first();
         if($data == null){
@@ -49,24 +49,26 @@ class DrawSurveyController extends Controller
         $messages_list = json_decode($this->getSettings($survey_settings,'survey_custom_error_messages_list'),true);
         if($survey_data->status == 1){
             $authentication_required = $this->getSettings($survey_settings,'authentication_required');
-            if(($authentication_required == '1' || $authentication_required == 1) && $authentication_required != null){
-                if(Auth::check()!=false){
-                    $authentication_type = $this->getSettings($survey_settings,'authentication_type');
-                    if($authentication_type == 'role'){
-                        $roles = json_decode($this->getSettings($survey_settings,'authorized_roles'),true);
-                        if(!in_array(Auth::user()->role_id, $roles)){
-                            $errors[] = $messages_list['survey_unauth_role'];
+            if($skip_auth == null){
+                if(($authentication_required == '1' || $authentication_required == 1) && $authentication_required != null){
+                    if(Auth::check()!=false){
+                        $authentication_type = $this->getSettings($survey_settings,'authentication_type');
+                        if($authentication_type == 'role'){
+                            $roles = json_decode($this->getSettings($survey_settings,'authorized_roles'),true);
+                            if(!in_array(Auth::user()->role_id, $roles)){
+                                $errors[] = $messages_list['survey_unauth_role'];
+                            }
+                        }else{
+                            $users = json_decode($this->getSettings($survey_settings,'authorized_users'),true);
+                            if(!in_array(Auth::user()->id, $users)){
+                                $errors[] = $messages_list['survey_unauth_user'];
+                            }
                         }
                     }else{
-                        $users = json_decode($this->getSettings($survey_settings,'authorized_users'),true);
-                        if(!in_array(Auth::user()->id, $users)){
-                            $errors[] = $messages_list['survey_unauth_user'];
-                        }
+                        Session::flash('error',$messages_list['survey_auth_required']);
+                        Session::put('token',$token);
+                        return redirect()->route('survey.auth');
                     }
-                }else{
-                    Session::flash('error',$messages_list['survey_auth_required']);
-                    Session::put('token',$token);
-                    return redirect()->route('survey.auth');
                 }
             }
         }else{
@@ -153,7 +155,9 @@ class DrawSurveyController extends Controller
 
     public function survey_store(Request $request)
     {
+
         $data = SEMBED::where('embed_token',$request->code)->first();
+
         if($data == null){
             $errors[] = 'Survey id not valid!';
             return view('survey.draw_survey',['err_msg'=>$errors]);
@@ -164,20 +168,10 @@ class DrawSurveyController extends Controller
 		if(!Schema::hasTable($table))
     	{
             MyFuncs::create_survey_table($data->survey_id , $data->org_id);
-
-   //  		$ques_data = SQ::select(['answer'])->where('survey_id',$request->survey_id)->get();
-   //  		foreach ($ques_data as $key => $value) {
-   //  		 $ans = json_decode($value->answer);
-   //  		 $colums[] =   "`$ans->question_id` text COLLATE utf8_unicode_ci DEFAULT NULL";
-   //  		}
-			// $colums[] =    "`created_by` int(11)  NULL";
-			// $colums[] =    "`created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP";
-			// $colums[] =    "`ip_address` varchar(255) NULL DEFAULT  NULL";
-
-			// DB::select("CREATE TABLE `{$table}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-   //      	DB::select("ALTER TABLE `{$table}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
-   //      	Surrvey::where('id',$request->survey_id)->update(['survey_table'=>$table]);
-		}
+		}else{
+            
+           MyFuncs::alter_survey_table($data->survey_id , $data->org_id);
+       }
 
     	foreach ($request->all() as $key => $value) {
     		if($key=="_token" || $key=="survey_id" )
@@ -189,7 +183,17 @@ class DrawSurveyController extends Controller
     			$insert[$key] = $request->$key;
     		}
     	}
-       // $insert['survey_started_on']  =  $request->started_on;
+        
+        if(Auth::check())
+        {
+            $survey_submitted_by = Auth::user()->id;
+        }
+        else{ $survey_submitted_by = null; }
+        $insert["survey_completed_on"] = date('YmdHis').substr((string)microtime(), 2, 6);
+        $insert["survey_submitted_by"] = $survey_submitted_by;
+        $insert["survey_submitted_from"] = "WEB";
+        $insert["survey_status"] = 1;
+        $insert["unique_id"] = date('YmdHis').''.substr((string)microtime(), 2, 6).''.rand(1000,9999); 
 		$insert["created_by"] = $uid;
     	$insert["ip_address"] = $request->ip();
         unset($insert['code']);
