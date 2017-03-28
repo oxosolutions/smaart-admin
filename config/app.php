@@ -252,6 +252,7 @@ return [
 
         'MySQLWrapper' => PHPMySQLWrapper\MySQLWrapper\Wrapper::class,
         'MyFuncs' => App\Helpers\MyFuncs::class,
+        'SurveyHelper' => App\Helpers\MyFuncs::class,
 
     ],
 

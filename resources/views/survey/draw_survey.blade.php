@@ -1,34 +1,8 @@
 @extends('layouts.survey')
 @section('content')
-	<style type="text/css">
-		.error_main_div{
-			padding: 10px;
-			border: 2px dashed #ededed;
-			text-align: center;
-		}
-		.error_main_div h1{
-			font-size: 100px;
-			padding: 0px;
-		}
-		.erroe_main_div h2{
-			font-size: 80px
-		}
-		.wrapper{
-			min-height: 648px;
-		}
-		.survey-error-messages{
-			color: red;
-			text-align: center;
-			border: 2px dashed red;
-			padding: 65px;
-			margin: 50px;
-			font-size: 25px
-		}
-		.survey-success-messages{
-			color: #666666;
-		}
-
-	</style>
+{{@$theme}}
+{{@$skip_auth}}
+	
 	@if(@$err_msg)
 			@foreach($err_msg as $key => $error_message)
 				<div class="survey-wrapper" style="margin-top: 35px;">
@@ -49,8 +23,12 @@
 	@else
 		<div id="survey_{{$sdata->id}}" class="survey-wrapper">
 		@if(Auth::check()!=false)
-		<a  'class'='button' href="{{url('logout')}}">Logout</a>
-			{{Auth::user()->name}}
+		<div class="top-bar">
+			<ul>
+				<li>Welcome {{Auth::user()->name}},</li>
+				<li><a class'='button' href="{{url('out')}}/{{$token}}">Logout</a></li>
+			</ul>
+		</div>
 		@endif
 			{!! Form::open(['route' => 'survey.store','id'=>"survey_form_".$sdata->id, 'class'=>'survey-form','files'=>true]) !!}
 				<input type="hidden" name="survey_started_on" value="<?php echo date('YmdHis').substr((string)microtime(), 2, 6); ?>" >
@@ -88,16 +66,31 @@
 										
 										<div id="group_content_{{$survey_group->id}}" class="group-content">
 											<div class="content-row">
-											<?php //dd($survey_group->question); ?>
+											
 											
 												@foreach ($survey_group->question as $field_key => $field) 
-													<?php 
-													$field_id = 'sid'.$field->survey_id.'_gid'.$field->group_id.'_qid'.$field->id;
-													$field_meta = json_decode($field->answer,true);
+													<?php
+														$field_id = 'sid'.$field->survey_id.'_gid'.$field->group_id.'_qid'.$field->id;
+														$field_meta = json_decode($field->answer,true);
+														$validation_array = [];
+
+													if($field_meta['required']=="yes"){
+														$validation_array[] = 'required';
 													
-													// 1. Required Field Star
-													// 2. required Field Class
+													}
+
+													if($field_meta['pattern']!=null && $field_meta['pattern']!="blank" ){
+														$validation_array[] = 'custom';
+													  	//$validate = "data-validation-regexp=".$field_meta['pattern']; 
+													  	$validate = "data-validation-regexp=".$field_meta['pattern']; 
+													}
+														
+												
+													 
+														$validations = implode(' ',$validation_array);
 													?>
+													
+
 													
 													<div id="field_{{$field_id}}" class="field-wrapper field-wrapper-{{$field_meta['question_id']}} field-wrapper-type-{{$field_meta['question_type']}}">
 
@@ -105,16 +98,23 @@
 														<div id="field_label_{{$field_meta['question_id']}}" class="field-label">
 															<label for="input_{{$field_meta['question_id']}}">
 																<h4 class="field-title"><?php echo $field->question ?></h4>
-																<p class="field-description"><?php echo $field_meta['question_desc']; ?></p>
+																<p class="field-description"><?php
+																$media = SurveyHelper::get_survey_media($field_meta['question_desc']);
+
+																 echo $media['text']; ?></p>
 															</label>
 														</div> <!-- field-label -->
+													
+
 														
-														<div  id="field_{{$field_meta['question_id']}}" class="field {{$field_meta['question_type']}} field-type-{{$field_meta['question_type']}}">
+														
+														<div  id="field_{{$field_meta['question_id']}}" class="field {{$field_meta['question_type']}} field-type-{{$field_meta['question_type']}} ">
 														
 															@if($field_meta['question_type'] =="text")
-																<input name="{{$field_meta['question_id']}}" id="input_{{$field_meta['question_id']}}" type="text" placeholder="" >
+
+																<input {{$validate}}  name="{{$field_meta['question_id']}}" id="input_{{$field_meta['question_id']}}" type="text" placeholder="" data-validation="{{$validations}}" >
 																@elseif($field_meta['question_type'] =="text_only")
-																<textarea  name="{{$field_meta['question_id']}}" id="textarea_{{$field_meta['question_id']}}"> </textarea>
+																<textarea {{$validate}} name="{{$field_meta['question_id']}}" id="textarea_{{$field_meta['question_id']}}"> </textarea>
 															@elseif($field_meta["extraOptions"] && $field_meta['question_type'] =="checkbox" )
 																	@foreach($field_meta["extraOptions"] as $option_key =>  $option_value)
 																		<div id="field_option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option">
@@ -131,7 +131,7 @@
 																	</div>
 																@endforeach
 															@elseif($field_meta["extraOptions"] && $field_meta['question_type'] =="dropdown" )
-																<select name="{{$field_meta['question_id']}}" >
+																<select {{$validate}} name="{{$field_meta['question_id']}}" >
 																@foreach($field_meta["extraOptions"] as $option_key =>  $option_value)
 																	<option value="{{$option_key}}"> <?php echo $option_value; ?> </option>
 																@endforeach

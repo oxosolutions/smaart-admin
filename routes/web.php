@@ -15,6 +15,7 @@ Route::get('/func', function () {
 		Route::get('/correctCsv',['as'=>'datasets.list','uses'=>'DataSetsController@correctCsv']);
 
 
+
 		Route::get ('/export/dataset/{id}',['as'=>'export.dataset', 'uses'=>'DataSetsController@apiExportDataset']);
 
 		Route::get('checkLog',['as' => 'log' , 'uses' => 'LogsystemController@CheckForLog']);
@@ -25,7 +26,7 @@ Route::get('/func', function () {
 
 		});
 
-		Route::get('s/{id}/{skip?}',['as'=>'survey.draw', 'uses'=>'DrawSurveyController@draw_survey']);
+		Route::get('s/{id}/{theme?}/{skip?}',['as'=>'survey.draw', 'uses'=>'DrawSurveyController@draw_survey']);
 
 		Route::get('v/{id}',['as'=>'draw.visualisation','uses'=>'VisualisationController@embedVisualization']);
 
@@ -188,7 +189,8 @@ Route::get('/func', function () {
 //DRAW SURVEY 
 	Route::get('survey/view/{sid}/{uid}',['as'=>'survey.views', 'uses'=>'DrawSurveyController@view_filled_survey']);
 
-		
+	Route::get('out/{token}',[ 'uses'=>'DrawSurveyController@out']);
+
 	//Form Builder 
 
 		Route::get('surrvey_setting/{id}',['as'=>'surrvey.setting', 'uses'=>'FormBuilderController@surrvey_setting']);

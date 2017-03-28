@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Schema;
 use App\SurveyEmbed as SEMBED;
 use Session;
 use MyFuncs;
+use SurveyHelper;
 
 
 class DrawSurveyController extends Controller
@@ -30,7 +31,7 @@ class DrawSurveyController extends Controller
         return $keyArray[array_search($keyValue, array_column($settingsArray, 'key'))]['value'];
     }
 
-    public function draw_survey($token, $skip_auth = null)
+    public function draw_survey($token, $theme=null ,$skip_auth = null )
     {//2017-03-24T17:00:00.000Z
     	$data = SEMBED::where('embed_token',$token)->first();
         if($data == null){
@@ -147,7 +148,7 @@ class DrawSurveyController extends Controller
         if(!empty($errors)){
             return view('survey.draw_survey',['err_msg'=>$errors,'token'=>$token]);
         }else{
-            return view('survey.draw_survey',['sdata'=>$survey_data,'token'=>$token]);
+            return view('survey.draw_survey',['theme'=>$theme, 'skip_auth'=>$skip_auth , 'sdata'=>$survey_data, 'token'=>$token]);
         }
 
     	
@@ -155,51 +156,55 @@ class DrawSurveyController extends Controller
 
     public function survey_store(Request $request)
     {
+        try{
+            $data = SEMBED::where('embed_token',$request->code)->first();
 
-        $data = SEMBED::where('embed_token',$request->code)->first();
-
-        if($data == null){
-            $errors[] = 'Survey id not valid!';
-            return view('survey.draw_survey',['err_msg'=>$errors]);
-        }
-        $table = $data->org_id.'_survey_data_'.$data->survey_id;
-        $uid = $data->user_id;
-        Session::put('org_id',$data->org_id);
-		if(!Schema::hasTable($table))
-    	{
-            MyFuncs::create_survey_table($data->survey_id , $data->org_id);
-		}else{
-            
-           MyFuncs::alter_survey_table($data->survey_id , $data->org_id);
-       }
-
-    	foreach ($request->all() as $key => $value) {
-    		if($key=="_token" || $key=="survey_id" )
-    		{ }
-    		elseif(is_array($request->$key))
-    		{
-    			$insert[$key] = json_encode($value);
+            if($data == null){
+                $errors[] = 'Survey id not valid!';
+                return view('survey.draw_survey',['err_msg'=>$errors]);
+            }
+            $table = $data->org_id.'_survey_data_'.$data->survey_id;
+            $uid = $data->user_id;
+            Session::put('org_id',$data->org_id);
+    		if(!Schema::hasTable($table))
+        	{
+                SurveyHelper::create_survey_table($data->survey_id , $data->org_id);
     		}else{
-    			$insert[$key] = $request->$key;
-    		}
-    	}
-        
-        if(Auth::check())
+                
+               SurveyHelper::alter_survey_table($data->survey_id , $data->org_id);
+           }
+
+        	foreach ($request->all() as $key => $value) {
+        		if($key=="_token" || $key=="survey_id" )
+        		{ }
+        		elseif(is_array($request->$key))
+        		{
+        			$insert[$key] = json_encode($value);
+        		}else{
+        			$insert[$key] = $request->$key;
+        		}
+        	}
+            
+            if(Auth::check())
+            {
+                $survey_submitted_by = Auth::user()->id;
+            }
+            else{ $survey_submitted_by = null; }
+            $insert["survey_completed_on"] = date('YmdHis').substr((string)microtime(), 2, 6);
+            $insert["survey_submitted_by"] = $survey_submitted_by;
+            $insert["survey_submitted_from"] = "WEB";
+            $insert["survey_status"] = 1;
+            $insert["unique_id"] = date('YmdHis').''.substr((string)microtime(), 2, 6).''.rand(1000,9999); 
+    		$insert["created_by"] = $uid;
+        	$insert["ip_address"] = $request->ip();
+            unset($insert['code']);
+        	DB::table($table)->insert($insert);
+            Session::flash('successfullSaveSurvey','Survey saved successfully!');
+            return redirect()->route('survey.draw',['id'=>$request->code]);
+        }catch(\Exception $e)
         {
-            $survey_submitted_by = Auth::user()->id;
+            return ['status'=>'error', 'message'=>"Something goes wrong try again"];
         }
-        else{ $survey_submitted_by = null; }
-        $insert["survey_completed_on"] = date('YmdHis').substr((string)microtime(), 2, 6);
-        $insert["survey_submitted_by"] = $survey_submitted_by;
-        $insert["survey_submitted_from"] = "WEB";
-        $insert["survey_status"] = 1;
-        $insert["unique_id"] = date('YmdHis').''.substr((string)microtime(), 2, 6).''.rand(1000,9999); 
-		$insert["created_by"] = $uid;
-    	$insert["ip_address"] = $request->ip();
-        unset($insert['code']);
-    	DB::table($table)->insert($insert);
-        Session::flash('successfullSaveSurvey','Survey saved successfully!');
-        return redirect()->route('survey.draw',['id'=>$request->code]);
     }
 
     public function view_filled_survey($sid , $uid)
@@ -281,5 +286,12 @@ class DrawSurveyController extends Controller
         ];
 
         $this->validate($request,$rules);
+    }
+
+    public function out($token)
+    {
+        Auth::logout();
+        return redirect()->route('survey.draw',['id'=>$token]);
+
     }
 }

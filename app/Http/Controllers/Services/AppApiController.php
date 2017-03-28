@@ -12,22 +12,23 @@ use Session;
 use App\SurveyQuestionGroup as SQG;
 use App\SurveyQuestion as SQ;
 use App\FileManager as FM;
+use MyFuncs;
+
 class AppApiController extends Controller
 {
     public function getAllsurveys(){
 		try{
-
 			$sdata = Surrvey::get();
-			;	
-			$survey['survey_id'] 			= 	$sdata->id;
-			$survey['survey_name'] 		= 	$sdata->name;
-	  		$survey['survey_author_id']	= 	$sdata->created_by;
-	  		$survey['survey_author_name']	= 	$sdata->creat_by->name;
+
+			$survey['survey_id'] 				= 	$sdata->id;
+			$survey['survey_name'] 				= 	$sdata->name;
+	  		$survey['survey_author_id']			= 	$sdata->created_by;
+	  		$survey['survey_author_name']		= 	$sdata->creat_by->name;
 	  		$survey['survey_author_role_id']	= 	$sdata->creat_by->role_id;
 	  		$survey['survey_author_role_name']	= 	$sdata->creat_by->roles->name;
 
-	  		$survey['survey_description'] 	=	$sdata->description;
-	  		$survey['survey_status'] 		= 	$sdata->status;
+	  		$survey['survey_description'] 		=	$sdata->description;
+	  		$survey['survey_status'] 			= 	$sdata->status;
 	  		if(count($sdata->setting) >0)
 	  		{
 	  			foreach ($sdata->setting as $key => $value) {	  		
@@ -71,46 +72,62 @@ class AppApiController extends Controller
 		}
 		Session::put('org_id',$model->id);
 		$users = User::where('organization_id',$model->id)->get();
-		$surveyData = Surrvey::get();
+		$surveyData = Surrvey::where('status','1')->get();
 		$groupsData = SQG::get();
 		$surveyQuestions = SQ::get();
 		$media ="";
 		
+
 		foreach ($surveyQuestions as $key => $value) {
 			
 			$questionData[$key]['question_id'] = $value->id;
 			$ansData = json_decode($value->answer,true);
+			//dump($ansData);
 
-			if(str_contains($ansData['question_desc'], ['[image_', '[audio_' ] ))
-			{	
-			 	$descData = 	explode(' ', $ansData['question_desc']);
-			 	foreach ($descData as $deskey => $desValue) {
+			$survey_media = MyFuncs::get_survey_media($ansData['question_desc']);
+			 if($survey_media['media']!=null)
+			 {
+			 	 if(is_array($survey_media['media']))
+			 	 {
+			 	 	foreach ($survey_media['media'] as $mkey => $mvalue) {
+			 	 		$media[$mkey] = $mvalue;
+			 	 	}
+			 	 }
+			 }
 
-			 		 if(starts_with($desValue, '[image_'))
-			 		 {
-			 		 	 $newDec = str_replace('[', '', $desValue);
-			 		 	  $finalDes = str_replace(']', '', $newDec);
-			 			 $url = FM::select('url')->where('media',$finalDes);
-				 		 if($url->count()>0)
-				 		 {
-				 		  $urls =	$url->first()->url;
-				 		  $media[$finalDes] = $urls;
-				 		 }
-			 		 }
-			 		 elseif(starts_with($desValue, '[audio_'))
-			 		 {
-			 		 	 $newDec = str_replace('[', '', $desValue);
-			 		 	  $finalDes = str_replace(']', '', $newDec);
-			 			 $url = FM::select('url')->where('media',$finalDes);
-				 		 if($url->count()>0)
-				 		 {
-				 		  $urls =	$url->first()->url;
-				 		  $media[$finalDes] = $urls;
-				 		 }
-			 		 }
-			 	}
+			// if(str_contains($ansData['question_desc'], ['[image_', '[audio_' ] ))
+			// {	
+			//  	$descData = 	explode(' ', $ansData['question_desc']);
+			//  	foreach ($descData as $deskey => $desValue) {
 
-			}
+			//  		 if(starts_with($desValue, '[image_'))
+			//  		 {
+			//  		 	 $newDec = str_replace('[', '', $desValue);
+			//  		 	  $finalDes = str_replace(']', '', $newDec);
+			//  			 $url = FM::select('url')->where('media',$finalDes);
+			// 	 		 if($url->count()>0)
+			// 	 		 {
+			// 	 		  $urls =	$url->first()->url;
+			// 	 		  $media[$finalDes] = $urls;
+			// 	 		 }
+			//  		 }
+			//  		 elseif(starts_with($desValue, '[audio_'))
+			//  		 {
+			//  		 	//dump($desValue);
+			//  		 	$newDec = str_replace('[', '', $desValue);
+			//  		 	$finalDes = str_replace(']', '', $newDec);
+			//  			 $url = FM::select('url')->where('media',$finalDes);
+			// 	 		 if($url->count()>0)
+			// 	 		 {
+			// 	 		  $urls =	$url->first()->url;
+			// 	 		 //  dump($urls);
+
+			// 	 		  $media[$finalDes] = $urls;
+			// 	 		 }
+			//  		 }
+			//  	}
+
+			// }
 			
 			$questionData[$key]["question_key"] =  @$ansData["question_id"];
     		$questionData[$key]["question_order"]	=  "";
@@ -119,6 +136,8 @@ class AppApiController extends Controller
     		$questionData[$key]["question_type"] = @$ansData['question_type'];
     		$questionData[$key]["question_message"]= "";
     		$questionData[$key]["required"]=  @$ansData['required'];
+    		$questionData[$key]["pattern"]=  @$ansData['pattern'];
+
      		$option=null;
      		$ary = [];
 		if(array_key_exists('extraOptions', $ansData))
@@ -167,9 +186,9 @@ class AppApiController extends Controller
 			$questionData[$key]['updated_at'] = $value->updated_at;
 			$questionData[$key]['deleted_at'] = $value->deleted_at;
 		}
-		 
+	 
 		Session::forget('org_id');
-		return ['status'=>'success','media'=>$media ,'questions'=>$questionData ,'users'=>$users,'surveys'=>$surveyData,'groups'=>$groupsData];
+		return ['status'=>'success', 'media'=>$media ,'questions'=>$questionData ,'users'=>$users,'surveys'=>$surveyData,'groups'=>$groupsData];
 	}
 protected function get_media($parm , $find)
 {

@@ -3,6 +3,7 @@ namespace App\Helpers;
 use App\SurveyQuestion as SQ;
 use App\Surrvey;
 use DB;
+use App\FileManager as FM;
 
 
 
@@ -55,6 +56,55 @@ public static function create_survey_table($survey_id , $org_id)
     			
     		}
 	}
+
+	public function get_media_value($strValue)
+	{
+		$newDec = str_replace('[', '', $strValue);
+		$finalDes = str_replace(']', '', $newDec);
+
+		$url = FM::select('url')->where('media',$finalDes);
+		if($url->count()>0)
+		{
+		return   ['key'=>$finalDes , 'media'=>$url->first()->url]; 	
+		}
+	}
+
+	public static function get_survey_media($string)
+	{	
+		$string_data = null;
+		$media = null;
+		$obj = new MyFuncs();	
+		if(str_contains($string,  [ '[image_' , '[audio_'] ))
+		{	
+		 $string_data = 	explode(' ', $string);
+		foreach ($string_data as $strkey => $strValue) {
+
+			if(starts_with($strValue,"[image_"))	
+			{
+				$img = $obj->get_media_value($strValue);
+				$string_data[$strkey] = "<img class='survey-media media-type-image' src='".$img['media']."'>";
+				$media[$img['key']] = $img['media'];
+				//unset($string_data[$strkey]);
+			}
+			elseif(starts_with($strValue,"[audio_"))
+			{
+				$audios = $obj->get_media_value($strValue);
+				$string_data[$strkey] = "<audio class='survey-media media-type-audio'   controls>											<source src='".$audios['media']."' type='audio/ogg'>													       <source src='".$audios['media']."' type='audio/mpeg'>our browser does not support the audio element.	
+										</audio>";
+				$media[$audios['key']] = $audios['media'];
+
+	 		}	
+		}
+	}
+		if($string_data==null)
+		{
+			$text = $string;
+		}else{
+			$text = implode(" ", $string_data);
+		}
+
+	return ['text'=> $text , 'media'=>$media ];
+}
 }
 
 ?>

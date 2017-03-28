@@ -109,6 +109,7 @@ class FileManagerController extends Controller
     }
 
     //upload file
+    //date time microtime
     public function uploadFile(Request $request){
 
         $org_id = AUTH::user()->organization_id;
@@ -117,9 +118,11 @@ class FileManagerController extends Controller
             File::makeDirectory($path, $mode = 0777, true, true);
         }
         $filename = $request->file('file')->getClientOriginalName();
+        
         $type = $request->file('file')->getClientOriginalExtension();
+        $file_name_new =  date('YmdHis').''.substr((string)microtime(), 2, 6).''.rand(1000,9999).'.'.$type;
         $size = $request->file('file')->getSize();
-        $uploadFile = $request->file('file')->move($path, $filename);
+        $uploadFile = $request->file('file')->move($path, $file_name_new);
         if($type == 'mp3' || $type == 'wav'){
             $media = 'audio_'.rand(1000,9999).time();
         }elseif($type == 'jpg' || $type == 'jpeg' || $type == 'png'){
@@ -131,7 +134,7 @@ class FileManagerController extends Controller
             'size'          =>  $size,
             'media'         =>  $media,
             'server_path'   =>  public_path().'/shared/org_'.$org_id,
-            'url'           =>  url('/shared/org_'.$org_id).'/'.$filename,
+            'url'           =>  url('/shared/org_'.$org_id).'/'.$file_name_new,
             'modified_at'   =>  date('Y-m-d h:i:s'),
             'permission'    => '',
             'org_id'    =>  $org_id

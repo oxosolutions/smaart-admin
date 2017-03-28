@@ -1,50 +1,73 @@
+img{
+    max-width:100%;
+}
+
+
 .wrapper{
-	background:#f2f2f2;
-	color:#666666;
-	padding:50px 0;
-	margin:0;
-	
+    background:#f2f2f2;
+    color:#666666;
+    padding:50px 0;
+    margin:0;
+    
 }
 
 .main{
-	width:100%;
-	max-width:980px;
-	margin:0 auto;
-	background-color:#FFFFFF;
-	border:1px solid #e8e8e8;
+    width:100%;
+    max-width:980px;
+    margin:0 auto;
+    background-color:#FFFFFF;
+    border:1px solid #e8e8e8;
 }
 
 .survey-wrapper{
-	
+    
 }
 
 .wrapper-row{
-	padding:0 20px;
+    padding:0 20px;
 }
 
 .survey-form{
-	
+    
 }
-
+.top-bar{
+    float: right;
+    width: 100%
+}
+.top-bar h5{
+    float: left;
+}
 /***************************************
 SURVEY HEADER
 ***************************************/
 
 .survey-header{
-	border-bottom:1px solid #e8e8e8;
-	margin-bottom: 20px;
+    border-bottom:1px solid #e8e8e8;
+    margin-bottom: 20px;
 }
-
-
+.survey-title:after , .survey-title:before{
+    margin-top: 30px !important
+}
+.top-bar ul li{
+    display: inline-block;
+}
+.top-bar ul li h5{
+    float: left;
+    margin-top: 2px
+}
+.top-bar ul{
+    float: right;
+    padding: 5px 10px;
+}
 .survey-title{
-	color:#666666;
-	text-align: center;
+    color:#666666;
+    text-align: center;
     font-size: 24px;
-	line-height:30px;
-	font-weight:400;
-	padding: 10px 0 10px 0;
+    line-height:30px;
+    font-weight:400;
+    padding: 10px 0 10px 0;
     margin: 0 0 10px 0;
-	position:relative;
+    position:relative;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 .survey-title:before{
@@ -75,12 +98,12 @@ SURVEY HEADER
 }
 
 .survey-description{
-	color:#747474;
-	text-align: center;
+    color:#747474;
+    text-align: center;
     font-size: 18px;
-	line-height:24px;
-	font-weight:400;
-	padding: 10px 0 10px 0;
+    line-height:24px;
+    font-weight:400;
+    padding: 10px 0 10px 0;
     margin: 0 0 10px 0;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
@@ -99,43 +122,43 @@ SURVEY SUCCESS MESSAGES
 SURVEY CONTENT
 ***************************************/
 .survey-content{
-	
+    
 }
 
 .survey-group{
-	border: 1px solid #e8e8e8;
-	margin-bottom:30px;
+    border: 1px solid #e8e8e8;
+    margin-bottom:30px;
 }
 
 .group-header{
-	border-bottom: 1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;
 }
 
 .group-title{
-	color:#747474;
-	text-align: center;
+    color:#747474;
+    text-align: center;
     font-size: 18px;
-	line-height:24px;
-	font-weight:400;
-	padding: 5px 0 5px 0;
+    line-height:24px;
+    font-weight:400;
+    padding: 5px 0 5px 0;
     margin: 0;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 
 .group-description{
-	color:#999999;
-	text-align: center;
+    color:#999999;
+    text-align: center;
     font-size: 16px;
-	line-height:20px;
-	font-weight:400;
-	padding: 5px 0 5px 0;
+    line-height:20px;
+    font-weight:400;
+    padding: 5px 0 5px 0;
     margin: 0 0 5px 0;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 
 
 .group-content{
-	padding:20px;
+    padding:20px;
 }
 /***************************************
 FIELD
@@ -147,11 +170,11 @@ FIELD
 }
 .field-label label{
     margin-bottom: 0;
-	padding:0;
+    padding:0;
     font-weight: 100;
 }
 .field-title{
-	color: #747474;
+    color: #747474;
     text-align: left;
     font-size: 18px;
     line-height: 22px;
@@ -161,7 +184,7 @@ FIELD
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 .field-description{
-	color: #b8b8b8;
+    color: #b8b8b8;
     text-align: left;
     font-size: 14px;
     line-height: 16px;
@@ -171,19 +194,23 @@ FIELD
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 
+.media-type-image{
+    max-width:100%;
+}
+
 .field {
     margin-bottom: 20px;
     padding: 0 0 10px 0;
     border-bottom: 1px dotted #e8e8e8;
 }
 .field-option{
-	padding:0;
-	margin-bottom: 5px;
-	border-bottom: 1px dotted #e8e8e8;
+    padding:0;
+    margin-bottom: 5px;
+    border-bottom: 1px dotted #e8e8e8;
 }
 .field-option:last-child{
-	margin-bottom: 0;
-	border-bottom: none;
+    margin-bottom: 0;
+    border-bottom: none;
 }
 .field-option label,
 .field .field-option label{
@@ -207,7 +234,7 @@ textarea,
 .field input[type="url"],
 .field select,
 .field select[multiple=multiple]{
-	font-size: 18px;
+    font-size: 18px;
     line-height: 28px;
     font-weight: 400;
     width: 100%;
@@ -220,8 +247,8 @@ textarea,
     outline: none;
     text-shadow: none;
     box-shadow: none;
-	font-family: "Open Sans", Arial, Helvetica, sans-serif;
-	
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    
     -moz-border-radius: 0px;
     -webkit-border-radius: 0px;
     border-radius: 0px;
@@ -251,7 +278,7 @@ input[type=radio],
  input[type=checkbox],
 .checkbox input[type=checkbox],
 .field-wrapper .field.checkbox input[type=checkbox] {
-	border: 1px solid #b4b9be;
+    border: 1px solid #b4b9be;
     background: #fff;
     color: #555;
     clear: none;
@@ -277,7 +304,7 @@ input[type=radio],
 .radio input[type=radio], 
 .field-wrapper .field.radio input[type=radio] {
     -moz-border-radius: 50%;
-	-webkit-border-radius: 50%;
+    -webkit-border-radius: 50%;
     border-radius: 50%;
 }
 
@@ -308,10 +335,10 @@ input[type=checkbox]:checked:before ,
 SURVEY FOOTER
 ***************************************/
 .survey-footer{
-	text-align: center;
-	padding:20px;
-	margin: 0 20px 30px 20px;
-	border:1px solid #e8e8e8;
+    text-align: center;
+    padding:20px;
+    margin: 0 20px 30px 20px;
+    border:1px solid #e8e8e8;
 }
 
 
@@ -329,13 +356,43 @@ SURVEY FOOTER
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
-	    -moz-transition: all 200ms ease-in-out;
+        -moz-transition: all 200ms ease-in-out;
     -webkit-transition: all 200ms ease-in-out;
     transition: all 200ms ease-in-out;
 }
 .button:hover{
     color: #ffffff;
     background-color: #121212;
+}
+/***************************************
+SURVEY ERROR MESSAGES
+***************************************/
+
+.error_main_div{
+    padding: 10px;
+    border: 2px dashed #ededed;
+    text-align: center;
+}
+.error_main_div h1{
+    font-size: 100px;
+    padding: 0px;
+}
+.erroe_main_div h2{
+    font-size: 80px
+}
+.wrapper{
+    min-height: 648px;
+}
+.survey-error-messages{
+    color: red;
+    text-align: center;
+    border: 2px dashed red;
+    padding: 65px;
+    margin: 50px;
+    font-size: 25px
+}
+.survey-success-messages{
+    color: #666666; 
 }
 
 
