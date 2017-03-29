@@ -14,7 +14,6 @@ use App\SurveySetting as SSETTING;
 use Illuminate\Support\Facades\Schema;
 use App\SurveyEmbed as SEMBED;
 use Session;
-use MyFuncs;
 use SurveyHelper;
 
 
@@ -33,6 +32,7 @@ class DrawSurveyController extends Controller
 
     public function draw_survey($token, $theme=null ,$skip_auth = null )
     {//2017-03-24T17:00:00.000Z
+        $ip = \Request::ip();
     	$data = SEMBED::where('embed_token',$token)->first();
         if($data == null){
             $errors[] = 'Survey id not valid!';
@@ -47,8 +47,45 @@ class DrawSurveyController extends Controller
             return view('survey.draw_survey',['err_msg'=>$errors]);
         }
     	$survey_settings = SSETTING::where(["survey_id" => $sid ])->get()->toArray();
-        $messages_list = json_decode($this->getSettings($survey_settings,'survey_custom_error_messages_list'),true);
+        
+        $error_message_status = $this->getSettings($survey_settings,'survey_custom_error_message_status');
+        if($error_message_status =='0')
+        {
+            $messages_list = [
+                              "responce_limit_exceeded" => "Responce limit exceeded..",
+                              "survey_expired" => "Survey is expired.",
+                              "survey_not_started" => "Survey not started yet.",
+                              "empty_survey" => "Empty survey.",
+                              "invalid_survey_id" => "Invalid survey ID.",
+                              "survey_unauth_user" => "You do not have permissions to access the survey.",
+                              "survey_unauth_role" => "Your user role do not have permissions access the survey.",
+                              "survey_auth_required" => "You have to login to access the survey.",
+                              "survey_status" => "Survey is disabled."
+                            ];
+        }else{
+            $messages_list = json_decode($this->getSettings($survey_settings,'survey_custom_error_messages_list'),true);
+            
+        }
         if($survey_data->status == 1){
+//RESPONSE PER IP CHECK
+            $response_status = $this->getSettings($survey_settings,'survey_respone_limit_status');
+                            if($response_status =='1' || $response_status ==1 || $response_status !='0' )
+                            {
+                                $response_type = $this->getSettings($survey_settings,'survey_response_limit_type');
+                                if($response_type=='per_ip_address')
+                                {
+                                    $sid = $data->survey_id;
+                                    $table = $data->org_id."_survey_data_".$sid;
+                                     $filled_count = DB::table($table)->where('ip_address',$ip)->count();
+                                   
+                                     $response_value = $this->getSettings($survey_settings,'survey_response_limit_value');
+                                     if($response_value <= $filled_count)
+                                     {
+                                         $errors[] = $messages_list['responce_limit_exceeded'];
+                                     }
+                                }
+                            }
+
             $authentication_required = $this->getSettings($survey_settings,'authentication_required');
             if($skip_auth == null){
                 if(($authentication_required == '1' || $authentication_required == 1) && $authentication_required != null){
@@ -64,7 +101,27 @@ class DrawSurveyController extends Controller
                             if(!in_array(Auth::user()->id, $users)){
                                 $errors[] = $messages_list['survey_unauth_user'];
                             }
-                        }
+
+                         }
+//Response limit Per user                           
+                            $response_status = $this->getSettings($survey_settings,'survey_respone_limit_status');
+                            if($response_status =='1' || $response_status ==1 || $response_status !='0' )
+                            {
+                                $response_type = $this->getSettings($survey_settings,'survey_response_limit_type');
+                                if($response_type=='per_user')
+                                {
+                                    $sid = $data->survey_id;
+                                    $table = $data->org_id."_survey_data_".$sid;
+                                    $filled_count = DB::table($table)->where('survey_submitted_by',Auth::user()->id)->count();
+                                   
+                                    $response_value = $this->getSettings($survey_settings,'survey_response_limit_value');
+                                    if($response_value <= $filled_count)
+                                    {
+                                        $errors[] = $messages_list['responce_limit_exceeded'];
+                                    }
+                                }
+                            }
+
                     }else{
                         Session::flash('error',$messages_list['survey_auth_required']);
                         Session::put('token',$token);
@@ -73,14 +130,18 @@ class DrawSurveyController extends Controller
                 }
             }
         }else{
-            $errors[] = ucfirst($messages_list['survey_status']);
+            $errors[] = @$messages_list['survey_status'];
         }
         
         $scheduling_status = $this->getSettings($survey_settings,'survey_scheduling_status');
         if(($scheduling_status == 1 || $scheduling_status == '1') && $scheduling_status != null){
-            $today_date = date('Y-m-d H:i');
+            $today_date = date('Y-m-d H:i:s');
+          //  dump('current'.$today_date);
         $survey_start_date = $this->getSettings($survey_settings,'survey_start_date');
         $survey_expiry_date = $this->getSettings($survey_settings,'survey_expiry_date');
+           // dump('start'.$survey_start_date);
+                        //dump('end'.$survey_expiry_date);
+
 
             if($today_date < $survey_start_date){
                 $errors[] = $messages_list['survey_not_started'];
@@ -89,64 +150,18 @@ class DrawSurveyController extends Controller
             }
             
         }
-    	/*if($this->get_setting($sid,'survey_custom_error_message_status')!=null)
-    	{
-    		$msgList = json_decode($this->get_setting($sid,'survey_custom_error_messages_list'),true);
-    		dump($msgList);
-    	}
-    	if($sdata->status ==0)
-    	{
-    		$msgList['survey_status'];
-    		return view('survey.draw_survey',['err_msg'=>$msgList['survey_status']]);
-
-    	}
-
-    	if($this->get_setting($sid,'survey_scheduling_status')==1){
-				$sdate =  $this->get_setting($sid,'survey_start_date');
-				$exdate =  $this->get_setting($sid,'survey_expiry_date');
-
-				
-		if($this->get_setting($sid,'authentication_required')==1){
-    		if(Auth::check()==false){
-    			   return view('survey.draw_survey',['err_msg'=>@$msgList['survey_auth_required']]);
-    			}
-        //role chk
-			if($this->get_setting($sid,'authentication_type')=='role'){
-				$roles = json_decode($this->get_setting($sid,'authorized_roles'),true);
-					 if(in_array(Auth::user()->role_id, $roles)==false)
-					 {
-					return view('survey.draw_survey',['err_msg'=>$msgList['survey_unauth_role']]);
- 	
-					 }
-    		
-    			}
-    		if($this->get_setting($sid,'authentication_type')=='ind'){
-				$users = json_decode($this->get_setting($sid,'authorized_users'),true);
-					 if(in_array(Auth::user()->id, $users)==false)
-					 {
-					 	
-					return view('survey.draw_survey',['err_msg'=>$msgList['survey_unauth_user']]);
- 	
-					 }
-    			}
-		}
-        
-		if(date('Y-m-d') >= $sdate || date('Y-m-d') <= $exdate )
-						{
-								//dd($sdate);
-						}
-						else{
-							if(date('Y-m-d') >= $exdate)
-							{
-	       return view('survey.draw_survey',['err_msg'=>$msgList['survey_expired']]);
-							
-							}
-					return view('survey.draw_survey',['err_msg'=>$msgList['survey_not_started']]);
-
-						}
-			}*/
+            $survey_timer_status = $this->getSettings($survey_settings,'survey_timer_status');
+            $survey_timer_type   = $this->getSettings($survey_settings,'survey_timer_type');
+            $survey_duration = $this->getSettings($survey_settings,'survey_duration');
+            echo "<div style='display:none;'>";
+                dump('survey_timer_status-->'.$survey_timer_status);
+                dump('survey_timer_type-->'.$survey_timer_type);
+                dump('survey_duration-->'.$survey_duration);
+            echo "</div>";
+                    
+    	
         if(!empty($errors)){
-            return view('survey.draw_survey',['err_msg'=>$errors,'token'=>$token]);
+            return view('survey.draw_survey',['err_msg'=>$errors,'theme'=>$theme, 'skip_auth'=>$skip_auth ,'token'=>$token]);
         }else{
             return view('survey.draw_survey',['theme'=>$theme, 'skip_auth'=>$skip_auth , 'sdata'=>$survey_data, 'token'=>$token]);
         }

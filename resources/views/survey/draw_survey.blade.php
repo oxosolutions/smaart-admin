@@ -1,35 +1,52 @@
 @extends('layouts.survey')
 @section('content')
-{{@$theme}}
-{{@$skip_auth}}
-	
+
 	@if(@$err_msg)
 			@foreach($err_msg as $key => $error_message)
 				<div class="survey-wrapper" style="margin-top: 35px;">
 					<div class="survey-header">
 						<div class="wrapper-row">
-							<h1 class="survey-title">OOPS..!  Something Went Wrong</h1>
+							<h1 class="survey-title">Something went wrong</h1>
 							<h3 class="survey-description"></h3>
 						</div> <!-- wrapper-row -->
 					</div> <!-- survey-header -->
-					<div class="survey-content">
-						<div class="wrapper-row ">
-							<h1 class="survey-error-messages"><?php echo $error_message; ?></h1>
-						</div>
-					</div>
+					<div id="survey_content" class="survey-content">
+						<div class="wrapper-row">
+							<div id="survey_error_messages" class="survey-error-messages">
+								<div class="wrapper-row">
+									<h3 class="survey-error-message"><?php echo $error_message; ?></h3>
+								</div> <!-- wrapper-row -->
+							</div> <!-- survey-error-messages -->
+					</div> <!-- wrapper-row -->
+					</div> <!-- survey-content -->
+					<div id="survey_footer" class="survey-footer">
+						<div class="wrapper-row">
+                			{!! Form::button('Try Again', ['class' => 'button','onclick'=>'window.location.reload()']) !!}
+						</div> <!-- wrapper-row -->
+					</div> <!-- survey-footer -->
 				</div>
 				@break
 			@endforeach
 	@else
-		<div id="survey_{{$sdata->id}}" class="survey-wrapper">
+		
+		
 		@if(Auth::check()!=false)
-		<div class="top-bar">
-			<ul>
-				<li>Welcome {{Auth::user()->name}},</li>
-				<li><a class'='button' href="{{url('out')}}/{{$token}}">Logout</a></li>
-			</ul>
-		</div>
+		<div id="survey_topbar_{{$sdata->id}}" class="survey-topbar">
+			<div class="wrapper-row">
+				Welcome {{Auth::user()->name}}, <a href="{{url('out')}}/{{$token}}">Logout</a>
+			</div> <!-- wrapper-row -->
+		</div> <!-- survey-topbar -->
 		@endif
+		
+		@if(1)
+		<div id="survey_topbar_{{$sdata->id}}" class="survey-topbar">
+			<div class="wrapper-row">
+				<span id="survey_timer" class="survey-timer" data-hours="" data-minutes="" data-seconds=""></span>
+			</div> <!-- wrapper-row -->
+		</div> <!-- survey-topbar -->
+		@endif
+		
+		<div id="survey_{{$sdata->id}}" class="survey-wrapper">
 			{!! Form::open(['route' => 'survey.store','id'=>"survey_form_".$sdata->id, 'class'=>'survey-form','files'=>true]) !!}
 				<input type="hidden" name="survey_started_on" value="<?php echo date('YmdHis').substr((string)microtime(), 2, 6); ?>" >
 				<input type="hidden" name="survey_id" value="{{$sdata->id}}" >
@@ -42,12 +59,22 @@
 					</div> <!-- wrapper-row -->
 				</div> <!-- survey-header -->
 				@if ($message = Session::get('successfullSaveSurvey'))
-					<div id="survey_success_{{$sdata->id}}" class="survey-success-messages">
+					<div id="survey_content" class="survey-content">
 						<div class="wrapper-row">
-							<h1 class="survey-title">Success</h1>
-							<h3 class="survey-description">{{Session::get('successfullSaveSurvey')}}</h3>
+							<div id="survey_success_messages" class="survey-success-messages">
+								<div class="wrapper-row">
+									<h1 class="survey-success-title">Success</h1>
+									<h3 class="survey-success-description">{{Session::get('successfullSaveSurvey')}}</h3>
+								</div> <!-- wrapper-row -->
+							</div> <!-- survey-success-messages -->
 						</div> <!-- wrapper-row -->
-					</div>
+					</div> <!-- survey-content -->
+					<div id="survey_footer_{{$sdata->id}}" class="survey-footer">
+						<div class="wrapper-row">
+                			{!! Form::button('Fill Survey Again', ['class' => 'button','onclick'=>'window.location.reload()']) !!}
+						</div> <!-- wrapper-row -->
+					</div> <!-- survey-footer -->
+					
 				@else
 					<div id="survey_content_{{$sdata->id}}" class="survey-content">
 
@@ -112,7 +139,7 @@
 														
 															@if($field_meta['question_type'] =="text")
 
-																<input {{$validate}}  name="{{$field_meta['question_id']}}" id="input_{{$field_meta['question_id']}}" type="text" placeholder="" data-validation="{{$validations}}" >
+																<input  name="{{$field_meta['question_id']}}" id="input_{{$field_meta['question_id']}}" type="text" placeholder="" data-validation="{{$validations}}" >
 																@elseif($field_meta['question_type'] =="text_only")
 																<textarea {{$validate}} name="{{$field_meta['question_id']}}" id="textarea_{{$field_meta['question_id']}}"> </textarea>
 															@elseif($field_meta["extraOptions"] && $field_meta['question_type'] =="checkbox" )
@@ -181,7 +208,12 @@
 				@endif
 
 		</div><!-- survey-wrapper -->
-	@endif
+		<div id="survey_copyright" class="survey-copyright">
+			<div class="wrapper-row ">
+				&copy; copyright 2017. Survey created with <a href="http://smaartframework.com/" target="_blank">SMAART™ Framework</a> 
+			</div> <!-- wrapper-row -->
+		</div> <!-- survey-footer -->	
+		@endif
 			
 
 @endsection

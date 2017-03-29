@@ -12,7 +12,7 @@ use Session;
 use App\SurveyQuestionGroup as SQG;
 use App\SurveyQuestion as SQ;
 use App\FileManager as FM;
-use MyFuncs;
+use SurveyHelper;
 
 class AppApiController extends Controller
 {
@@ -84,7 +84,7 @@ class AppApiController extends Controller
 			$ansData = json_decode($value->answer,true);
 			//dump($ansData);
 
-			$survey_media = MyFuncs::get_survey_media($ansData['question_desc']);
+			$survey_media = SurveyHelper::get_survey_media($ansData['question_desc']);
 			 if($survey_media['media']!=null)
 			 {
 			 	 if(is_array($survey_media['media']))

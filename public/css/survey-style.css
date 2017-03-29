@@ -30,13 +30,28 @@ img{
 .survey-form{
     
 }
-.top-bar{
-    float: right;
-    width: 100%
+/***************************************
+SURVEY TOPBAR
+***************************************/
+.survey-topbar {
+    width: 100%;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 15px 0;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: right;
+    border-bottom: 1px solid #e8e8e8;
 }
-.top-bar h5{
-    float: left;
+
+.survey-topbar a{
+    color: #666666;
 }
+.survey-topbar a:hover{
+    color: #333333;
+}
+
+
 /***************************************
 SURVEY HEADER
 ***************************************/
@@ -44,20 +59,7 @@ SURVEY HEADER
 .survey-header{
     border-bottom:1px solid #e8e8e8;
     margin-bottom: 20px;
-}
-.survey-title:after , .survey-title:before{
-    margin-top: 30px !important
-}
-.top-bar ul li{
-    display: inline-block;
-}
-.top-bar ul li h5{
-    float: left;
-    margin-top: 2px
-}
-.top-bar ul{
-    float: right;
-    padding: 5px 10px;
+	position:relative;
 }
 .survey-title{
     color:#666666;
@@ -110,13 +112,57 @@ SURVEY HEADER
 /***************************************
 SURVEY ERROR MESSAGES
 ***************************************/
-
+.survey-error-messages{
+    border:2px dashed #E65100;
+    margin-bottom: 20px;
+	padding: 50px 20px;
+	text-align: center;
+	position:relative;
+}
+.survey-error-message{
+    color:#E65100;
+    text-align: center;
+    font-size: 18px;
+    line-height:24px;
+    font-weight:400;
+    padding: 10px 0 10px 0;
+    margin: 0 0 10px 0;
+    position:relative;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
 
 /***************************************
 SURVEY SUCCESS MESSAGES
 ***************************************/
+.survey-success-messages{
+    border:2px dashed #689F38;
+    margin-bottom: 20px;
+	padding: 50px 20px;
+	text-align: center;
+	position:relative;
+}
+.survey-success-title{
+    color:#689F38;
+    text-align: center;
+    font-size: 24px;
+    line-height:30px;
+    font-weight:400;
+    padding: 10px 0 10px 0;
+    margin: 0 0 10px 0;
+    position:relative;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
 
-
+.survey-success-description{
+    color:#999999;
+    text-align: center;
+    font-size: 16px;
+    line-height:20px;
+    font-weight:400;
+    padding: 5px 0 5px 0;
+    margin: 0 0 5px 0;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
 
 /***************************************
 SURVEY CONTENT
@@ -196,6 +242,16 @@ FIELD
 
 .media-type-image{
     max-width:100%;
+	margin: 12px 0;
+}
+.media-type-audio{
+	border: 1px solid #e8e8e8;
+    margin: 12px 0;
+    padding: 0px;
+    display: block;
+    width: 100%;
+    min-height: 34px;
+    position: relative;
 }
 
 .field {
@@ -341,7 +397,6 @@ SURVEY FOOTER
     border:1px solid #e8e8e8;
 }
 
-
 .button{
     font-size: 18px;
     line-height: 24px;
@@ -364,35 +419,44 @@ SURVEY FOOTER
     color: #ffffff;
     background-color: #121212;
 }
+
 /***************************************
-SURVEY ERROR MESSAGES
+SURVEY FOOTER
 ***************************************/
 
-.error_main_div{
-    padding: 10px;
-    border: 2px dashed #ededed;
+.survey-copyright {
+    width: 100%;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 15px 20px;
     text-align: center;
-}
-.error_main_div h1{
-    font-size: 100px;
-    padding: 0px;
-}
-.erroe_main_div h2{
-    font-size: 80px
-}
-.wrapper{
-    min-height: 648px;
-}
-.survey-error-messages{
-    color: red;
-    text-align: center;
-    border: 2px dashed red;
-    padding: 65px;
-    margin: 50px;
-    font-size: 25px
-}
-.survey-success-messages{
-    color: #666666; 
+    font-size: 16px;
+    line-height: 24px;
+    color: #ffffff;
+    background-color: #454545;
+    border: 1px solid #454545;
 }
 
+.survey-copyright a{
+    color: #ffffff;
+}
+.survey-copyright a:hover{
+    color: #ffffff;
+}
 
+/***************************************
+SURVEY THEMES
+***************************************/
+
+/***************************************
+THEME MINIMAL
+***************************************/
+.theme-minimal{
+	padding:0;
+}
+.theme-minimal .main{
+	max-width:98%;
+}
+.theme-minimal .survey-copyright{
+	max-width:100%;
+}

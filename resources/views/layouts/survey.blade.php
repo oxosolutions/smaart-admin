@@ -1,12 +1,5 @@
 <!DOCTYPE html>
 <html>
-<style type="text/css">
-	.footer{
-		width: 100%;
-	    max-width: 980px;
-	    margin: 0 auto !important;
-	}
-</style>
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,20 +11,14 @@
 		<link rel="stylesheet" href="{{asset('/bower_components/admin-lte/bootstrap/css/bootstrap.min.css')}}">
 	</head>
 	<body>
-		<div class="wrapper">
+		<div id="theme_{{@$theme}}" class="wrapper theme-{{@$theme}}">
 			<div class="main">
 				@yield('content')
-			</div>
-			<div class="survey-footer footer" style="background: grey;color: white;">
-				<div class="wrapper-row ">
-				
-					&copy; copyright 2017 
-					
-				</div> <!-- wrapper-row -->
-			</div> <!-- survey-footer -->		
+			</div>	
 		</div>
 		<script src="{{asset('/bower_components/admin-lte/plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
 		<script src="{{asset('/vendor/jQuery-Form-Validator/form-validator/jquery.form-validator.min.js')}}"></script>
+		<script src="{{asset('/js/jquery.countdownTimer.min.js')}}"></script>
 
 		<script src="{{asset('/js/survey.js')}}" type="text/javascript">  </script>
 

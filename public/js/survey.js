@@ -5,3 +5,17 @@ $(function() {
   	lang:'en'
   });
 });
+
+$(function(){
+	$("#survey_timer").countdowntimer({
+		hours : $(this).attr('data-hours'),
+		minutes : $(this).attr('data-minutes'),
+		seconds : $(this).attr('data-seconds'),
+		size : "lg",
+		timeUp : timeisUp
+	});
+});
+
+function timeisUp(){
+	//$("#post").submit();
+}

@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Schema;
 use App\organization as org;
 use Session;
 use MyFuncs;
+use SurveyHelper;
+
 
 class SurrveyApiController extends Controller
 {
@@ -30,10 +32,10 @@ class SurrveyApiController extends Controller
 		$table = $org_id.'_survey_data_'.$surveyid;
 		if(!Schema::hasTable($table))
     	{
-    		MyFuncs::create_survey_table($surveyid , $org_id);
+    		SurveyHelper::create_survey_table($surveyid , $org_id);
 		}
 		else{
-			MyFuncs::alter_survey_table($surveyid , $org_id);
+			SurveyHelper::alter_survey_table($surveyid , $org_id);
 
 		}
 		foreach ($data as $key => $value) {
@@ -388,7 +390,22 @@ class SurrveyApiController extends Controller
     	}
     	protected function setting_save($ssdata,$sid )
     	{
+    		
     		foreach ($ssdata as $key => $value) {
+    			// if($key =="authorized_users")
+    			// {
+    			// 	if($value ==null)
+    			// 	{dump(123);
+    			// 		$value = [Auth::user()->id];
+    			// 	}
+    			// 	else{
+    			// 		//dump(count($value));
+    			// 		$uid = Auth::user()->id;
+    			// 		$value = array_add($value,count($value), $uid );
+    			// 	}
+    			// 	dump($value);
+    			// }
+
 		          		if($key == "survey_custom_error_messages_list" && $ssdata['survey_custom_error_message_status'] != null)
           		{
           			$value = json_encode($value);
@@ -404,6 +421,7 @@ class SurrveyApiController extends Controller
 
           		}else if($key =="authorized_users" && $value !=null)
           		{
+
           			$settingdata = ['survey_id'=>$sid,'key'=>$key, 'value'=>json_encode($value)];
           			$this->save_survey_setting($settingdata);
           		}
