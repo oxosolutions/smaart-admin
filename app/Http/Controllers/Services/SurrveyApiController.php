@@ -24,7 +24,8 @@ class SurrveyApiController extends Controller
 
 	public function save_survey_filled_data(Request $request)
 	{
-		dump($request->all());
+
+		//dump($request->all());
 		$org_id = org::select('id')->where('activation_code' ,$request->activation_code)->first()->id;
 		Session::put('org_id', $org_id);
 		$data = json_decode($request->export,true);
@@ -39,11 +40,24 @@ class SurrveyApiController extends Controller
 
 		}
 		foreach ($data as $key => $value) {
+			dump($value);
 				
-			
-		// $insert["survey_completed_on"] = date('YmdHisu');
+if($value['status']=="completed")
+{
+	$status =1;	// $insert["survey_completed_on"] = date('YmdHisu');
+}else{$status =0;}
   //       $insert["survey_submitted_by"] = $survey_submitted_by;
-  //       $insert["survey_status"] = 1;
+		//dd(implode('',explode('-', $value['starton'])));
+         $insert["survey_status"] = $status;
+         $insert["survey_started_on"] = 	$value['starton'];
+         $insert["survey_completed_on"] = 	$value['endon']; 
+         if(isset($value['unique_id']))
+         {
+         	dump($value['unique_id']);
+         	 $insert["unique_id"] = 	@$value['unique_id'];
+         }
+         
+
   //       $insert["unique_id"] = date('YmdHisu').''.str_random(5);
 		// $insert["created_by"] = $uid;
   //   	$insert["ip_address"] = $request->ip();
@@ -63,13 +77,7 @@ class SurrveyApiController extends Controller
 				
 				$insert[$value['questkey']] = $ans;
 				$insert["ip_address"] = $request->ip();
-				$insert["unique_id"] = date('YmdHis').''.substr((string)microtime(), 2, 6).''.rand(1000,9999); 
 				$insert["survey_submitted_from"] = "APP";
-				$insert["survey_completed_on"] = date('YmdHis').substr((string)microtime(), 2, 6);
-
-
-
-				
 			}
 			
 			DB::table($table)->insert($insert);
@@ -406,7 +414,7 @@ class SurrveyApiController extends Controller
     			// 	dump($value);
     			// }
 
-		          		if($key == "survey_custom_error_messages_list" && $ssdata['survey_custom_error_message_status'] != null)
+		        if($key == "survey_custom_error_messages_list" && $ssdata['survey_custom_error_message_status'] != null)
           		{
           			$value = json_encode($value);
           			$settingdata = ['survey_id'=>$sid,'key'=>$key, 'value'=>$value];
@@ -421,6 +429,9 @@ class SurrveyApiController extends Controller
 
           		}else if($key =="authorized_users" && $value !=null)
           		{
+          			//dd()
+          			$value[] = Auth::user()->id;
+
 
           			$settingdata = ['survey_id'=>$sid,'key'=>$key, 'value'=>json_encode($value)];
           			$this->save_survey_setting($settingdata);
@@ -434,7 +445,7 @@ class SurrveyApiController extends Controller
 //  UPDATE SURVEY & SETTING
 	public function survey_update(Request $request )
 	    {
-
+	    	
 	        try{
 	        	DB::beginTransaction();
 	            Surrvey::findORfail($request->id);

@@ -7,15 +7,14 @@ $(function() {
 });
 
 $(function(){
+	var expire_time = $("#survey_timer").attr('data-expire-time');
 	$("#survey_timer").countdowntimer({
-		hours : $(this).attr('data-hours'),
-		minutes : $(this).attr('data-minutes'),
-		seconds : $(this).attr('data-seconds'),
+		dateAndTime : expire_time,
 		size : "lg",
 		timeUp : timeisUp
 	});
 });
 
 function timeisUp(){
-	//$("#post").submit();
+	//$(".survey-form").submit(); 
 }

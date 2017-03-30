@@ -30,6 +30,9 @@ img{
 .survey-form{
     
 }
+.clear{
+	clear:both;
+}
 /***************************************
 SURVEY TOPBAR
 ***************************************/
@@ -40,7 +43,6 @@ SURVEY TOPBAR
     padding: 15px 0;
     font-size: 16px;
     line-height: 24px;
-    text-align: right;
     border-bottom: 1px solid #e8e8e8;
 }
 
@@ -49,6 +51,27 @@ SURVEY TOPBAR
 }
 .survey-topbar a:hover{
     color: #333333;
+}
+
+.survey-topbar-left{
+	width:50%;
+	float:left;
+	text-align: left;
+}
+.survey-topbar-right{
+	width:50%;
+	float:right;
+	text-align:right;
+
+}
+.survey-topbar-left .survey-timer{
+	color: #666666;
+    font-size: 20px;
+    line-height: 22px;
+    font-weight: 400;
+    padding: 10px 0 10px 0;
+    margin: 0 0 10px 0;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 
 

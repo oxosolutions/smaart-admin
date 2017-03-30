@@ -13,6 +13,7 @@ use DB;
 use App\Embed;
 use App\LogSystem as LOG;
 use Carbon\Carbon AS TM;
+use App\Http\Controllers\Services\VisualApiController;
 class VisualisationController extends Controller
 {
     protected $ipAdress;
@@ -182,36 +183,80 @@ class VisualisationController extends Controller
       }
 
     public function embedVisualization(Request $request){
+
+        //$data->getFIlters();
         $model = Embed::where('embed_token',$request->id)->first();
         Session::put('org_id',$model->org_id);
+        //dump($model->visual_id);
         $visual = GV::find($model->visual_id);
+       // dump($visual);
+        $filter =  json_decode($visual->filter_columns,true);
+        //dump($filter);
+        $chart_type = json_decode($visual->chart_type,true);
+        //dump($chart_type);
+        foreach ($chart_type as $ckey => $cvalue) {
+            //dump($ckey);
+           $array['visualizations'][$ckey]['chart_type'] = $cvalue;
+        }
+        $i = 0;
+        foreach ($filter as $fkey => $fvalue) {
+            $array['filters'][$i]['filter_column'] =$fvalue['column']; 
+            $array['filters'][$i]['filter_type'] =$fvalue['type'];
+            $i++;
+        }
+       
         $dataset_id = $visual->dataset_id;
         $columns = json_decode($visual->columns, true);
         $chartType = json_decode($visual->chart_type, true);
         $embedCss = @$columns['embedCss'];
         $embedJS = @$columns['embedJS'];
-        $datatableName = DL::find($dataset_id);
-        
-        $array_data  = [
-                            'model'         =>    Embed::where('embed_token',$request->id)->first(),
-                            'visual'        =>    GV::find($model->visual_id),
-                            'dataset_id'    =>    $visual->dataset_id,
-                            'columns'       =>    json_decode($visual->columns, true),
-                            'chartType'     =>    json_decode($visual->chart_type, true),
-                            'embedCss'      =>    @$columns['embedCss'],
-                            'embedJS'       =>    @$columns['embedJS'],
-                            'datasetRecords'=>    DL::find($dataset_id)
-                        ];
-        dump($datatableName->dataset_table);
-        $visualizationsData = json_decode($visual->columns, true);
-        $dataArray = [];
-        foreach ($visualizationsData['column_one'] as $key => $value) {
-            $singleChart = [];
-            foreach ($variable as $key => $value) {
-                $tempArray = [];
-                
+        $dataset_data = DL::find($dataset_id);
+        $keys = array_keys($columns);
+        $charts = array_keys($columns[$keys[0]]);
+        //dump($dataset_data);
+        $dataset_table_data = DB::table($dataset_data->dataset_table)->get();
+        //dump($dataset_table_data);
+        $obj = new VisualApiController;
+        $datasetColumns = (array)DB::table($dataset_data->dataset_table)->where('id',1)->first();
+        $filters = $obj->getFIlters($dataset_data->dataset_table, json_decode($visual->filter_columns, true),$datasetColumns);
+
+        $array['visualization_id'] =  $visual->id;
+        $array['visualization_name'] =  $visual->visual_name;
+        $array['dataset_id'] =  $visual->dataset_id;
+        $array['dataset_name'] = $dataset_data->dataset_name;
+        $array['filters'] = $filters;
+        $array['custom_code'] = ['custom_css'=>$embedCss,'custom_js'=>$embedJS];
+        $array['data'] = $dataset_table_data;
+
+
+        foreach ($charts as $key => $val) {
+            foreach($columns as $colKey => $colVal){
+                if(is_array($colVal)){
+                    if(array_key_exists($val, $colVal)){
+                        $array['visualizations'][$val][$colKey] = $colVal[$val];
+                    }else{
+                        $array['visualizations'][$val][$colKey] = [];
+                    }
+                }
             }
         }
+
+       dd($array);
+               //return view('web_visualization.visualization');
+
+//dump($kkey);
+       // dump($value[$charts[0]]);
+         //  $array[$charts[0]][$key] = $value[$charts[0]];
+           // dump(array_keys($value));
+            //$kkey = $key;
+           // dump($kkey);
+          //  foreach ($value as $nKey => $nValue) {
+           
+          // //  dump($nKey);
+          //  // dump($nValue);
+
+          //  }
+       
         return view('embedVisual.index')->with('data',$array_data);
     }
 }

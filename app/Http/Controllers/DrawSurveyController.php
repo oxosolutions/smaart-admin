@@ -135,8 +135,8 @@ class DrawSurveyController extends Controller
         
         $scheduling_status = $this->getSettings($survey_settings,'survey_scheduling_status');
         if(($scheduling_status == 1 || $scheduling_status == '1') && $scheduling_status != null){
-            $today_date = date('Y-m-d H:i:s');
-          //  dump('current'.$today_date);
+             $today_date = date('Y-m-d H:i:s');
+            
         $survey_start_date = $this->getSettings($survey_settings,'survey_start_date');
         $survey_expiry_date = $this->getSettings($survey_settings,'survey_expiry_date');
            // dump('start'.$survey_start_date);
@@ -150,20 +150,20 @@ class DrawSurveyController extends Controller
             }
             
         }
-            $survey_timer_status = $this->getSettings($survey_settings,'survey_timer_status');
-            $survey_timer_type   = $this->getSettings($survey_settings,'survey_timer_type');
-            $survey_duration = $this->getSettings($survey_settings,'survey_duration');
-            echo "<div style='display:none;'>";
-                dump('survey_timer_status-->'.$survey_timer_status);
-                dump('survey_timer_type-->'.$survey_timer_type);
-                dump('survey_duration-->'.$survey_duration);
-            echo "</div>";
+            @$timer['survey_timer_status'] = $this->getSettings($survey_settings,'survey_timer_status');
+            @$timer['survey_timer_type']   = $this->getSettings($survey_settings,'survey_timer_type');
+            @$timer['survey_duration']     = $this->getSettings($survey_settings,'survey_duration');
+            @$timer['survey_expiry_date']  = $survey_expiry_date;
+           
+            @$custom_code['custom_js'] = $this->getSettings($survey_settings,'customJs');
+            @$custom_code['custom_css'] = $this->getSettings($survey_settings,'customCss');
+
                     
     	
         if(!empty($errors)){
             return view('survey.draw_survey',['err_msg'=>$errors,'theme'=>$theme, 'skip_auth'=>$skip_auth ,'token'=>$token]);
         }else{
-            return view('survey.draw_survey',['theme'=>$theme, 'skip_auth'=>$skip_auth , 'sdata'=>$survey_data, 'token'=>$token]);
+            return view('survey.draw_survey',['custom_code'=>$custom_code, 'timer'=>$timer ,'theme'=>$theme , 'skip_auth'=>$skip_auth , 'sdata'=>$survey_data, 'token'=>$token]);
         }
 
     	
@@ -209,7 +209,7 @@ class DrawSurveyController extends Controller
             $insert["survey_submitted_by"] = $survey_submitted_by;
             $insert["survey_submitted_from"] = "WEB";
             $insert["survey_status"] = 1;
-            $insert["unique_id"] = date('YmdHis').''.substr((string)microtime(), 2, 6).''.rand(1000,9999); 
+            $insert["unique_id"] = $data->survey_id.''.date('YmdHis').''.substr((string)microtime(), 2, 6).''.rand(1000,9999); 
     		$insert["created_by"] = $uid;
         	$insert["ip_address"] = $request->ip();
             unset($insert['code']);

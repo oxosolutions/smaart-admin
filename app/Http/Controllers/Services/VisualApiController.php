@@ -330,7 +330,10 @@ class VisualApiController extends Controller
         return call_user_func_array('array_map', $array);
     }
 
-    protected function getFIlters($table, $columns, $columnNames){
+
+   
+    public function getFIlters($table, $columns, $columnNames){
+        
         $columnsWithType = $columns;
         $columns = (array)$columns;
         $columns = array_column($columns, 'column');
@@ -498,7 +501,7 @@ class VisualApiController extends Controller
         return ['status'=>'success','data'=>$returnArray,'map_list'=> $mapArray];
     }
     public function saveVisualData(Request $request){
-
+        
         $validate = $this->validateRequest($request);
         if($validate['status'] == 'false'){
             return ['status'=>'error','message'=>$validate['message']];
@@ -506,6 +509,7 @@ class VisualApiController extends Controller
 
         
         $columns = json_decode($request->columns, true);
+
         //unset($columns['formula']);
         //
         $filterCOlumns = json_decode($request->filter_cols, true);

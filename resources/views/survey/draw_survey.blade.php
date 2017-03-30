@@ -30,21 +30,35 @@
 	@else
 		
 		
-		@if(Auth::check()!=false)
+		@if(Auth::check()!=false || $timer['survey_timer_status'])
 		<div id="survey_topbar_{{$sdata->id}}" class="survey-topbar">
 			<div class="wrapper-row">
-				Welcome {{Auth::user()->name}}, <a href="{{url('out')}}/{{$token}}">Logout</a>
+				<div class="survey-topbar-left">
+					@if($timer['survey_timer_status'] == 1)
+						<?php
+						$expire_time = "";
+						if($timer['survey_timer_type'] == 'duration'){
+							$date = new DateTime(date("Y-m-d H:i:s"));
+							$date->add(new DateInterval('PT'.$timer['survey_duration'].'M'));
+							$expire_time = $date->format('Y/m/d H:i:s');
+						} 
+						if($timer['survey_timer_type'] == 'expiry'){
+							$expire_time = date("Y/m/d H:i:s", strtotime($timer['survey_expiry_date']));
+						}
+						?>
+						Time left <span id="survey_timer" class="survey-timer" data-expire-time="{{$expire_time}}"></span>
+					@endif
+				</div>
+				<div class="survey-topbar-right">
+					@if(Auth::check()!=false)
+						Welcome {{Auth::user()->name}}, <a href="{{url('out')}}/{{$token}}">Logout</a>
+					@endif
+				</div>
+				<div class="clear"></div>
 			</div> <!-- wrapper-row -->
 		</div> <!-- survey-topbar -->
 		@endif
 		
-		@if(1)
-		<div id="survey_topbar_{{$sdata->id}}" class="survey-topbar">
-			<div class="wrapper-row">
-				<span id="survey_timer" class="survey-timer" data-hours="" data-minutes="" data-seconds=""></span>
-			</div> <!-- wrapper-row -->
-		</div> <!-- survey-topbar -->
-		@endif
 		
 		<div id="survey_{{$sdata->id}}" class="survey-wrapper">
 			{!! Form::open(['route' => 'survey.store','id'=>"survey_form_".$sdata->id, 'class'=>'survey-form','files'=>true]) !!}
@@ -79,9 +93,12 @@
 					<div id="survey_content_{{$sdata->id}}" class="survey-content">
 
 						<div class="wrapper-row">
-					
+						<?php 
+						
+						$group_status ="enable"; ?>
 							@if(count($sdata->group)>0)
 								@foreach ($sdata->group as $key => $survey_group)
+									@if($group_status =="enable")
 									<div id="survey_group_{{$survey_group->id}}" class="survey-group"> 
 									
 										<div id="group_header_{{$survey_group->id}}" class="group-header">
@@ -99,6 +116,8 @@
 													<?php
 														$field_id = 'sid'.$field->survey_id.'_gid'.$field->group_id.'_qid'.$field->id;
 														$field_meta = json_decode($field->answer,true);
+
+
 														$validation_array = [];
 
 													if($field_meta['required']=="yes"){
@@ -180,6 +199,7 @@
 
 										
 									</div> <!-- survey-group -->
+									@endif <!-- SURVEY-GROUP STATUS ENDIF -->
 								@endforeach
 								
 								@else
