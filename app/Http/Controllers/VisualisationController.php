@@ -15,6 +15,8 @@ use App\LogSystem as LOG;
 use Carbon\Carbon AS TM;
 use App\Http\Controllers\Services\VisualApiController;
 use Lava;
+use App\Map;
+use App\GMap;
 
 class VisualisationController extends Controller
 {
@@ -476,7 +478,7 @@ return view('web_visualization.lava');
 		try{       
 			$filters = $obj->getFIlters($dataset_data->dataset_table, json_decode($visual->filter_columns, true),$datasetColumns);
 		}catch(\Exception $e){
-			throw $e;
+			// throw $e;
 		}
 		// dd($filters);
 		$array['visualization_id'] =  $visual->id;
@@ -488,23 +490,33 @@ return view('web_visualization.lava');
 		$array['data'] = $dataset_table_data;
 		// dd($array);
 		foreach($array['visualizations'] as $key => $value){
-			$lavaschart = lava::DataTable();
-			foreach($value['headers'] as $index => $header){
-				if($index == 0){
+			if($value['chart_type'] != 'CustomMap'){
+				$lavaschart = lava::DataTable();
+				foreach($value['headers'] as $index => $header){
+					if($index == 0){
 
-					$lavaschart->addStringColumn($header);
-				}else{
-					$lavaschart->addNumberColumn($header);
+						$lavaschart->addStringColumn($header);
+					}else{
+						$lavaschart->addNumberColumn($header);
+					}
 				}
-			}
-			$lavaschart->addRows($value['data']);
-			$chartDetailsForView[$key] = ['type'=>$value['chart_type'],'id'=>$key];
-			lava::{$value['chart_type']}($key,$lavaschart)->setOptions([
-					'title' => $value['title']	
-				]);
-			$chartTitles[$key] = $value['title'];
+				$lavaschart->addRows($value['data']);
+				$chartDetailsForView[$key] = ['type'=>$value['chart_type'],'id'=>$key];
+				lava::{$value['chart_type']}($key,$lavaschart)->setOptions([
+						'title' => $value['title']	
+					]);
+				$chartTitles[$key] = $value['title'];	
+			}else{
+				$SVGContent = Map::find($value['mapArea']);
+				if($SVGContent == null){
+					$SVGContent = GMap::find($value['mapArea']);
+				}
+				$chartDetailsForView[$key] = ['type'=>$value['chart_type'],'id'=>$key,'data'=>$value['data'],'map'=>$SVGContent['map_data']];
+				$chartTitles[$key] = $value['title'];
+				$chartDetailsForJquery[$key] = ['type'=>$value['chart_type'],'id'=>$key,'data'=>$value['data'],'headers'=>$value['headers']];
+			}			
 		}
-		// dd($filters);
- 		return view('web_visualization.visualization',['details'=>$chartDetailsForView,'filters'=>$filters,'titles'=>$chartTitles]);
+		//dd($chartDetailsForView);
+ 		return view('web_visualization.visualization',['details'=>$chartDetailsForView,'filters'=>$filters,'titles'=>$chartTitles,'javascript'=>$chartDetailsForJquery]);
 	}
 }
