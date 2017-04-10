@@ -1,6 +1,5 @@
  <?php
-
-namespace App\Http\Controllers;
+ namespace App\Http\Controllers;
 use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
 Use App\Role;
@@ -11,6 +10,7 @@ Use App\PermissonRole as PR;
 class RoleController extends Controller
 {
     //
+
 
     public function index()
     {

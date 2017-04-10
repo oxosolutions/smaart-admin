@@ -13,6 +13,113 @@ use DB;
 use MyFuncs;
 class FormBuilderController extends Controller
 {
+
+   public function custom_excel_formula()
+    {
+
+      
+      $count_colum = 705;//count($data_row); 
+     $key_map = array("A","B","C","D","E","F","G","H","I","J","k","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z");
+
+     //echo (4 % 2);
+   $first_prefix= $first_index = $second = null;
+
+     for($i=0; $i<$count_colum; $i++)
+     {
+      if($i<26)
+      {
+        $new_data[] =  $key_map[$i];
+      }
+      elseif(($i % 26)==0)
+      {
+        $second_index = ($i / 26) * 26;
+        //$first_index = ($i / 26);
+        $first_index = ($i / 26);
+       
+        
+        if($first_index >25)
+        {
+          if(($first_index % 27)==0)
+          {
+              $new_data['second_index'][] = $second_index  = ($first_index) * 26;
+              $new_data['i'][]= $i;
+              $new_data['first_index'][] = $first_index = $first_index/27;
+            //  $first_index
+          }
+         
+      }
+    }
+
+      if($first_index !=null && $second_index !=null)
+      {
+        $next_index = $i - $second_index;
+        $new_data[] = $first_prefix.''.$key_map[$first_index - 1].''.$key_map[$next_index];
+      }
+     
+     }
+     dump($new_data);
+die;
+
+
+        echo 123;
+        $table = "data_table_1488027926";
+        $data = DB::select('SELECT * FROM `'.$table.'`');
+        $colCount = 'column_301';
+        $formula ='division';
+        $formula ='power';
+       
+       
+      
+
+        $after_column = 'id';
+//DB::select('ALTER TABLE `'.$table.'` DROP COLUMN '.$colCount.';');
+// DB::select('ALTER TABLE `'.$table.'` ADD COLUMN '.$colCount.' TEXT NULL AFTER '.$after_column.';');
+ 
+         try{
+         switch ($formula) {
+           case 'sum':
+           echo $formula;
+              $array_numeric = array('column_5', 1, 13);
+               DB::select('update `'.$table.'` set '.$colCount.' = ('. implode(' +', $array_numeric).' ) where id not in (1)');
+            //  DB::table($table)->update(['column_'.$colCount => ('column_5')]);
+             break;
+            case 'difference':
+             echo $formula;
+                $array_numeric = array('column_5',5,2);
+             
+             DB::select('update `'.$table.'` set '.$colCount.' = ('. implode(' -', $array_numeric).' ) where id not in (1)');
+            
+           case 'multipication':
+                $array_numeric = array('column_5', 5);
+                 DB::select('update `'.$table.'` set '.$colCount.' = ('. implode('*', $array_numeric).' ) where id not in (1)');
+
+            break;
+            case 'division':
+            echo  $formula;
+                $power= 2;
+                for($i=0; $i<$power; $i++)
+                {
+                  $array_numeric[] = 'column_5';
+                }
+                $array_numeric = array('column_5',2);
+                echo implode(' / ', $array_numeric);
+                 DB::select('update `'.$table.'` set '.$colCount.' = ('. implode(' / ', $array_numeric).' ) where id not in (1)');
+
+            break;
+           
+         }
+        
+
+        //DB::table($table)->update(['column_'.$colCount => $operation])->where(['id'=>]);
+
+       // DB::table($table)->where(['id'=>1])->update(['column_'.$colCount => $column_name]);
+        
+    }catch(\Exception $e){
+        throw $e;
+    }
+        
+       
+    }
       public function surrvey_setting($id)
       {
         $model = Surrvey::where('id',$id)->first();

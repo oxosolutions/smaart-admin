@@ -75,6 +75,7 @@ class VirtualTableGenController extends Controller
             "`filter_counts` longtext COLLATE utf8_unicode_ci",
             "`filter_columns` text COLLATE utf8_unicode_ci",
             "`chart_type` text COLLATE utf8_unicode_ci",
+            "`status` int(1) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0'",
             "`created_by` int(10) UNSIGNED NOT NULL",
             "`created_at` timestamp NULL DEFAULT NULL",
             "`updated_at` timestamp NULL DEFAULT NULL"

@@ -82,7 +82,7 @@ class AppApiController extends Controller
 			
 			$questionData[$key]['question_id'] = $value->id;
 			$ansData = json_decode($value->answer,true);
-			//dump($ansData);
+			
 
 			$survey_media = SurveyHelper::get_survey_media($ansData['question_desc']);
 			 if($survey_media['media']!=null)
@@ -128,7 +128,10 @@ class AppApiController extends Controller
 			//  	}
 
 			// }
-			
+
+
+
+			$questionData[$key]["next_question_key"] =  @$ansData["question_key"];
 			$questionData[$key]["question_key"] =  @$ansData["question_id"];
     		$questionData[$key]["question_order"]	=  "";
     		$questionData[$key]['question_text'] = $value->question;
@@ -143,11 +146,14 @@ class AppApiController extends Controller
 		if(array_key_exists('extraOptions', $ansData))
 		{
 			$i=0;
+			//dump($ansData['extraOptions']);
     		 foreach ($ansData['extraOptions'] as $optKey => $optValue) {
+    		 		//dump($optKey);
+    		 		//dump($optValue["options"]['label']);//['options']['label']); 
     			$option["option_type"] = $ansData['question_type'];
-				$option["option_text"] = $optValue;
-       			$option["option_value"] =  $optKey;
-        		$option["option_next"] = 	"";
+				$option["option_text"] = $optValue["options"]['label'];
+       			$option["option_value"] =  $optValue["options"]['value'];
+        		$option["option_next"] = 	$optValue["options"]['condition'];
         		$option["option_prompt"] = "";
         		array_push( $ary , $option);
     		}

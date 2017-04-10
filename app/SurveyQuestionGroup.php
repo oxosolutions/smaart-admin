@@ -10,6 +10,8 @@ use Session;
 class SurveyQuestionGroup extends Model
 {	
 	use SoftDeletes;
+  public static $question_take = null;
+  public static $question_random = null;
 	protected $dates =['deleted_at'];
 	protected $SoftDelete =True;
 	protected $fillable = ['survey_id', 'title'];
@@ -25,6 +27,11 @@ class SurveyQuestionGroup extends Model
 
     public function question()
     {
-    	return $this->hasMany('App\SurveyQuestion','group_id','id');
+      $question = $this->hasMany('App\SurveyQuestion','group_id','id')->take(self::$question_take);
+      if(self::$question_random!=null)
+      {
+        $question->orderByRaw("RAND()");
+      }
+      return $question;
     }
 }

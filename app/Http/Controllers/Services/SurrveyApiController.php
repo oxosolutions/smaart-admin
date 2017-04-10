@@ -15,7 +15,7 @@ use App\SurveyEmbed as SEMBED;
 use Illuminate\Support\Facades\Schema;
 use App\organization as org;
 use Session;
-use MyFuncs;
+use App\DatasetsList;
 use SurveyHelper;
 
 
@@ -25,7 +25,6 @@ class SurrveyApiController extends Controller
 	public function save_survey_filled_data(Request $request)
 	{
 
-		//dump($request->all());
 		$org_id = org::select('id')->where('activation_code' ,$request->activation_code)->first()->id;
 		Session::put('org_id', $org_id);
 		$data = json_decode($request->export,true);
@@ -37,77 +36,59 @@ class SurrveyApiController extends Controller
 		}
 		else{
 			SurveyHelper::alter_survey_table($surveyid , $org_id);
-
 		}
 		foreach ($data as $key => $value) {
-			dump($value);
-				
-if($value['status']=="completed")
-{
-	$status =1;	// $insert["survey_completed_on"] = date('YmdHisu');
-}else{$status =0;}
-  //       $insert["survey_submitted_by"] = $survey_submitted_by;
-		//dd(implode('',explode('-', $value['starton'])));
-         $insert["survey_status"] = $status;
-         $insert["survey_started_on"] = 	$value['starton'];
-         $insert["survey_completed_on"] = 	$value['endon']; 
-         if(isset($value['unique_id']))
-         {
-         	dump($value['unique_id']);
-         	 $insert["unique_id"] = 	@$value['unique_id'];
-         }
-         
-
-  //       $insert["unique_id"] = date('YmdHisu').''.str_random(5);
-		// $insert["created_by"] = $uid;
-  //   	$insert["ip_address"] = $request->ip();
-
-			foreach ($value['answers'] as $key => $value) {
-				
-				if(is_array($value["answer"]))
-				{
-					$ansdata="";
-						foreach ($value["answer"] as $ansKey => $ansValue) {
-							$ansdata[] = $ansKey;
-						}
-					$ans = json_encode($ansdata);
-				}else{
-					$ans = $value["answer"];
-				}
-				
-				$insert[$value['questkey']] = $ans;
-				$insert["ip_address"] = $request->ip();
-				$insert["survey_submitted_from"] = "APP";
+			if($value['status']=="completed")
+			{
+				$status =1;	
+			}else{
+				$status =0;
 			}
-			
-			DB::table($table)->insert($insert);
-		
-		}
-
-		
+			$insert["survey_status"] = $status;
+			$insert["survey_started_on"] = 	$value['starton'];
+			$insert["survey_completed_on"] = 	$value['endon']; 
+			$insert["ip_address"] = $request->ip();
+			$insert["survey_submitted_from"] = "APP";
+			if(isset($value['unique_id']))
+			{
+				$insert["unique_id"] = 	@$value['unique_id'];
+			}
+			foreach ($value['answers'] as $ansKey => $ansValue) {	
+				if(isset($ansValue["answer"]))
+				{
+					if(is_array($ansValue["answer"]))
+					{
+					$insert[$ansValue["questkey"]] = json_encode($ansValue["answer"]);
+					}
+					else
+					{
+						$insert[$ansValue["questkey"]] = $ansValue["answer"];
+					}
+				}				 
+			}			
+			DB::table($table)->insert($insert);		
+		}		
 	}
 //VIEW SURVEY SAVED DATA 
 	public function view_survey_saved_data($sid)
 	{
 		try{
-		Surrvey::findORfail($sid);
-		$table = Surrvey::select('survey_table')->where('id',$sid)->first()->survey_table;
-		$data = DB::table($table)->get();
-		foreach ($data as $key => $value) {
-			foreach ($value as $aKey => $ansValue) {
-				
+			Surrvey::findORfail($sid);
+			$table = Surrvey::select('survey_table')->where('id',$sid)->first()->survey_table;
+			$data = DB::table($table)->get();
+			foreach ($data as $key => $value) {
+				foreach ($value as $aKey => $ansValue) {
 					if(is_array(json_decode($ansValue,true)))
 					{
 						$data[$key]->$aKey = implode(', ', json_decode($ansValue,true));
 					}
-
+				}
 			}
-		}
-		return ['status'=>'success', 'data'=> $data];
+			return ['status'=>'success', 'data'=> $data];
+
 		}catch(\Exception $e)
 		{
-			throw $e;
-			
+			throw $e;			
 			return ['status'=>'error', 'message'=>'something goes wrong try again'];	
 		}
 	} 
@@ -118,7 +99,6 @@ if($value['status']=="completed")
 		$user = Auth::user();
 		$count = SEMBED::where(['user_id'=>$user->id, 'survey_id'=>$request->survey_id])->first();
 		if($count==null){
-
 			$sembed = new SEMBED();
 			$sembed->user_id = $user->id;
 			$sembed->org_id = $user->organization_id;
@@ -126,21 +106,18 @@ if($value['status']=="completed")
 			$sembed->embed_token = $token; 
 			$sembed->save();	
 			return ['status'=>'success', 'token'=>$token, 'message'=>'Successfully save survey embed'];
-
 		}else{
 			return ['status'=>'error', 'message'=>'already created','token'=>$count->embed_token];
 		}
 	}
 
-
 	//SAVE & EDIT SURVEY GROUP QUESTION
 	public function save_survey_data(Request $request)
-	{
-		
-		$survey_id = $request['survey_id'];
-		$grp = GROUP::where('survey_id',$survey_id);
-		$sq = SQ::where('survey_id', $survey_id);		
-		$data = json_decode($request['survey_data'],true);
+	{	
+		$survey_id 	= $request['survey_id'];
+		$grp 		= GROUP::where('survey_id',$survey_id);
+		$sq 		= SQ::where('survey_id', $survey_id);		
+		$data 		= json_decode($request['survey_data'],true);
 		try{
 				DB::beginTransaction();
 				if($grp->count() > 0)
@@ -185,7 +162,7 @@ if($value['status']=="completed")
 	// FOR VIEW GROUP & QUESTION 
 	public function view_survey_data($id)
 	{
-	try{
+		try{
 			Surrvey::findORfail($id);
 			$sdata = Surrvey::find($id);		
 			$survey['id'] 			= 	$sdata->id;
@@ -228,14 +205,12 @@ if($value['status']=="completed")
 		try{
 			Surrvey::findORfail($id);
 			$sdata = Surrvey::find($id);	
-			//dd($sdata->creat_by->roles->name);	
 			$survey['survey_id'] 			= 	$sdata->id;
 			$survey['survey_name'] 		= 	$sdata->name;
 	  		$survey['survey_author_id']	= 	$sdata->created_by;
 	  		$survey['survey_author_name']	= 	$sdata->creat_by->name;
 	  		$survey['survey_author_role_id']	= 	$sdata->creat_by->role_id;
 	  		$survey['survey_author_role_name']	= 	$sdata->creat_by->roles->name;
-
 	  		$survey['survey_description'] 	=	$sdata->description;
 	  		$survey['survey_status'] 		= 	$sdata->status;
 	  		if(count($sdata->setting) >0)
@@ -287,12 +262,23 @@ if($value['status']=="completed")
 	public function surrvey_save(Request $request)
     {
 
+    	// $ssdata =	json_decode($request->settings,true);
+     //    dump($ssdata);
+     //    dump($request->all());
+
+     //    die;
+
 		try{
 			$user_id =	Auth::user()->id;
 			$org_id = Auth::user()->organization_id;
             $surrvey = new Surrvey();
             $surrvey->name = $request->name;
-            $surrvey->description = $request->description;
+            if ($request->description == "undefined"){
+            	 $surrvey->description = " ";
+            }else{
+            	$surrvey->description = $request->description;
+            }
+            
             $status = '0';
 			if($request->enableDisable=="true")
             {           	
@@ -382,7 +368,7 @@ if($value['status']=="completed")
             $model = Surrvey::find($id);
             $survey['id'] =	$model->id;
             $survey['name'] =	$model->name;
-            $survey['description'] =	$model->description;
+            $survey['description'] = $model->description;
             $survey['status'] =	$model->status;
             foreach ($model->setting as $key => $value) {
             $survey[$value->key]= $value->value;
@@ -414,14 +400,11 @@ if($value['status']=="completed")
     			// 	dump($value);
     			// }
 
-		        if($key == "survey_custom_error_messages_list" && $ssdata['survey_custom_error_message_status'] != null)
+		        if($key == "survey_custom_error_messages_list" )
           		{
           			$value = json_encode($value);
           			$settingdata = ['survey_id'=>$sid,'key'=>$key, 'value'=>$value];
           			$this->save_survey_setting($settingdata);
-          		}else if($ssdata['survey_custom_error_message_status'] == null && $key =="survey_custom_error_messages_list")
-          		{
-
           		}elseif($key =="authorized_roles" && $value !=null)
           		{
           			$settingdata = ['survey_id'=>$sid,'key'=>$key, 'value'=>json_encode($value)];
@@ -445,7 +428,10 @@ if($value['status']=="completed")
 //  UPDATE SURVEY & SETTING
 	public function survey_update(Request $request )
 	    {
-	    	
+
+	    		// $ssdata =	json_decode($request->settings,true);
+	    		// dump($ssdata);
+	    		// die;
 	        try{
 	        	DB::beginTransaction();
 	            Surrvey::findORfail($request->id);
@@ -454,6 +440,11 @@ if($value['status']=="completed")
 	            {
 	            	$status = "1";
 	            }
+	            $array = array(
+	            		'name'			=>	$request->name,
+	            		'description'	=>	$request->description,
+	            		'status'		=>	$status
+	            	);
 	            Surrvey::where('id',$request->id)->update(['name'=>$request->name, 'description'=>$request->description,'status'=>$status]);
 	            $ssetting = SSETTING::where('survey_id',$request->id);
 	            	if($ssetting->count() > 0){
@@ -610,4 +601,30 @@ if($value['status']=="completed")
 		}
 		return ['response'=>$array];    		
     }
+
+    
+
+    public function answeredSurveysList(){
+    	$a =0;
+    	$survey_data =	surrvey::select(['id','name','survey_table'])->whereNotNull('survey_table')->get()->toArray();
+    	foreach ($survey_data as $key => $value) {
+		$table = $value['survey_table'];
+		if(Schema::hasTable($table))
+		{
+			$count = DB::table($table)->count();
+			if($count>0)
+			{
+				$a=1;
+				$survey[$key]['id'] = $value['id'];
+				$survey[$key]['name'] = $value['name'];
+			}
+		}
+		}
+		if($a==0)
+		{
+			return ['status'=>'error','message'=>'no filled surrvey'];
+
+		}
+    	return ['status'=>'successfully','survey_list'=>$survey];
+		}
 }

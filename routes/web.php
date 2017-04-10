@@ -4,6 +4,12 @@ Route::get('/func', function () {
     return MyFuncs::full_name("John","Doe");
 });
 
+		Route::get('custom_excel_formula',['uses'=>'FormBuilderController@custom_excel_formula']);
+
+
+		Route::get('lava_test',['uses'=>'VisualisationController@lava_test']);
+
+
 		Route::get('/viewemail',function(){
 			return view('mail.layout.email',
 			['username' => 'sgssandhu'],
@@ -28,7 +34,7 @@ Route::get('/func', function () {
 
 		Route::get('s/{id}/{theme?}/{skip?}',['as'=>'survey.draw', 'uses'=>'DrawSurveyController@draw_survey']);
 
-		Route::get('v/{id}',['as'=>'draw.visualisation','uses'=>'VisualisationController@embedVisualization']);
+		Route::match(['get','post'],'v/{id}',['as'=>'draw.visualisation','uses'=>'VisualisationController@embedVisualization']);
 
 		Route::post('survey/filled',['as'=>'survey.store', 'uses'=>'DrawSurveyController@survey_store']);
 

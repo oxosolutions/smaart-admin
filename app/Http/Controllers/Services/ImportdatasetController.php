@@ -12,11 +12,11 @@ use App\DatasetsList as DL;
 use MySQLWrapper;
 use DB;
 use File;
+use App\Surrvey;
 class ImportdatasetController extends Controller
 {
 
     function uploadDataset(Request $request){
-
 
 	   $validate = $this->validateRequst($request);
         
@@ -60,13 +60,21 @@ class ImportdatasetController extends Controller
             $filep = explode('/',$filePath);
             $filename = $filep[count($filep)-1];
         }
+        if($request->source != 'import_survey'){
+            if(@$request->add_replace == 'newtable'){
+                $result = $this->storeInDatabase($filePath, $request->dataset_name, $request->source, $filename);
+            }elseif(@$request->add_replace == 'append'){
+                $result = $this->appendDataset($request->dataset_name, $request->source, $filename, $filePath, $request);
+            }elseif(@$request->add_replace == 'replace'){
+                //$result = $this->replaceDataset($request, $request->dataset_name, $filePath);
+            }
+        }
 
-        if($request->add_replace == 'newtable'){
-            $result = $this->storeInDatabase($filePath, $request->dataset_name, $request->source, $filename);
-        }elseif($request->add_replace == 'append'){
-            $result = $this->appendDataset($request->dataset_name, $request->source, $filename, $filePath, $request);
-        }elseif($request->add_replace == 'replace'){
-            //$result = $this->replaceDataset($request, $request->dataset_name, $filePath);
+        if($request->source == 'import_survey'){
+
+            $result = $this->exportSurveyToDataset($request->survey, $request->dataset_name);
+            $response = ['status'=>'success','message'=>'Dataset created successfully!','id'=>$result['dataset_id']];
+            return $response;
         }
 
         if($result['status'] == 'true'){
@@ -99,6 +107,9 @@ class ImportdatasetController extends Controller
                         $errors['message'] = 'File url should not empty!';
                     }
                 break;
+                case'import_survey':
+                    $errors = '';
+                break;
             }
         }else{
             $errors['message'] = 'Required fields are missing!';
@@ -116,7 +127,10 @@ class ImportdatasetController extends Controller
     			$errors['message'] = 'Please select dataset to '.$request->add_replace;
     	   }
     	}
-        
+        if($request->source == 'import_survey'){
+            $return = ['status' => 'true','errors'=>[]];
+            return $return;
+        }
     	if(count($errors) >= 1){
     		$return = ['status' => 'false','errors'=>$errors];
     		return $return;
@@ -407,5 +421,56 @@ class ImportdatasetController extends Controller
         }
         
         return ['status'=>'true','message'=>'Dataset updated successfully!!', 'id'=>$model_DL->id];
+    }
+
+    private function exportSurveyToDataset($surveyId, $datasetName){
+
+        $model = Surrvey::find($surveyId);
+        $surveytable = $model->survey_table;
+        $org_id = Auth::user()->organization->id;
+        $surveyTableData = DB::select('SELECT * FROM '.$surveytable);
+        $datasetTableName = $org_id.'_data_table_'.time();
+        $dataSetInsert = new DL;
+        $dataSetInsert->dataset_name = $datasetName;
+        $dataSetInsert->dataset_table = $datasetTableName;
+        $dataSetInsert->user_id = Auth::user()->id;
+        $dataSetInsert->uploaded_by = Auth::user()->name;
+        $dataSetInsert->save();
+        $columns = [];
+        $insert = [];
+        $column_index = 1;
+        foreach($surveyTableData[0] as $key => $value){
+            if($key == 'id'){
+                $columns[] = '`'.$key.'` int(20) PRIMARY KEY AUTO_INCREMENT';
+            }else{
+
+                $columns[] = '`column_'.$column_index.'` text';
+                $insert[] = '`column_'.$column_index.'`';
+                $column_index++;
+            }
+        }
+        DB::select('CREATE TABLE '.$datasetTableName.' ('.implode(',',$columns).')');
+
+        $records = [];
+        $firstRow = array_keys((array)$surveyTableData[0]);
+        unset($firstRow[0]);
+        $firstRow = array_values($firstRow);
+        $firtsRowImploded = implode(', ', array_map(function ($entry) {
+         return "'".$entry."'";
+        }, $firstRow));
+        DB::select('INSERT INTO '.$datasetTableName.' ( '.implode(',',$insert).' ) values('.$firtsRowImploded.')');
+        foreach($surveyTableData as $key => $value){
+
+            $value = (array)$value;
+            unset($value['id']);
+            $value = array_values($value);
+            $arrayImploded = implode(', ', array_map(function ($entry) {
+             return "'".$entry."'";
+            }, $value));
+            DB::select('INSERT INTO '.$datasetTableName.' ( '.implode(',',$insert).' ) values( '.$arrayImploded.' )');
+        }
+
+
+        return ['status'=>'success','message'=>'Dataset created successfully!','dataset_id'=>$dataSetInsert->id];
     }
 }

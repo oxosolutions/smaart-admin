@@ -1,6 +1,16 @@
 @extends('layouts.survey')
 @section('content')
 
+{{-- @foreach ($sdata->group as $key => $survey_group)
+	@foreach ($survey_group->question as $field_key => $field) 
+
+	{{dump(json_decode($field->answer,true))}}
+
+	@endforeach
+@endforeach
+ --}}
+
+
 	@if(@$err_msg)
 			@foreach($err_msg as $key => $error_message)
 				<div class="survey-wrapper" style="margin-top: 35px;">
@@ -121,14 +131,21 @@
 														$validation_array = [];
 
 													if($field_meta['required']=="yes"){
-														$validation_array[] = 'required';
+														@$validation_array[] = 'required';
 													
 													}
 
 													if($field_meta['pattern']!=null && $field_meta['pattern']!="blank" ){
-														$validation_array[] = 'custom';
+
+														if($field_meta['pattern'] =='email')
+														{
+															@$validation_array[] = 'email';
+														}else{
+
+														@$validation_array[] = 'custom';
+														}
 													  	//$validate = "data-validation-regexp=".$field_meta['pattern']; 
-													  	$validate = "data-validation-regexp=".$field_meta['pattern']; 
+													  	@$validate = "data-validation-regexp=".$field_meta['pattern']; 
 													}
 														
 												
@@ -160,26 +177,28 @@
 
 																<input  name="{{$field_meta['question_id']}}" id="input_{{$field_meta['question_id']}}" type="text" placeholder="" data-validation="{{$validations}}" >
 																@elseif($field_meta['question_type'] =="text_only")
-																<textarea {{$validate}} name="{{$field_meta['question_id']}}" id="textarea_{{$field_meta['question_id']}}"> </textarea>
+																<textarea data-validation="{{@$validations}}" name="{{$field_meta['question_id']}}" id="textarea_{{$field_meta['question_id']}}"> </textarea>
 															@elseif($field_meta["extraOptions"] && $field_meta['question_type'] =="checkbox" )
 																	@foreach($field_meta["extraOptions"] as $option_key =>  $option_value)
 																		<div id="field_option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option">
-																			<input id="option_{{$field_meta['question_id']}}_{{$option_key}}" name="{{$field_meta['question_id']}}[]" type="checkbox" value="{{$option_key}}">
-																			<label for="option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option-label"> <?php echo $option_value; ?></label>
+																			<input data-validation="checkbox_group" data-validation-qty="min1" id="option_{{$field_meta['question_id']}}_{{$option_key}}" name="{{$field_meta['question_id']}}[]" type="checkbox" value="{{$option_value['options']['value']}}">
+																			<label for="option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option-label"> <?php echo $option_value['options']['label']; ?></label>
 																		</div>
 																	@endforeach
 
 															@elseif($field_meta["extraOptions"] && $field_meta['question_type'] =="radio" )
 																@foreach($field_meta["extraOptions"] as $option_key =>  $option_value)
 																	<div id="field_option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option">
-																		<input id="option_{{$field_meta['question_id']}}_{{$option_key}}" name="{{$field_meta['question_id']}}" type="radio" value="{{$option_key}}">
-																		<label for="option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option-label"> <?php echo $option_value; ?></label>
+																		<input data-validation="{{@$validations}}"  id="option_{{$field_meta['question_id']}}_{{$option_key}}" name="{{$field_meta['question_id']}}" type="radio" value="{{$option_value['options']['value']}}">
+																		<label for="option_{{$field_meta['question_id']}}_{{$option_key}}" class="field-option-label"> <?php echo $option_value['options']['label']; ?></label>
 																	</div>
 																@endforeach
 															@elseif($field_meta["extraOptions"] && $field_meta['question_type'] =="dropdown" )
-																<select {{$validate}} name="{{$field_meta['question_id']}}" >
+																<select data-validation="{{@$validations}}" {{@$validate}} name="{{$field_meta['question_id']}}" >
+
+																<option value=""> Select Option </option>
 																@foreach($field_meta["extraOptions"] as $option_key =>  $option_value)
-																	<option value="{{$option_key}}"> <?php echo $option_value; ?> </option>
+																	<option value="{{@$option_value['options']['value']}}"> <?php echo @$option_value['options']['label']; ?> </option>
 																@endforeach
 																</select>
 

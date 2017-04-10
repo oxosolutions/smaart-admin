@@ -21,7 +21,7 @@ class Controller extends BaseController
    
     
     
-  public function putInLog($ip, $user_id, $email, $name, $query , $value, $time)
+  public function putInLog($ip=null, $user_id, $email, $name, $query , $value, $time)
   {
         $Lg             =   new LOG;
         $Lg->user_id    =   $user_id;
@@ -34,12 +34,14 @@ class Controller extends BaseController
 
     public function __destruct()
     {	
+     
+      if(Auth::check()!=false)
+      {
         $user = Auth::user();
         $uid = $user->id; 
         $email =$user->email;
         $name =$user->name;
-
-        foreach (DB::getQueryLog() as $key => $value){ 
+      foreach (DB::getQueryLog() as $key => $value){ 
 			if(str_contains($value['query'], 'log_systems') ==true || str_contains($value['query'], 'count(*)')==true){
 
    				 }else{
@@ -54,16 +56,20 @@ class Controller extends BaseController
                   {
                   // dump('not insert log forthis');
                   }else{
+                     $this->ipAdress =12;
 
                 $this->putInLog($this->ipAdress, $uid, $email, $name, $value['query'], $value['bindings'], $value['time'] );
                   
                   }
                 }else{
+            $this->ipAdress =12;
+                  
                     $this->putInLog($this->ipAdress, $uid, $email,$name, $value['query'], $value['bindings'], $value['time'] );
                 }
           }
 
         }
+      }
     }
    } 
 

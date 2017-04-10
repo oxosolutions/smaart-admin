@@ -15,11 +15,14 @@ use Illuminate\Support\Facades\Schema;
 use App\SurveyEmbed as SEMBED;
 use Session;
 use SurveyHelper;
+use Excel;
 
 
 class DrawSurveyController extends Controller
 {
     
+ 
+
     protected function getSettings(Array $settingsArray, $keyValue){
         $keyArray = array_map(function($array) use ($keyValue){
             if($array['key'] == $keyValue){
@@ -32,6 +35,11 @@ class DrawSurveyController extends Controller
 
     public function draw_survey($token, $theme=null ,$skip_auth = null )
     {//2017-03-24T17:00:00.000Z
+        Surrvey::$group_take = null;
+        Surrvey::$group_random = null;
+
+        GROUP::$question_take = null;
+        GROUP::$question_random = null;
         $ip = \Request::ip();
     	$data = SEMBED::where('embed_token',$token)->first();
         if($data == null){
@@ -41,6 +49,8 @@ class DrawSurveyController extends Controller
     	$sid = $data->survey_id;
     	Session::put('org_id', $data->org_id);
         $errors = [];
+         
+
     	$survey_data = Surrvey::find($sid);
         if($survey_data == null){
             $errors[] = 'Survey id not valid!';
@@ -51,6 +61,7 @@ class DrawSurveyController extends Controller
         $error_message_status = $this->getSettings($survey_settings,'survey_custom_error_message_status');
         if($error_message_status =='0')
         {
+
             $messages_list = [
                               "responce_limit_exceeded" => "Responce limit exceeded..",
                               "survey_expired" => "Survey is expired.",
@@ -62,6 +73,7 @@ class DrawSurveyController extends Controller
                               "survey_auth_required" => "You have to login to access the survey.",
                               "survey_status" => "Survey is disabled."
                             ];
+                            
         }else{
             $messages_list = json_decode($this->getSettings($survey_settings,'survey_custom_error_messages_list'),true);
             
@@ -69,6 +81,7 @@ class DrawSurveyController extends Controller
         if($survey_data->status == 1){
 //RESPONSE PER IP CHECK
             $response_status = $this->getSettings($survey_settings,'survey_respone_limit_status');
+
                             if($response_status =='1' || $response_status ==1 || $response_status !='0' )
                             {
                                 $response_type = $this->getSettings($survey_settings,'survey_response_limit_type');

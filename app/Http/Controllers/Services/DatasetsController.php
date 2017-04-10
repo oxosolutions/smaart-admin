@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Auth;
 use DB;
 use App\GlobalSetting as GS;
+use Excel;
 class DatasetsController extends Controller
 {
 
@@ -46,6 +47,8 @@ class DatasetsController extends Controller
                     DB::table($tableName)->insert($dataset_columns);
         return ['status'=>'success' , 'message'=>"Create & Insert Successfully ",'dataset_id'=>$dl->id];       
     }
+
+
     public function updateDataSetName(Request $request)
     {
         try{
@@ -164,9 +167,11 @@ class DatasetsController extends Controller
             return ['status'=>'error','message'=>$result['message']];
         }
         $model = DL::find($request->id);
-        
+
         $newColumns = json_decode($request->create_columns);
         $orgColumns = (array)json_decode($request->columns);
+
+        //dump($newColumns);
 
         if(!empty($newColumns)){
             $orgColumns = $this->createNewColumns($request->create_columns, $model->dataset_table, $orgColumns);
@@ -174,6 +179,8 @@ class DatasetsController extends Controller
                 return ['status'=>'error','message'=>'Some error occurs during query execution!'];
             }
         }
+
+
         $orgColumns = json_encode($orgColumns);
         if(!empty($model)){
 
@@ -187,25 +194,123 @@ class DatasetsController extends Controller
     }
 
     protected function createNewColumns($columns, $table, $orgColumns){
-     
+
+
+
         foreach(json_decode($columns) as $key => $value){
+
             $columnsList = DB::select('SHOW COLUMNS FROM `'.$table.'`');
             $colCount = rand(1000,2000);//count($columnsList)-1;
+
+            $column_name =  $value->col_name;
+            $excute_formula =  $value->formula;
+            $operation = $value->operation;
+
             try{
                 DB::select('ALTER TABLE `'.$table.'` ADD COLUMN column_'.$colCount.' TEXT NULL AFTER '.$value->col_after.';');
-                DB::table($table)->update(['column_'.$colCount => $value->operation]);
-                DB::table($table)->where(['id'=>1])->update(['column_'.$colCount => $value->col_name]);
+                DB::table($table)->update(['column_'.$colCount => $operation]);
+
+                if($excute_formula){
+                    $rawdata = Excel::create('Filename', function($excel) use ($operation,$table,$colCount) {
+                        $excel->sheet('Sheetname', function($sheet) use ($operation,$table,$colCount){
+                            $data = DB::select('SELECT * FROM `'.$table.'`');
+                            foreach ($data as $key => $data_row) {
+                                $data_row = (Array)$data_row;
+                                if($key==0)
+                                {
+                                    $count_colum = 802;//count($data_row); 
+                                     $key_map = array("A","B","C","D","E","F","G","H","I","J","k","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z");
+
+                                     $first_prefix= $first_index = $second = null;
+
+                                         for($i=0; $i<$count_colum; $i++)
+                                         {
+                                          if($i<26)
+                                          {
+                                            $new_data[] =  $key_map[$i];
+                                          }
+                                          elseif(($i % 26)==0)
+                                          {
+                                            $second_index = ($i / 26) * 26;
+                                            $first_index = ($i / 26);
+                                            if($first_index >26)
+                                            {
+                                                $first_prefix = $key_map[0];
+                                            if($first_index >52)
+                                            {
+                                              $first_prefix = $key_map[1];
+                                            }
+
+                                            $first_index = $first_index-26; 
+                                            }
+                                          }
+
+                                          if($first_index !=null && $second_index !=null)
+                                          {
+                                            $next_index = $i - $second_index;
+                                            $new_data[] = $first_prefix.''.$key_map[$first_index - 1].''.$key_map[$next_index];
+                                          }
+                                         
+                                         }
+                                         dump($new_data);   
+                                   
+                                }
+                                $row_id = $data_row['id']; 
+
+                                $data_row['column_'.$colCount] = str_replace("$",$row_id,$data_row['column_'.$colCount]);
+                                $column_keys = array_keys($data_row);
+                                $search = array_search('column_'.$colCount , $column_keys);
+
+                               
+
+                                
+
+
+                                $sheet->row($row_id, $data_row);
+                                $column_value = $sheet->getCell($key_map[$search].$row_id)->getCalculatedValue();
+                                //$operation_val[] = $column_value;
+                                DB::table($table)->where(['id'=>$row_id])->update(['column_'.$colCount => $column_value]);
+                            }
+
+                        });
+                    });
+                }
+
+                DB::table($table)->where(['id'=>1])->update(['column_'.$colCount => $column_name]);
                 $orgColumns['column_'.$colCount] = $value->col_type;
-                }catch(\Exception $e){
-                    return false;
-               }
+
+            }catch(\Exception $e){
+                throw $e;
             }
-            return $orgColumns;
+        }
+
+        dump($orgColumns);
+
+        return $orgColumns;
+
+
+            // try{
+            //     DB::select('ALTER TABLE `'.$table.'` ADD COLUMN column_'.$colCount.' TEXT NULL AFTER '.$value->col_after.';');
+
+
+            //     DB::table($table)->update(['column_'.$colCount => $value->operation]);
+
+
+
+            //     DB::table($table)->where(['id'=>1])->update(['column_'.$colCount => $value->col_name]);
+            //     $orgColumns['column_'.$colCount] = $value->col_type;
+            //     }catch(\Exception $e){
+            //         return false;
+            //    }
+            // }
+            
+
+
             //if($value->formula == true){
                 //try{
 
                    // DB::select('UPDATE `'.$table.'` `set column_'.$colCount.'` = "'.$value->operation.'"  where id > 1');
-//die;
+                    //die;
                     // DB::select('UPDATE `'.$table.'` set column_'.$colCount.' = DATEDIFF(STR_TO_DATE(`'.$value->col_one.'`,"%m/%d/%Y"),STR_TO_DATE(`'.$value->col_two.'`,"%m/%d/%Y")) where id > 1 and '.$value->col_two.' REGEXP "[0-9]" and '.$value->col_one.' REGEXP "[0-9]"');
                // }catch(\Exception $e){
                     //return false;

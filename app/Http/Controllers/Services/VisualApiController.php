@@ -143,6 +143,7 @@ class VisualApiController extends Controller
         $responseArray = [];
         $mapChartsArray = [];
         $visual = GV::find($request->id);
+        
         $dataset_id = $visual->dataset_id;
         $columns = json_decode($visual->columns, true);
         $chartType = json_decode($visual->chart_type, true);
@@ -153,7 +154,6 @@ class VisualApiController extends Controller
         /*if(array_key_exists('count', $columns) && is_array(@$columns['count'])){
             $countCharts = $columns['count'];
         }*/
-
         $responseArray['num_of_charts'] = count($columns['column_one']);
         $chartsArray = [];
         $datatableName = DL::find($dataset_id);
@@ -272,7 +272,9 @@ class VisualApiController extends Controller
         $responseArray['settings'] = $columns['visual_settings'];
         $responseArray['titles'] = $columns['title'];
         $responseArray['status'] = 'success';
+        $responseArray['visual_status'] = $visual->status;
         return $responseArray;
+
     }
 
     protected function getDataforAddition($col_one, $key, $columns, $table, $request){
@@ -471,6 +473,7 @@ class VisualApiController extends Controller
         $default_setting = GS::select('meta_value')->where("meta_key","default_setting")->first();
 
         $model = GV::find($id);
+     
         $vSettings = GS::where('meta_key','visual_setting')->first();
         $settings = json_decode($model->columns);
         $returnArray['visual_name'] = $model->visual_name;
@@ -501,27 +504,24 @@ class VisualApiController extends Controller
         return ['status'=>'success','data'=>$returnArray,'map_list'=> $mapArray];
     }
     public function saveVisualData(Request $request){
-        
+       
         $validate = $this->validateRequest($request);
         if($validate['status'] == 'false'){
             return ['status'=>'error','message'=>$validate['message']];
         }
-
-        
-        $columns = json_decode($request->columns, true);
-
+         $columns = json_decode($request->columns, true);
+         //dump()
         //unset($columns['formula']);
-        //
         $filterCOlumns = json_decode($request->filter_cols, true);
-        
-        
+       
         $model = GV::find($request->visual_id);
         $model->visual_name = $request->visual_name;
         $model->dataset_id = $request->dataset_id;
         $model->columns = json_encode($columns);
         $model->filter_columns = $request->filter_cols;
         $model->chart_type = $request->chartTypes;
-        $model->created_by = 90;//Auth::user()->id;
+        $model->created_by = Auth::user()->id;
+        
         $model->save();
         return ['status'=>'success','message'=>'Visual update successfully!'];
     }

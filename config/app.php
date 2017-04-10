@@ -171,6 +171,9 @@ return [
         //Laravel\Passport\PassportServiceProvider::class,
         PHPMySQLWrapper\MySQLWrapper\PHPMySQLWrapperProvider::class,
         App\Providers\HelperServiceProvider::class,
+        Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
+
+
         // Logsystem\Logrecord\LogsystemServiceProvider::class,
 
         /*
@@ -187,6 +190,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
 /*        App\Providers\LogsystemServiceProvider::class,
 */
     ],
@@ -251,8 +255,9 @@ return [
         'Activity'  => Spatie\Activitylog\ActivitylogFacade::class,
 
         'MySQLWrapper' => PHPMySQLWrapper\MySQLWrapper\Wrapper::class,
-        'MyFuncs' => App\Helpers\MyFuncs::class,
+        //'MyFuncs' => App\Helpers\MyFuncs::class,
         'SurveyHelper' => App\Helpers\MyFuncs::class,
+         'Lava' => Khill\Lavacharts\Laravel\LavachartsFacade::class,
 
     ],
 

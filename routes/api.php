@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 	
 Route::get('/sql','Services\ImportdatasetController@runSqlFile');
 Route::group(['prefix' => 'v1'], function () {
+	
+	
+
 	Route::post('survey_filled_data', ['as'=>'survey.filled', 'uses'=>'Services\SurrveyApiController@save_survey_filled_data', 'route_name'=> 'Survey filled']);
 
 
@@ -67,7 +70,7 @@ Route::group(['prefix' => 'v1'], function () {
 	
 	//surrvey
 
-
+Route::get('answeredSurveysList',['as'=> 'organization' , 'uses'=>'Services\SurrveyApiController@answeredSurveysList']);
 Route::get('view_survey_saved_data/{id}' , ['as'=>'survey.savedata' , 'uses'=>'Services\SurrveyApiController@view_survey_saved_data']);
 
 	
@@ -150,6 +153,8 @@ Route::get('view_survey_saved_data/{id}' , ['as'=>'survey.savedata' , 'uses'=>'S
 	Route::post('/generateEmbedToken',			['as'=>'generate.embed','uses'=>'Services\VisualApiController@generateEmbed']);
 
 	Route::post('/uplaodFile',['as'=>'file_manager.upload','uses'=>'Services\FileManagerController@uploadFile']);
+
+	Route::get('/surveyToDataset/{id}',['as'=>'export_to_dataset','uses'=>'Services\SurrveyApiController@exportSurveyToDataset']);
 	
 	});
 });

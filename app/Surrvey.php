@@ -8,6 +8,8 @@ use Session;
 use Auth;
 class Surrvey extends Model
 {
+   public static $group_take = null;
+   public static $group_random = null;
    protected $table;
    public function __construct(){
       parent::__construct();
@@ -38,8 +40,13 @@ class Surrvey extends Model
       return $this->hasMany('App\SurveySetting','survey_id','id');
    }
    public function group()
-   {
-      return $this->hasMany('App\SurveyQuestionGroup','survey_id','id');
+   { 
+      $group =  $this->hasMany('App\SurveyQuestionGroup','survey_id','id')->take(self::$group_take);
+      if(self::$group_random!=null)
+      {
+      $group->orderByRaw("RAND()");
+      }
+      return $group;
    }
 
    public function creat_by()
