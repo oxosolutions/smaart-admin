@@ -488,7 +488,7 @@ return view('web_visualization.lava');
 		$array['filters'] = @$filters;
 		$array['custom_code'] = ['custom_css'=>$embedCss,'custom_js'=>$embedJS];
 		$array['data'] = $dataset_table_data;
-		// dd($array);
+		$chartDetailsForJquery = [];
 		foreach($array['visualizations'] as $key => $value){
 			if($value['chart_type'] != 'CustomMap'){
 				$lavaschart = lava::DataTable();

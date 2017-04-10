@@ -19,8 +19,8 @@ img{
     border:1px solid #e8e8e8;
 }
 
-.visualization-wrapper{
-    
+.wrapper{
+   height: 100% 
 }
 
 .wrapper-row{
@@ -509,12 +509,11 @@ THEME MINIMAL
     border: none !important
 }
 .chart-wrapper-left{
-    width: 70%;
     float: left;
 }
 .chart-filters{
     border: 1px solid #e8e8e8;
-    width: 32.33333% !important;
+    width: 31.22222% !important;
 }
 #theme_{
     min-height: 100%
