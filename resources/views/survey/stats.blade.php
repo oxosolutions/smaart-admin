@@ -26,15 +26,20 @@
           
 </head>
 <body>
-{{dump($survey_data)}}
+<?php 
+dump($survey_data->group());
+?>
+
     <div id="card-stats">
         <div class="row" style="margin-bottom: 24px">
             <div class="col s12 m6 l3">
                 <div class="card" >
                     <div class="card-content  green white-text" style="padding: 10px 14px;">
                         <p class="card-stats-title"><i class="mdi-social-group-add"></i>{{$survey_data->name}}</p>
-                        <h5 class="card-stats-number">566</h5>
-                        <p class="card-stats-compare"><i class="mdi-hardware-keyboard-arrow-up"></i> 15% <span class="green-text text-lighten-5">{{$survey_data->description}}</span>
+                        <h5 class="card-stats-number">{{$survey_data->created_on}}</h5>
+                        <p class="card-stats-compare"><i class="mdi-hardware-keyboard-arrow-up"></i>
+
+<span class="green-text text-lighten-5">{{$survey_data->description}}</span>
                         </p>
                     </div>
                     <div class="card-action  green darken-2">
@@ -46,7 +51,7 @@
                 <div class="card">
                     <div class="card-content pink lighten-1 white-text" style="padding: 10px 14px;">
                         <p class="card-stats-title"><i class="mdi-editor-insert-drive-file"></i>Total questions</p>
-                        <h5 class="card-stats-number">1806</h5>
+                        <h5 class="card-stats-number">{{$survey_data->count_ques()}}</h5>
                         <p class="card-stats-compare"><i class="mdi-hardware-keyboard-arrow-down"></i> 3% <span class="deep-purple-text text-lighten-5">from last month</span>
                         </p>
                     </div>
@@ -59,7 +64,7 @@
                 <div class="card">
                     <div class="card-content blue-grey white-text" style="padding: 10px 14px;">
                         <p class="card-stats-title"><i class="mdi-action-trending-up"></i>Groups</p>
-                        <h5 class="card-stats-number">$806.52</h5>
+                        <h5 class="card-stats-number">{{$survey_data->count_group()}}</h5>
                         <p class="card-stats-compare"><i class="mdi-hardware-keyboard-arrow-up"></i> 80% <span class="blue-grey-text text-lighten-5">from yesterday</span>
                         </p>
                     </div>
@@ -72,7 +77,7 @@
                 <div class="card">
                     <div class="card-content purple white-text" style="padding: 10px 14px;">
                         <p class="card-stats-title"><i class="mdi-editor-attach-money"></i>Users</p>
-                        <h5 class="card-stats-number">$8990.63</h5>
+                        <h5 class="card-stats-number">{{$survey_data->total_filled}}</h5>
                         <p class="card-stats-compare"><i class="mdi-hardware-keyboard-arrow-up"></i> 70% <span class="purple-text text-lighten-5">last month</span>
                         </p>
                     </div>

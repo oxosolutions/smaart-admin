@@ -16,6 +16,7 @@ use App\SurveyEmbed as SEMBED;
 use Session;
 use SurveyHelper;
 use Excel;
+use Carbon\Carbon;
 
 
 class DrawSurveyController extends Controller
@@ -30,10 +31,17 @@ public function survey_statistics($token)
         }
         $sid = $data->survey_id;
         Session::put('org_id', $data->org_id);
-        $survey_data = Surrvey::find($sid); 
+        $survey_data = Surrvey::find($sid);
+
+        foreach ($survey_data->group() as $key => $value) {
+            dump($value);
+         } 
+
+         die;
         if(Schema::hasTable($survey_data->survey_table))
         {
-         echo  $survey_data['total_filled'] = $total_filled = DB::table($survey_data->survey_table)->count();     
+            $survey_data['created_on'] = Carbon::parse($survey_data->created_at)->diffForHumans();
+           $survey_data['total_filled'] = $total_filled = DB::table($survey_data->survey_table)->count();     
         }
 
        return view('survey.stats', ['survey_data'=>$survey_data]);

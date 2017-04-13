@@ -490,7 +490,7 @@ class ApiusersController extends VirtualTableGenController
                     $userModel = User::where('api_token',$api_token);
                     if($userModel->count() >0)
                     {
-                    $userModel->first();
+                    $userModel =  $userModel->first();
                     $userDetails = [];
                     $userDetails['email'] = $userModel->email;
                     $userDetails['name'] = $userModel->name;
@@ -499,8 +499,9 @@ class ApiusersController extends VirtualTableGenController
                     Mail::to($userModel->email)->send(new AfterApproveUser($userDetails));
                   }
                   else{
-                          return ['status'=>'error','message'=>'Token Not match'];
-                  }
+                       
+                    return view('approvel.not-match-token');
+                      }
                   }
                   catch(Exception $e)
                   {
