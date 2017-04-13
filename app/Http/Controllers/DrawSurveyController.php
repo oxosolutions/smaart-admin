@@ -21,7 +21,23 @@ use Excel;
 class DrawSurveyController extends Controller
 {
     
- 
+public function survey_statistics($token)
+  {
+        $data = SEMBED::where('embed_token',$token)->first();
+        if($data == null){
+            $errors[] = 'Survey id not valid!';
+            return view('survey.draw_survey',['err_msg'=>$errors]);
+        }
+        $sid = $data->survey_id;
+        Session::put('org_id', $data->org_id);
+        $survey_data = Surrvey::find($sid); 
+        if(Schema::hasTable($survey_data->survey_table))
+        {
+         echo  $survey_data['total_filled'] = $total_filled = DB::table($survey_data->survey_table)->count();     
+        }
+
+       return view('survey.stats', ['survey_data'=>$survey_data]);
+  } 
 
     protected function getSettings(Array $settingsArray, $keyValue){
         $keyArray = array_map(function($array) use ($keyValue){

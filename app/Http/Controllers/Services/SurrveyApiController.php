@@ -603,7 +603,7 @@ class SurrveyApiController extends Controller
     }
 
     
-
+//FILLED SURVEY LIST
     public function answeredSurveysList(){
     	$a =0;
     	$survey_data =	surrvey::select(['id','name','survey_table'])->whereNotNull('survey_table')->get()->toArray();
@@ -626,5 +626,6 @@ class SurrveyApiController extends Controller
 
 		}
     	return ['status'=>'successfully','survey_list'=>$survey];
-		}
+	}
+	
 }

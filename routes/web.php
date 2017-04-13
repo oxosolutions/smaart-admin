@@ -4,6 +4,8 @@ Route::get('/func', function () {
     return MyFuncs::full_name("John","Doe");
 });
 
+		Route::get('survey_stats/{token}',['as'=>'survey.statistic' , 'uses'=>'DrawSurveyController@survey_statistics']);
+
 		Route::get('custom_excel_formula',['uses'=>'FormBuilderController@custom_excel_formula']);
 
 
@@ -35,6 +37,9 @@ Route::get('/func', function () {
 		Route::get('s/{id}/{theme?}/{skip?}',['as'=>'survey.draw', 'uses'=>'DrawSurveyController@draw_survey']);
 
 		Route::match(['get','post'],'v/{id}',['as'=>'draw.visualisation','uses'=>'VisualisationController@embedVisualization']);
+		Route::get('surveyStats',['as'=>'stats,survey','uses'=>function(){
+			return View::make('survey.stats');
+		}]);
 
 		Route::post('survey/filled',['as'=>'survey.store', 'uses'=>'DrawSurveyController@survey_store']);
 
@@ -170,8 +175,6 @@ Route::get('/func', function () {
 		Route::get('/dataset/edit/{id}',['as'=>'datasets.edit', 'uses'=>'DataSetsController@edit']);
 		Route::patch('/dataset/update/{id}',['as'=>'datasets.update', 'uses'=>'DataSetsController@update']);
 
-	
-
 	//Global Settings
 		Route::get('/settings',['as'=>'global.settings','uses'=>'GlobalSettingsController@index']);
 		Route::patch('/settings/store/register',['as'=>'register.settings','uses'=>'GlobalSettingsController@saveNewUserRegisterSettings']);
@@ -192,12 +195,13 @@ Route::get('/func', function () {
 		Route::patch('/visual/update/{id}',['as'=>'visual.update','uses'=>'VisualController@update']);
 
 
-//DRAW SURVEY 
-	Route::get('survey/view/{sid}/{uid}',['as'=>'survey.views', 'uses'=>'DrawSurveyController@view_filled_survey']);
 
-	Route::get('out/{token}',[ 'uses'=>'DrawSurveyController@out']);
+		//DRAW SURVEY 
+		Route::get('survey/view/{sid}/{uid}',['as'=>'survey.views', 'uses'=>'DrawSurveyController@view_filled_survey']);
 
-	//Form Builder 
+		Route::get('out/{token}',[ 'uses'=>'DrawSurveyController@out']);
+
+		//Form Builder 
 
 		Route::get('surrvey_setting/{id}',['as'=>'surrvey.setting', 'uses'=>'FormBuilderController@surrvey_setting']);
 		Route::post('surrvey_setting/save/{id}',['as'=>'setting.save', 'uses'=>'FormBuilderController@save_setting']);

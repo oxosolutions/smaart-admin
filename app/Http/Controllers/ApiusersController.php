@@ -486,13 +486,26 @@ class ApiusersController extends VirtualTableGenController
                 $gs_model = GS::where('meta_key','user_approvel_settings')->first();
                 $settings = json_decode($gs_model->meta_value);
                 if($settings->activate == 'true'){
-                    $userModel = User::where('api_token',$api_token)->first();
+                try{
+                    $userModel = User::where('api_token',$api_token);
+                    if($userModel->count() >0)
+                    {
+                    $userModel->first();
                     $userDetails = [];
                     $userDetails['email'] = $userModel->email;
                     $userDetails['name'] = $userModel->name;
                     $userDetails['subject'] = $settings->subject;
                     $userDetails['desc'] = $settings->description;
                     Mail::to($userModel->email)->send(new AfterApproveUser($userDetails));
+                  }
+                  else{
+                          return ['status'=>'error','message'=>'Token Not match'];
+                  }
+                  }
+                  catch(Exception $e)
+                  {
+                    return ['status'=>'error','message'=>'Somethings goes wrong try again.'];
+                  }
                 }
                 $model = User::where('api_token',$api_token)->update(['approved'=>1]);
                 if($model){

@@ -13,16 +13,13 @@ use DB;
 use MyFuncs;
 class FormBuilderController extends Controller
 {
-
+  
    public function custom_excel_formula()
-    {
-
-      
+    { 
       $count_colum = 705;//count($data_row); 
-     $key_map = array("A","B","C","D","E","F","G","H","I","J","k","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z");
+      $key_map = array("A","B","C","D","E","F","G","H","I","J","k","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z");
 
-     //echo (4 % 2);
-   $first_prefix= $first_index = $second = null;
+      $first_prefix= $first_index = $second = null;
 
      for($i=0; $i<$count_colum; $i++)
      {

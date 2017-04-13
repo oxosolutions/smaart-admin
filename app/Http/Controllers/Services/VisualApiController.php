@@ -803,4 +803,10 @@ class VisualApiController extends Controller
         $responseArray['css_js'] = ['css'=>$embedCss,'js'=>$embedJS];
         return $responseArray;
     }
+
+    public function getEmbedTokenFromVisualId(Request $request){
+        $org_id = Auth::user()->organization_id;
+        $model = Embed::where(['visual_id'=>$request->visual_id,'org_id'=>$org_id])->first();
+        return ['status'=>'success','token'=>$model->embed_token];
+    }
 }

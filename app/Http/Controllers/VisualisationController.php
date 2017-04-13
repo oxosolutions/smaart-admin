@@ -17,6 +17,7 @@ use App\Http\Controllers\Services\VisualApiController;
 use Lava;
 use App\Map;
 use App\GMap;
+use Excel;
 
 class VisualisationController extends Controller
 {
@@ -318,7 +319,7 @@ return view('web_visualization.lava');
 	  }
 
 	public function embedVisualization(Request $request){
-	    // dd($request->all());
+	    
 		$model = Embed::where('embed_token',$request->id)->first();
 		Session::put('org_id',$model->org_id);
 		$visual = GV::find($model->visual_id);
@@ -501,22 +502,47 @@ return view('web_visualization.lava');
 					}
 				}
 				$lavaschart->addRows($value['data']);
-				$chartDetailsForView[$key] = ['type'=>$value['chart_type'],'id'=>$key];
+				$chartDetailsForView[$key] = [
+												'type'=>$value['chart_type'],
+												'id'=>$key,
+												'data'=>$value['data'],
+												'chartWidth' => @$value['chartWidth']
+											];
 				lava::{$value['chart_type']}($key,$lavaschart)->setOptions([
-						'title' => $value['title']	
+						'title' => $value['title']
 					]);
 				$chartTitles[$key] = $value['title'];	
-			}else{
+			}elseif($value['chart_type'] == 'CustomMap'){
+
 				$SVGContent = Map::find($value['mapArea']);
 				if($SVGContent == null){
 					$SVGContent = GMap::find($value['mapArea']);
 				}
-				$chartDetailsForView[$key] = ['type'=>$value['chart_type'],'id'=>$key,'data'=>$value['data'],'map'=>$SVGContent['map_data']];
+				$chartDetailsForView[$key] = [
+												'type'=>$value['chart_type'],
+												'id'=>$key,
+												'data'=>$value['data'],
+												'map'=>$SVGContent['map_data'],
+												'data'=>$value['data'],
+												'chartWidth'=> @$value['chartWidth']
+											];
 				$chartTitles[$key] = $value['title'];
 				$chartDetailsForJquery[$key] = ['type'=>$value['chart_type'],'id'=>$key,'data'=>$value['data'],'headers'=>$value['headers']];
-			}			
+			}
 		}
-		//dd($chartDetailsForView);
+		if($request->has('downloadData')){
+			$chartsData = $value['data'];
+			array_unshift($chartsData,$headers);
+			Excel::create('Generated-Chart-Data', function($excel) use ($chartsData) {
+
+			    $excel->sheet('Records', function($sheet) use ($chartsData) {
+
+			        $sheet->fromArray($chartsData);
+
+			    });
+
+			})->download('xls');
+		}
  		return view('web_visualization.visualization',['details'=>$chartDetailsForView,'filters'=>$filters,'titles'=>$chartTitles,'javascript'=>$chartDetailsForJquery]);
 	}
 }

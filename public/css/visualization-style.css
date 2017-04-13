@@ -8,7 +8,7 @@ img{
     color:#666666;
     padding:25px 0;
     margin:0;
-    
+    min-height: 600px
 }
 
 .main{
@@ -17,10 +17,6 @@ img{
     margin:0 auto;
     background-color:#FFFFFF;
     border:1px solid #e8e8e8;
-}
-
-.wrapper{
-   height: 100% 
 }
 
 .wrapper-row{
@@ -516,7 +512,7 @@ THEME MINIMAL
     width: 31.22222% !important;
 }
 #theme_{
-    min-height: 100%
+    min-height: 637px;
 }
 .chart-wrapper-left .chart-row{
     background:white;
@@ -534,10 +530,10 @@ THEME MINIMAL
 .slider.slider-horizontal{
     margin-left: 18px;
     margin-right: 18px;
-    width: 80% !important;
+    width: 76% !important;
 }
 .chart-row .chart-sort-arrow{
-    padding: 10px;
+    padding: 13.5px;
     background: #888;
     color: white;
     position: absolute;
@@ -545,7 +541,7 @@ THEME MINIMAL
     cursor: move;
 }
 .chats-filter-button{
-    padding:10px 0px 30px 10px;
+    padding:10px 15px 30px 10px;
 }
 .filter-title{
     border-bottom: 1px solid #e8e8e8;

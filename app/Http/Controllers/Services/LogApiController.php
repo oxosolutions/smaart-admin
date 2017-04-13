@@ -13,8 +13,9 @@ class LogApiController extends Controller
  
 	public function logActivity()
 	{
+
 		$id = Auth::user()->id;
-		$log = LOG::orderBy('id','desc')->Where('user_id',$id )->whereNotNull('route_name')->get();
+		$log = LOG::orderBy('id','desc')->Where('user_id',$id )->whereNotNull('route_name')->take(50)->get();
 		return ['log'=>$log];
 	}
 	

@@ -11,6 +11,13 @@
 		<link rel="stylesheet" href="{{asset('/css/visualization-style.css')}}">
 		<!-- Font Awesome -->
   		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+
+  		 <!-- Compiled and minified CSS -->
+		  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
+
+		  <!-- Compiled and minified JavaScript -->
+		  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
+		          
 		{{-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 		<script type="text/javascript">
 
@@ -71,8 +78,8 @@
 		<script type="text/javascript">
 			$(document).ready(function(){
 				var mySlider = $("input.slider").bootstrapSlider();
-				
-				$(document).on('click','.chart-row > h4 > span > a > img',function(){
+				$('.accordion-arrow > img').css({'transform':'rotate(180deg)'});
+				$(document).on('click','.accordion-arrow > img',function(){
 					
 					if(!$(this).parents('.chart-row').find('.chart-wrapperr').hasClass('none') ){
 						$(this).css({'transform':'rotate(0deg)','transition':'transform 0.5s'});

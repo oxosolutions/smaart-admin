@@ -23,9 +23,10 @@ class Surrvey extends Model
     
    use SoftDeletes; 
    
-   protected $fillable =    ['name', 'created_by', 'description'];
+   protected $fillable =    ['name', 'created_by', 'description' ,'created_at'];
    protected $dates = ['deleted_at'];
    protected $softDelete = true;
+   
    public static function getSurrvey()
    {
    		return self::pluck('name','id');
@@ -53,4 +54,14 @@ class Surrvey extends Model
    {
       return $this->belongsTo('App\User','created_by','id')->select(['name','role_id']);
    }
+
+   public function count_group()
+   {
+      return $this->hasMany('App\SurveyQuestionGroup','survey_id','id')->count();
+   }
+   public function count_ques()
+   {
+      return $this->hasMany('App\SurveyQuestion','survey_id','id')->count();
+   }
+
 }

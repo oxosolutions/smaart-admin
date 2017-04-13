@@ -155,6 +155,8 @@ Route::get('view_survey_saved_data/{id}' , ['as'=>'survey.savedata' , 'uses'=>'S
 	Route::post('/uplaodFile',['as'=>'file_manager.upload','uses'=>'Services\FileManagerController@uploadFile']);
 
 	Route::get('/surveyToDataset/{id}',['as'=>'export_to_dataset','uses'=>'Services\SurrveyApiController@exportSurveyToDataset']);
+
+	Route::get('/getembedcode/{visual_id}',['as'=>'get.embed_code.by_visual_id','uses'=>'Services\VisualApiController@getEmbedTokenFromVisualId']);
 	
 	});
 });
