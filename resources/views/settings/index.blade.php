@@ -210,6 +210,23 @@
         </div>
       </div>
 
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">Survey Theme</h3>
+            </div>
+              {!! Form::model(@$survey_themes, ['method' => 'PATCH','route'=>['survey.themes', @$survey_themes->id], 'files'=>true]) !!}
+              {{--{!! Form::open(['route' => 'designations.store', 'files'=>true]) !!}--}}
+                @include('settings._survey_themes')
+              <div class="box-footer">
+                {!! Form::submit('Save Settings', ['class' => 'btn btn-primary']) !!}
+              </div>
+              {!! Form::close() !!}
+          </div>
+        </div>
+      </div>
+
     </section>
   </div>
 @endsection

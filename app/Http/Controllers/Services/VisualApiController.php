@@ -14,6 +14,7 @@ use App\Map;
 use App\Embed;
 use Session;
 use App\GMap;
+use App\VisualizationMeta as VisualMeta;
 class VisualApiController extends Controller
 {
     public function visualList(){
@@ -471,7 +472,7 @@ class VisualApiController extends Controller
     public function getVisualDetails($id){
         $mapArray = [];
         $default_setting = GS::select('meta_value')->where("meta_key","default_setting")->first();
-
+        $visualMeta = VisualMeta::select(['key','value'])->where('visualization_id',$id)->get()->toArray();
         $model = GV::find($id);
      
         $vSettings = GS::where('meta_key','visual_setting')->first();
@@ -483,6 +484,7 @@ class VisualApiController extends Controller
         $returnArray['visual_settings'] = @$settings->visual_settings;
         $returnArray['chart_types'] = $model->chart_type;
         $returnArray['visual_set'] = $vSettings;
+        $returnArray['meta'] = json_encode($visualMeta);
         $returnArray['default_setting'] = $default_setting->meta_value;
 
         $adminMap = DB::table('maps')->select(['id','title'])->where('status','enable')->get();
@@ -504,7 +506,6 @@ class VisualApiController extends Controller
         return ['status'=>'success','data'=>$returnArray,'map_list'=> $mapArray];
     }
     public function saveVisualData(Request $request){
-       
         $validate = $this->validateRequest($request);
         if($validate['status'] == 'false'){
             return ['status'=>'error','message'=>$validate['message']];
@@ -523,6 +524,21 @@ class VisualApiController extends Controller
         $model->created_by = Auth::user()->id;
         
         $model->save();
+        // VisualMeta
+        $metaList = json_decode($request->theme_settigs);
+        foreach($metaList as $key => $value){
+            $visualMeta = VisualMeta::where('visualization_id',$request->visual_id)->where('key',$key)->first();
+            if($visualMeta == null){
+                $VM = new VisualMeta;
+                $VM->visualization_id = $request->visual_id;
+                $VM->key = $key;
+                $VM->value = $value;
+                $VM->save();
+            }else{
+                $visualMeta->value = $value;
+                $visualMeta->save();
+            }
+        }
         return ['status'=>'success','message'=>'Visual update successfully!'];
     }
 
@@ -808,5 +824,17 @@ class VisualApiController extends Controller
         $org_id = Auth::user()->organization_id;
         $model = Embed::where(['visual_id'=>$request->visual_id,'org_id'=>$org_id])->first();
         return ['status'=>'success','token'=>$model->embed_token];
+    }
+
+    public function createClone($visualID){
+
+        $orgId = Auth::user()->organization_id;
+        DB::select('CREATE TABLE cloning_visual as SELECT * FROM `'.$orgId.'_generated_visuals` WHERE id = '.$visualID);
+        $newVisualID = DB::select('SELECT MAX(id) as maxId FROM `'.$orgId.'_generated_visuals`');
+        $newVisualID = $newVisualID[0]->maxId + 1;
+        DB::update('UPDATE cloning_visual SET id = '.$newVisualID);
+        DB::insert('INSERT into '.$orgId.'_generated_visuals SELECT * FROM cloning_visual');
+        DB::select('DROP TABLE cloning_visual');
+        return ['status'=>'success','message'=>'Visualization cloned successfully!'];
     }
 }

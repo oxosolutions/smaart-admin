@@ -17,7 +17,8 @@ use App\organization as org;
 use Session;
 use App\DatasetsList;
 use SurveyHelper;
-
+use Carbon\Carbon;
+use App\GlobalSetting as GS;
 
 class SurrveyApiController extends Controller
 {
@@ -28,6 +29,7 @@ class SurrveyApiController extends Controller
 		$org_id = org::select('id')->where('activation_code' ,$request->activation_code)->first()->id;
 		Session::put('org_id', $org_id);
 		$data = json_decode($request->export,true);
+		
 		$surveyid = $data[0]["surveyid"];
 		$table = $org_id.'_survey_data_'.$surveyid;
 		if(!Schema::hasTable($table))
@@ -38,6 +40,7 @@ class SurrveyApiController extends Controller
 			SurveyHelper::alter_survey_table($surveyid , $org_id);
 		}
 		foreach ($data as $key => $value) {
+			$survey_check =0;
 			if($value['status']=="completed")
 			{
 				$status =1;	
@@ -52,7 +55,10 @@ class SurrveyApiController extends Controller
 			if(isset($value['unique_id']))
 			{
 				$insert["unique_id"] = 	@$value['unique_id'];
+			$survey_check = DB::table($table)->where('unique_id',$insert["unique_id"])->count();
+			//dd($surve_check);
 			}
+			dump($value);
 			foreach ($value['answers'] as $ansKey => $ansValue) {	
 				if(isset($ansValue["answer"]))
 				{
@@ -65,8 +71,11 @@ class SurrveyApiController extends Controller
 						$insert[$ansValue["questkey"]] = $ansValue["answer"];
 					}
 				}				 
-			}			
-			DB::table($table)->insert($insert);		
+			}
+			if($survey_check==0)
+			{		
+				DB::table($table)->insert($insert);	
+			}	
 		}		
 	}
 //VIEW SURVEY SAVED DATA 
@@ -108,6 +117,79 @@ class SurrveyApiController extends Controller
 			return ['status'=>'success', 'token'=>$token, 'message'=>'Successfully save survey embed'];
 		}else{
 			return ['status'=>'error', 'message'=>'already created','token'=>$count->embed_token];
+		}
+	}
+
+	public function save_survey_groups(Request $request){
+		try{
+
+			DB::beginTransaction();
+			$survey_id 	= $request['survey_id'];
+			$grp 		= GROUP::where('survey_id',$survey_id);
+			$data 		= json_decode($request['survey_data'],true);
+			$sorts = explode(',',$request->sorts);
+			$sortIndex = 1;
+			$groupIds = [];
+			foreach($data as $key => $value) {
+				$groupExistOrNot = GROUP::find($value['group_id']);
+				if($groupExistOrNot != null){
+					$groupExistOrNot->survey_id 	=	$survey_id;
+					$groupExistOrNot->title 		=	$value["group_name"]; 
+					$groupExistOrNot->description 	=	$value["group_description"];
+					$groupExistOrNot->group_order 	= 	$sortIndex;
+					$groupExistOrNot->save();
+					$groupIds[] = $groupExistOrNot->id;
+				}else{
+					//group 
+					$grp = new GROUP();
+					$grp->survey_id 	=	$survey_id;
+					$grp->title 		=	$value["group_name"]; 
+					$grp->description 	=	$value["group_description"];
+					$grp->group_order 	=	$sortIndex;
+					$grp->save();
+					$groupIds[] = $grp->id;
+				}
+				$sortIndex++;
+			}
+			GROUP::whereNotIn('id',$groupIds)->where('survey_id',$survey_id)->delete();
+			DB::commit();
+			return ['status'=>"success", "message"=>'Section updated successfully!'];
+		}catch(\Exception $e){
+			DB::rollback();
+			throw $e;
+		}
+		
+	}
+
+	public function save_survey_question(Request $request){
+		try{
+				DB::beginTransaction();
+				$survey_id 	= $request['survey_id'];
+				$grp 		= $request['group_id'];
+				$sq 		= SQ::where(['survey_id'=>$survey_id,'group_id'=>$grp]);		
+				$data 		= json_decode($request['survey_data'],true);
+				if($sq->count() > 0){
+
+					$sq->forceDelete();
+				}
+				$sortIndex = 1;
+				foreach ($data as $key => $val) {
+						 
+					$sq = 	 new SQ();
+					$sq->question = $val["question"];
+					unset($val["question"]);
+					$sq->answer = 	json_encode($val);
+					$sq->survey_id = $survey_id;
+					$sq->group_id = $grp;
+					$sq->quest_order = $sortIndex;
+					$sq->save();
+					$sortIndex++;
+				}
+				DB::commit();
+				return ['status'=>"success", "message"=>'Questions saved successfully!'];
+		}catch(\Exception $e){
+			DB::rollback();
+			throw $e;
 		}
 	}
 
@@ -157,18 +239,48 @@ class SurrveyApiController extends Controller
 				throw $e;
 			}				
 	}
+
+	public function surveyFields($survey_id, $group_id){
+		try{
+			$model = SQ::where(['survey_id'=>$survey_id,'group_id'=>$group_id])->orderBy('quest_order')->get();
+			$surveyName = Surrvey::find($survey_id);
+			$groupName = GROUP::find($group_id);
+			$survey = [];
+			if(!$model->isEmpty()){
+				$index = 1;
+				foreach($model as $key => $question){
+					$answer = json_decode($question->answer,true);
+					foreach ($answer as $anskey => $ansVal) {
+						$survey['group'][1]['group_questions'][$index][$anskey] =$ansVal;
+					}
+					$survey['group'][1]['group_questions'][$index]['survey_id'] = $question->survey_id;
+					$survey['group'][1]['group_questions'][$index]['question']  = $question->question;
+		        	$survey['group'][1]['group_questions'][$index]['group_id']  = $question->group_id;
+					$index++;
+				}
+				return ['status'=>'success','data'=>$survey,'survey_name'=>$surveyName->name,'group_name'=>$groupName->title];
+			}else{
+				return ['status'=>'success','data'=>[],'message'=>'No questions found!','survey_name'=>$surveyName->name,'group_name'=>$groupName->title];
+			}
+		}catch(\Exception $e){
+			throw $e;
+		}
+	}
+
 // DRAW SURVEY 
 
 	// FOR VIEW GROUP & QUESTION 
 	public function view_survey_data($id)
 	{
 		try{
-			Surrvey::findORfail($id);
-			$sdata = Surrvey::find($id);		
+			// Surrvey::findORfail($id);
+			$sdata = Surrvey::with(['group'=>function($query){
+				$query->orderBy('group_order');
+			}])->find($id);	
 			$survey['id'] 			= 	$sdata->id;
 			$survey['survey_name'] 	= 	$sdata->name;
 	  		$survey['created_by']	= 	$sdata->created_by;
-	  		$survey['user_name']	= 	$sdata->creat_by->name;
+	  		//$survey['user_name']	= 	$sdata->creat_by->name;
 	  		$survey['description'] 	=	$sdata->description;
 	  		$survey['status'] 		= 	$sdata->status;
 	  		if(count($sdata->group)>0){
@@ -176,7 +288,8 @@ class SurrveyApiController extends Controller
 					$survey['group'][$key]['group_id'] 			= $grp->id;
 					$survey['group'][$key]['survey_id'] 		= $grp->survey_id;
 					$survey['group'][$key]['group_name'] 		= $grp->title;
-		    		$survey['group'][$key]['group_description'] =$grp->description;			
+		    		$survey['group'][$key]['group_description'] = $grp->description;			
+		    		$survey['group'][$key]['group_order'] 		= $grp->group_order;			
 					foreach ($grp->question as $qkey => $ques) {
 						$answer = json_decode($ques->answer,true);
 						foreach ($answer as $anskey => $ansVal) {
@@ -419,13 +532,25 @@ class SurrveyApiController extends Controller
           			$settingdata = ['survey_id'=>$sid,'key'=>$key, 'value'=>json_encode($value)];
           			$this->save_survey_setting($settingdata);
           		}
+          		elseif($key =="survey_start_date" && $value !=null)
+          		{
+          		$settingdata = ['survey_id'=>$sid,'key'=>$key, 'value'=>date('Y-m-d H:i:s',strtotime($value))];
+          		$this->save_survey_setting($settingdata);
+
+          		
+          		}elseif($key =="survey_expiry_date" && $value !=null)
+          		{
+          			$settingdata = ['survey_id'=>$sid,'key'=>$key, 'value'=>date('Y-m-d H:i:s',strtotime($value))];
+          			$this->save_survey_setting($settingdata);
+
+          		}
 				else{
           			$settingdata = ['survey_id'=>$sid,'key'=>$key, 'value'=>$value];
           			$this->save_survey_setting($settingdata);
 	          		}
           		}
     	}
-//  UPDATE SURVEY & SETTING
+//  UPDATE SURVEY & SETTING  survey_expiry_date
 	public function survey_update(Request $request )
 	    {
 
@@ -626,6 +751,60 @@ class SurrveyApiController extends Controller
 
 		}
     	return ['status'=>'successfully','survey_list'=>$survey];
+	}
+
+	public function getSurveyThemes(){
+		$model = GS::select('meta_value')->where("meta_key","survey_themes")->first();
+
+		return ['status'=>'success','themes'=>json_decode($model->meta_value)];
+	}
+
+	public function createClone($surveyId){
+
+		try{
+			DB::beginTransaction();
+			$orgId = Auth::user()->organization_id;
+
+
+			DB::select('CREATE TABLE cloning_survey as SELECT * FROM `'.$orgId.'_surveys` WHERE id = '.$surveyId);
+			$newSurveyID = DB::select('SELECT MAX(id) as maxId FROM `'.$orgId.'_surveys`');
+			$newSurveyID = $newSurveyID[0]->maxId + 1;
+			DB::update('UPDATE cloning_survey SET id = '.$newSurveyID);
+			DB::insert('INSERT into '.$orgId.'_surveys SELECT * FROM cloning_survey');
+			DB::select('DROP TABLE cloning_survey');
+
+
+			DB::select('CREATE TABLE cloning_group as SELECT * FROM `'.$orgId.'_survey_question_groups` WHERE survey_id = '.$surveyId);
+			$newGroupID = DB::select('SELECT MAX(id) maxId FROM `'.$orgId.'_survey_question_groups`');
+			$newGroupID = $newGroupID[0]->maxId + 1;
+			DB::select('ALTER TABLE cloning_group ADD new_ids VARCHAR(255)');
+			DB::select('SET @a = '.$newGroupID);
+			DB::select('UPDATE cloning_group SET new_ids = @a:=@a+1');
+			DB::select('UPDATE cloning_group SET survey_id = '.$newSurveyID);
+
+
+			DB::select('CREATE TABLE cloning_question as SELECT * FROM `'.$orgId.'_survey_questions` WHERE survey_id = '.$surveyId);
+			$maxQuestId = DB::select('SELECT MAX(id) maxId FROM `'.$orgId.'_survey_questions`');
+			$maxQuestId = $maxQuestId[0]->maxId + 1;
+			DB::select('SET @a = '.$maxQuestId);
+			DB::select('UPDATE cloning_question SET id = @a:=@a+1');
+			DB::update('UPDATE cloning_question SET survey_id = '.$newSurveyID);
+			DB::select('UPDATE cloning_question cq JOIN cloning_group cg ON cg.id = cq.group_id SET cq.group_id = cg.new_ids');
+			
+
+			DB::select('ALTER TABLE cloning_group DROP COLUMN new_ids');
+			DB::select('SET @a = '.$newGroupID);
+			DB::select('UPDATE cloning_group SET id = @a:=@a+1');
+			DB::select('INSERT into '.$orgId.'_survey_question_groups SELECT * FROM cloning_group');
+			DB::select('DROP TABLE cloning_group');
+			DB::select('INSERT into '.$orgId.'_survey_questions SELECT * FROM cloning_question');
+			DB::select('DROP TABLE cloning_question');
+			DB::commit();
+			return ['status'=>'success','message'=>'Survey cloned successfully!'];
+		}catch(\Exception $e){
+			DB::rollback();
+			throw $e;
+		}
 	}
 	
 }

@@ -19,7 +19,7 @@ class GeneratedVisual extends Model
       }
 
     }
-    protected $fillable = ['visual_name','dataset_id','columns','query_result'];
+    protected $fillable = ['visual_name','dataset_id','columns','query_result','theme_settings'];
 
     public function datasetName(){
 

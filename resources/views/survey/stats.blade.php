@@ -27,7 +27,16 @@
 </head>
 <body>
 <?php 
-dump($survey_data->group());
+//dump($survey_data->group);
+if(count($survey_data->group)>0)
+{
+    foreach ($survey_data->group as $group_key => $group_value) {
+        dump($group_value->title);
+        foreach ($group_value->question as $que_key => $que_value) {
+           dump($que_value->question);
+        }
+    }
+}
 ?>
 
     <div id="card-stats">
@@ -39,7 +48,7 @@ dump($survey_data->group());
                         <h5 class="card-stats-number">{{$survey_data->created_on}}</h5>
                         <p class="card-stats-compare"><i class="mdi-hardware-keyboard-arrow-up"></i>
 
-<span class="green-text text-lighten-5">{{$survey_data->description}}</span>
+<span class="green-text text-lighten-5 truncate">{{$survey_data->description}}</span>
                         </p>
                     </div>
                     <div class="card-action  green darken-2">
@@ -76,7 +85,7 @@ dump($survey_data->group());
             <div class="col s12 m6 l3">
                 <div class="card">
                     <div class="card-content purple white-text" style="padding: 10px 14px;">
-                        <p class="card-stats-title"><i class="mdi-editor-attach-money"></i>Users</p>
+                        <p class="card-stats-title"><i class="mdi-editor-attach-money"></i>Filled Survey</p>
                         <h5 class="card-stats-number">{{$survey_data->total_filled}}</h5>
                         <p class="card-stats-compare"><i class="mdi-hardware-keyboard-arrow-up"></i> 70% <span class="purple-text text-lighten-5">last month</span>
                         </p>
@@ -92,51 +101,32 @@ dump($survey_data->group());
         <div class="col s12 m8 l8">
             <div class="card" style="padding:10px;margin: 0px">
                 <div>
+                   <p style="font-size:24px">Structure of survey</p>
+                </div>
+                  <div class="divider"></div>
+                @if(count($survey_data->group)>0)
+               
+                @foreach ($survey_data->group as $group_key => $group_value) 
+                 <div>
                     <div class="row" style="margin-bottom: 0px">
                         <i class="material-icons dp48 col" style="padding: 0px">play_arrow</i>
-                        <p class="col ">title of group</p>
+                        <p class="col ">{{$group_value->title}}</p>
                     </div>
                     <div style="padding-left: 50px">
-                        <p>-questions inside a group</p>
-                        <p>-questions inside a group</p>
-                        <p>-questions inside a group</p>
-                        <p>-questions inside a group</p>
-                        <p>-questions inside a group</p>
-                        <p>-questions inside a group</p>
+                    @foreach ($group_value->question as $que_key => $que_value) 
+                         <p>-{{$que_value->question}}</p>
+                        
+                    @endforeach
                     </div>
                 </div>
-                <div>
-                    <div class="row" style="margin-bottom: 0px">
-                        <i class="material-icons dp48 col" style="padding: 0px">play_arrow</i>
-                        <p class="col ">title of group</p>
-                    </div>
-                    <div style="padding-left: 50px">
-                        <p>-questions inside a group</p>
-                        <p>-questions inside a group</p>
-                        <p>-questions inside a group</p>
-                        <p>-questions inside a group</p>
-                        <p>-questions inside a group</p>
-                        <p>-questions inside a group</p>
-                    </div>
-                </div>
-                <div>
-                    <div class="row" style="margin-bottom: 0px">
-                        <i class="material-icons dp48 col" style="padding: 0px">play_arrow</i>
-                        <p class="col ">title of group</p>
-                    </div>
-                    <div style="padding-left: 50px">
-                        <p>-questions inside a group</p>
-                        <p>-questions inside a group</p>
-                        <p>-questions inside a group</p>
-                        <p>-questions inside a group</p>
-                        <p>-questions inside a group</p>
-                        <p>-questions inside a group</p>
-                    </div>
-                </div>
+                @endforeach
+                
+             
+            @endif
             </div>
         </div>
         <div class="col s12 m4 l4">
-            <div class="card" style="margin: 0px">
+            <div class="card" style="padding:10px;margin: 0px">
                 <div class="center-align">
                    <p style="font-size:24px">Settings</p>
                 </div>

@@ -36,7 +36,9 @@ Route::get('/func', function () {
 
 		Route::get('s/{id}/{theme?}/{skip?}',['as'=>'survey.draw', 'uses'=>'DrawSurveyController@draw_survey']);
 
-		Route::match(['get','post'],'v/{id}',['as'=>'draw.visualisation','uses'=>'VisualisationController@embedVisualization']);
+		Route::post('s/{token}',['as'=>'survey.nxt', 'uses'=>'DrawSurveyController@draw_survey']);
+
+		Route::match(['get','post'],'v/{id?}',['as'=>'draw.visualisation','uses'=>'VisualisationController@embedVisualization']);
 		Route::get('surveyStats',['as'=>'stats,survey','uses'=>function(){
 			return View::make('survey.stats');
 		}]);
@@ -183,6 +185,7 @@ Route::get('/func', function () {
 		Route::patch('/settings/store/userapprove',['as'=>'aprroveuser.settings','uses'=>'GlobalSettingsController@saveApproveUserSettings']);
 		Route::patch('/settings/store/datasetNumRow',['as'=>'dataset.settings','uses'=>'GlobalSettingsController@datasetNumRowSetting']);
 		Route::patch('/settings/store/sitevalue',['as'=>'sitevalue.settings','uses'=>'GlobalSettingsController@siteValue']);
+		Route::patch('/settings/store/surveythemes',['as'=>'survey.themes','uses'=>'GlobalSettingsController@saveSurveyThemes']);
 
 	//Create Visual
 		Route::get('/visual', ['as'=>'list.visual','uses'=>'VisualController@index']);

@@ -86,6 +86,7 @@ Route::get('view_survey_saved_data/{id}' , ['as'=>'survey.savedata' , 'uses'=>'S
 	Route::post('survey/data', ['as'=>'apisurrvey.data', 'uses'=>'Services\SurrveyApiController@save_survey_data' , 'route_name'=> 'Created Question']);
 
 	Route::get('survey/view/{id}', ['as'=>'apisurrvey.data', 'uses'=>'Services\SurrveyApiController@view_survey_data']);
+	Route::get('/getfields/{survey_id}/{group_id}',['as'=>'fields.list','uses'=>'Services\SurrveyApiController@surveyFields']);
 	Route::get('generate_survey/{id}', ['as'=>'apisurrvey.data', 'uses'=>'Services\SurrveyApiController@generate_survey']);
 	Route::get('surveyList', ['as'=>'apisurrvey.data', 'uses'=>'Services\SurrveyApiController@getAllsurveys']);
 	
@@ -157,6 +158,15 @@ Route::get('view_survey_saved_data/{id}' , ['as'=>'survey.savedata' , 'uses'=>'S
 	Route::get('/surveyToDataset/{id}',['as'=>'export_to_dataset','uses'=>'Services\SurrveyApiController@exportSurveyToDataset']);
 
 	Route::get('/getembedcode/{visual_id}',['as'=>'get.embed_code.by_visual_id','uses'=>'Services\VisualApiController@getEmbedTokenFromVisualId']);
-	
+	Route::get('/getsurveythemes',['as'=>'get.survey.themes','uses'=>'Services\SurrveyApiController@getSurveyThemes']);
+	Route::post('/save_section',['as'=>'save.group','uses'=>'Services\SurrveyApiController@save_survey_groups']);
+	Route::post('/save/fields',['as'=>'save.questions','uses'=>'Services\SurrveyApiController@save_survey_question']);
+	Route::get('/getColumnOfDataset/{dataset_id}',['as'=>'getdataset.columns','uses'=>'Services\DatasetsController@getColumnsForSelectedDataset']);
+	Route::post('/saveMap',['as'=>'save.new.map','uses'=>'Services\MapApiController@createMap']);
+	Route::get('/deleteMap/{id}',['as'=>'delete.map','uses'=>'Services\MapApiController@deleteMap']);
+	Route::post('/updateMap',['as'=>'update.map','uses'=>'Services\MapApiController@updateMap']);
+	Route::get('/create/clone/{surveyId}' ,['as'=>'create.clone','uses'=>'Services\SurrveyApiController@createClone']);
+	Route::get('/create/dataset/clone/{datasetId}',['as'=>'create.survey.clone','uses'=>'Services\DatasetsController@creaetClone']);
+	Route::get('/create/visualization/clone/{visualID}',['as'=>'create.viausl.clone','uses'=>'Services\VisualApiController@createClone']);
 	});
 });

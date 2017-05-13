@@ -1,1 +1,0 @@
-<script src="{{asset('/bower_components/admin-lte/plugins/daterangepicker/daterangepicker.js')}}"></script>

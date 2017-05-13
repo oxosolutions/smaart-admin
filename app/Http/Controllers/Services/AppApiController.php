@@ -77,13 +77,12 @@ class AppApiController extends Controller
 		$surveyQuestions = SQ::get();
 		$media ="";
 		
-
+		$questionData = '';
 		foreach ($surveyQuestions as $key => $value) {
 			
 			$questionData[$key]['question_id'] = $value->id;
 			$ansData = json_decode($value->answer,true);
 			
-
 			$survey_media = SurveyHelper::get_survey_media($ansData['question_desc']);
 			 if($survey_media['media']!=null)
 			 {
@@ -150,6 +149,17 @@ class AppApiController extends Controller
     		 foreach ($ansData['extraOptions'] as $optKey => $optValue) {
     		 		//dump($optKey);
     		 		//dump($optValue["options"]['label']);//['options']['label']); 
+
+    		 	$survey_media = SurveyHelper::get_survey_media($optValue["options"]['label']);
+			 if($survey_media['media']!=null)
+			 {
+			 	 if(is_array($survey_media['media']))
+			 	 {
+			 	 	foreach ($survey_media['media'] as $mkey => $mvalue) {
+			 	 		$media[$mkey] = $mvalue;
+			 	 	}
+			 	 }
+			 }
     			$option["option_type"] = $ansData['question_type'];
 				$option["option_text"] = $optValue["options"]['label'];
        			$option["option_value"] =  $optValue["options"]['value'];

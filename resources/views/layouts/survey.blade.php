@@ -13,9 +13,13 @@
 		<style>
 		{{@$custom_code['custom_css']}}
 		</style>
+		@php
+			$Drawer = 'App\Http\Controllers\DrawSurveyController';
+		@endphp
 	</head>
 	<body>
-		<div id="theme_{{@$theme}}" class="wrapper theme-{{@$theme}}">
+	
+		<div id="theme_{{@$theme}}" class="wrapper theme-{{(!empty($design_settings))?$Drawer::getSettings($design_settings,'surveyThemes'):''}}">
 			<div class="main">
 				@yield('content')
 			</div>	

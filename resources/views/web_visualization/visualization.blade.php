@@ -1,363 +1,585 @@
 @extends('layouts.visualization')
 @section('content')
 
-<div class="row main-chart-row">
-		<div class="row" style="background-color: #fff;margin: 15px">
-			<div style="padding:10px" class="row">
-				<h5 class="col s11">Select graphs to display</h5>
-				
-			</div>
-			<div class="divider"></div>
-			<div style="padding:10px">
-				@foreach($titles as $chart_id => $title)
-					<p class="col s2">
-				      <input type="checkbox" class="filled-in show-hide-charts" id="{{$chart_id}}_checkbox" data-hide="{{$chart_id}}" checked="checked" />
-				      <label for="{{$chart_id}}_checkbox">{{ucwords($title)}}</label>
-				    </p>
-			    @endforeach
-			</div>
-		</div>
-	<div class="chart-wrapper-left {{(!empty($filters))?'col-md-8':'col-md-12'}}">
-		
+<?php
 
-		@foreach($details as $key => $value)
+$visualization_id = $visualizations['visualization_id'];
+$visualization_name = $visualizations['visualization_name'];
 
-			@if($value['type'] != 'CustomMap' && $value['type'] != 'TableChart')
-				<div class="chart-row">
-					<a href="" class="chart-sort-arrow"><i class="fa fa-arrows" aria-hidden="true"></i></a>
-					{{-- <h4>{{$titles[$key]}}<span><a href="javascript:;"><img src="{{asset('arrow-down.png')}}" alt=""></a></span></h4> --}}
-					<div class="row valign-wrapper">
-						<div class="col s10 left-align" style="padding-left: 60px"><h5>{{$titles[$key]}}</h5></div>
-	  					<div class="col s1 center-align valign">
-	  						  <div id="" class="fixed-action-btn horizontal click-to-toggle">
-							    <a class="btn-floating  red" >
-							      <i class="fa fa-eye" aria-hidden="true"></i>
-							    </a>
-							    <ul>
-							      <li><a class="btn-floating btn-small red"><i class="fa fa-line-chart fa-1g" aria-hidden="true"></i></a></li>
-							      <li><a class="btn-floating btn-small yellow darken-1"><i class="fa fa-pie-chart fa-1g" aria-hidden="true"></i></a></li>
-							      <li><a class="btn-floating btn-small green"><i class="fa fa-area-chart fa-2x" aria-hidden="true"></i></a></li>
-							      <li><a class="btn-floating btn-small blue"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i></a></li>
-							      <li><a class="btn-floating btn-small blue"><i class="fa fa-arrows fa-2x" aria-hidden="true"></i></a></li>
-							    </ul>
-							  </div>
-	  					</div>
-	  					<div class="col s1 center-align"><span class="accordion-arrow"><img src="{{asset('arrow-down.png')}}" alt="" style="width: 20px"></span></div>
-						
+$meta = $visualizations['visualization_meta'];
+$charts = $visualizations['visualizations'];
+
+$visualization_theme = 'minimal';
+
+if(isset($meta['theme']) && $meta['theme'] != ''){
+	$visualization_theme = $meta['theme'];
+}
+$sidebar_class="no-sidebar";
+if(
+	isset($meta['filters_position']) 
+	&& ($meta['filters_position'] == 'left' || $meta['filters_position'] == 'right') 
+){
+	$sidebar_class = $meta['filters_position']."-sidebar";
+}
+
+
+/*
+echo "<pre>";
+print_r($visualizations);
+echo "</pre>";
+*/
+?>
+
+<div id="theme_{{$visualization_theme}}" class="wrapper theme-{{$visualization_theme}}">
+	<div id="visualization_{{$visualization_id}}" class="main visualization visualization-{{$visualization_id}}">
+
+		@if(isset($meta['show_topbar']) && $meta['show_topbar'] == 1)
+			<!--==============================-->
+			<div id="aione_topbar_{{$visualization_id}}" class="aione-box aione-topbar aione-options">
+				<div class="wrapper-row">
+					<div class="aione-section-header aione-topbar-header">
+						<div class="aione-section-header-title">
+							<div class="aione-section-title">
+								Select Charts to Display
+							</div>
+						</div>
+						<div class="clear"></div>
 					</div>
+					<div class="aione-section-content aione-topbar-content">
+						<div class="widget-toggles">
+							@foreach($titles as $chart_id => $title)
+								<div class="widget-toggle">
+							      <input type="checkbox" class="filled-in show-hide-charts" id="{{$chart_id}}_checkbox" data-hide="{{$chart_id}}" checked="checked" value="{{$chart_id}}"/>
+							      <label for="{{$chart_id}}_checkbox">{{ucwords($title)}}</label>
+							    </div>
+						    @endforeach
+					    </div>
+					</div>
+				</div> <!-- wrapper-row -->
+			</div> <!-- aione_topbar -->
+		@endif
 
-					<div id="{{$value['id']}}" class="chart-wrapperr" style="width: {{$value['chartWidth']}}%;"></div>
+		@if(isset($meta['show_header']) && $meta['show_header'] == 1)
+			<!--==============================-->
+			<div id="aione_header_{{$visualization_id}}" class="aione-box aione-header">
+				<div class="wrapper-row ">
+					<h1 class="aione-header-title">{!! $visualization_name !!} </h1>
+					@if(isset($meta['visualization_description']) && $meta['visualization_description'] != '')
+					<h3 class="aione-header-description">{!! $meta['visualization_description'] !!}</h3>
+					@endif
+				</div> <!-- wrapper-row -->
+			</div> <!-- show_header -->
+		@endif
 
-					{!! lava::render($value['type'],$key,$value['id']) !!}
+		<!--==============================-->
+		<div id="aione_content_{{$visualization_id}}" class="aione-box aione-content aione-content-{{$sidebar_class}}">
+			<div class="wrapper-row padding-0">
+
+				@if(isset($meta['filters_position']) && $meta['filters_position'] != 'bottom')
+					@include('web_visualization.filters')
+				@endif
+				<!--==============================-->
+				<div id="aione_content_main_{{$visualization_id}}" class="aione-box aione-content-main">
+					<div class="wrapper-row padding-0">
+						
+						<!--==============================-->
+						<div id="aione_selected_filters_{{$visualization_id}}" class="aione-box aione-selected-filters">
+							<div class="wrapper-row padding-0">
+
+
+							</div> <!-- wrapper-row -->
+						</div> <!-- aione_selected_filters -->
+
+						<!--==============================-->
+						<div id="aione_charts_{{$visualization_id}}" class="aione-box aione-charts">
+							<div class="wrapper-row  padding-0">
+
+							<!--==============================-->
+							<!--==============================-->
+
+							@foreach($charts as $chart_key => $chart)
+
+								<?php
+								$chart_id = $chart_key;
+								$chart_type = $chart['chart_type'];
+								$chart_title = $chart['title'];
+								$chart_enabled = $chart['enableDisable'];
+								?>
+
+								@if(1)
+									<div id="chart_wrapper_{{$chart_id}}" class="aione-chart aione-chart-{{$chart_type}}">
+										@if(isset($meta['show_chart_title']) && $meta['show_chart_title'] == 1)
+										<div class="aione-section-header aione-topbar-header">
+											<div class="aione-section-header-title">
+												@if(isset($meta['sortable_chart_widgets']) && $meta['sortable_chart_widgets'] == 1)
+												<div class="aione-section-handle"></div>
+												@endif
+
+												<div class="aione-section-title">{{$chart_title}}</div>
+											</div>
+											<div class="aione-section-header-actions">
+												@if(isset($meta['collapsable_chart_widgets']) && $meta['collapsable_chart_widgets'] == 1)
+												<span class="aione-section-header-action aione-widget-toggle aione-widget-collapse"></span>
+												@endif
+												@if(isset($meta['show_topbar']) && $meta['show_topbar'] == 1)
+												<span class="aione-section-header-action aione-widget-toggle aione-widget-close"></span>
+												@endif
+											</div>
+											<div class="clear"></div>
+										</div>
+										@endif
+										<div id="" class="aione-chart-content">
+											<div id="{{$chart_id}}" class="chart-wrapperr"></div>
+
+											@if($chart_type == 'CustomMap')
+												{!! $details[$chart_key]['map'] !!}
+											@else
+												{!! lava::render($chart_type,$chart_key,$chart_id) !!}
+											@endif
+										</div>
+									</div>
+								@endif
+
+
+
+
+								
+
+
+
+
+
+
+
+							@endforeach
+
 					
-				</div>
-			@elseif($value['type'] == 'TableChart')
-				<div class="chart-row">
-					<a href="" class="chart-sort-arrow"><i class="fa fa-arrows" aria-hidden="true"></i></a>
-					{{-- <h4>{{$titles[$key]}}<span><a href="javascript:;"><img src="{{asset('arrow-down.png')}}" alt=""></a></span></h4> --}}
-					<div class="row valign-wrapper">
-						<div class="col s10 left-align" style="padding-left: 60px"><h5>{{$titles[$key]}}</h5></div>
-	  					<div class="col s1 center-align valign">
-	  						  <div id="" class="fixed-action-btn horizontal click-to-toggle">
-							    <a class="btn-floating  red" >
-							      <i class="fa fa-eye" aria-hidden="true"></i>
-							    </a>
-							    <ul>
-							      <li><a class="btn-floating btn-small red"><i class="fa fa-line-chart fa-1g" aria-hidden="true"></i></a></li>
-							      <li><a class="btn-floating btn-small yellow darken-1"><i class="fa fa-pie-chart fa-1g" aria-hidden="true"></i></a></li>
-							      <li><a class="btn-floating btn-small green"><i class="fa fa-area-chart fa-2x" aria-hidden="true"></i></a></li>
-							      <li><a class="btn-floating btn-small blue"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i></a></li>
-							      <li><a class="btn-floating btn-small blue"><i class="fa fa-arrows fa-2x" aria-hidden="true"></i></a></li>
-							    </ul>
-							  </div>
-	  					</div>
-	  					<div class="col s1 center-align"><span class="accordion-arrow"><img src="{{asset('arrow-down.png')}}" alt="" style="width: 20px"></span></div>
-						
-					</div>
-					<div id="{{$value['id']}}" class="chart-wrapperr" style="width: {{$value['chartWidth']}}%;">
-						{!! lava::render($value['type'],$key,$value['id']) !!}
-					</div>
+								
 
-				</div>
-			@elseif($value['type'] == 'CustomMap')
-				<div class="chart-row">
-					<a href="" class="chart-sort-arrow"><i class="fa fa-arrows" aria-hidden="true"></i></a>
-					{{-- <h4>{{$titles[$key]}}<span><a href="javascript:;"><img src="{{asset('arrow-down.png')}}" alt=""></a></span></h4> --}}
-					<div class="row valign-wrapper">
-						<div class="col s10 left-align" style="padding-left: 60px"><h5>{{$titles[$key]}}</h5></div>
-	  					<div class="col s1 center-align valign">
-	  						  <div id="" class="fixed-action-btn horizontal click-to-toggle">
-							    <a class="btn-floating  red" >
-							      <i class="fa fa-eye" aria-hidden="true"></i>
-							    </a>
-							    <ul>
-							      <li><a class="btn-floating btn-small red"><i class="fa fa-line-chart fa-1g" aria-hidden="true"></i></a></li>
-							      <li><a class="btn-floating btn-small yellow darken-1"><i class="fa fa-pie-chart fa-1g" aria-hidden="true"></i></a></li>
-							      <li><a class="btn-floating btn-small green"><i class="fa fa-area-chart fa-2x" aria-hidden="true"></i></a></li>
-							      <li><a class="btn-floating btn-small blue"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i></a></li>
-							      <li><a class="btn-floating btn-small blue"><i class="fa fa-arrows fa-2x" aria-hidden="true"></i></a></li>
-							    </ul>
-							  </div>
-	  					</div>
-	  					<div class="col s1 center-align"><span class="accordion-arrow"><img src="{{asset('arrow-down.png')}}" alt="" style="width: 20px"></span></div>
-						
-					</div>
-					<div id="{{$value['id']}}" class="chart-wrapperr" style="width: {{$value['chartWidth']}}%;">
-						{!! $value['map'] !!}
-					</div>
+							</div> <!-- wrapper-row -->
+						</div> <!-- aione_charts -->
 
-				</div>
+					</div> <!-- wrapper-row -->
+				</div> <!-- aione_content_main -->
+				<div class="clear"></div>
+
+				@if(isset($meta['filters_position']) && $meta['filters_position'] == 'bottom')
+					@include('web_visualization.filters')
+				@endif
+
+			</div> <!-- wrapper-row -->
+		</div> <!-- aione_topbar -->
+
+
+		@if(isset($meta['show_footer']) && $meta['show_footer'] == 1)
+			@if(isset($meta['footer_content']) && $meta['footer_content'] != '')
+				<!--==============================-->
+				<div id="aione_footer_{{$visualization_id}}" class="aione-box aione-footer">
+					<div class="wrapper-row ">
+						{!!  $meta['footer_content'] !!} 
+					</div> <!-- wrapper-row -->
+				</div> <!-- aione_footer -->
 			@endif
-		@endforeach
-	</div>
-	<div id="toolbar_div"></div>
-	@if(!empty($filters))
-		<div class="chart-filters col-md-4" style="padding: 0px">
-			<div class="filter-title">
-				<center>
-					<h5>Filters <span><a href="javascript:;"><img src="{{asset('arrow-down.png')}}" alt=""></a></span></h5>
-				</center>
-			</div>
-			<div class="survey-chart-filters hideDiv">
-				<form method="POST" action="">
-					{!! Form::token() !!}
-					@php
-						$multidrop = 0;
-						$singledrop = 0;
-						$range = 0;
-					@endphp
-					@foreach($filters as $key => $value)
-						@if($value['column_type'] == 'mdropdown')
-							<div class="row" style="margin-top: 5%;">
-								<div class=" col-md-12">
-									<label>{{ucfirst($value['column_name'])}}</label>
-									<select name='multipledrop[{{$multidrop}}][{{$key}}][]' multiple>
-										@foreach($value['column_data'] as $option)
-											<option value="{{$option}}">{{$option}}</option>
-										@endforeach
-									</select>
-								</div>
-							</div>
-							@php
-								$multidrop++;
-							@endphp
-						@endif
-						@if($value['column_type'] == 'dropdown')
-							<div class="row" style="margin-top: 5%;">
-								<div class="col-md-12">
-									<label>{{ucfirst($value['column_name'])}}</label>
-									<select name='singledrop[{{$singledrop}}][{{$key}}][]'>
-										@foreach($value['column_data'] as $option)
-											<option value="{{$option}}">{{$option}}</option>
-										@endforeach
-									</select>
-								</div>
-							</div>
-							@php
-								$singledrop++;
-							@endphp
-						@endif
-						@if($value['column_type'] == 'range')
-							<div class="row" style="margin-top: 5%;">
-								<div class="col-md-12">
-									<label style="width: 100%">{{ucfirst($value['column_name'])}}</label>
-									<b>{{$value['column_min']}}<b/><input type="range[]"  name="range[{{$range}}][{{$key}}]" data-slider-min="{{$value['column_min']}}" data-slider-max="{{$value['column_max']}}" data-slider-step="1" data-slider-value="[{{$value['column_min']}},{{$value['column_max']}}]" class="slider" /><b>{{$value['column_max']}}<b/>
-								</div>
-							</div>
-							@php
-								$range++;
-							@endphp
-						@endif
-					@endforeach
-					<div class="chats-filter-button">
-						<button name="downloadData" type="submit" value="downloadData" class="waves-effect waves-light btn" style="margin-left: 5px">Download Data</button>
-						<input type="submit" name="applyFilter" class="btn btn-default pull-right" value="Apply Filters" />
+		@endif
+
+		@if(isset($meta['show_copyright']) && $meta['show_copyright'] == 1)
+			<!--==============================-->
+			<div id="aione_copyright_{{$visualization_id}}" class="aione-box aione-copyright">
+				<div class="wrapper-row ">
+					©2017 <a href="http://smaartframework.com/" target="_blank">SMAART™ Framework</a>
+				</div> <!-- wrapper-row -->
+			</div> <!-- aione_copyright -->
+		@endif
+
+		@if(isset($meta['show_loader']) && $meta['show_loader'] == 1)
+			<!--==============================-->
+			<div id="aione_loader_{{$visualization_id}}" class="aione-loader">
+				<div class="loading-animation">
+					<div class="loading-bar">
+						<div class="blue-bar"></div> 
 					</div>
-					
-				</form>
-			</div>
-		</div>
-	@endif
+				</div>
+			</div> <!-- aione_loader -->
+		@endif
+
+
+	</div>	
 </div>
-@endsection
-<script type="text/javascript" src="{{asset('bower_components/admin-lte/plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
-<script type="text/javascript">
-	$(document).ready(function(){
-			var chartsList = '{!! json_encode($javascript) !!}';
-			
-			$.each(JSON.parse(chartsList), function(key,val){
-				$.each(val.data, function(ikey, ival){
-					var index = 0;
-					$.each(ival, function(dataKey, dataVal){
-						var colorVal = index/val.data.length;
-						var leagendWidth = (1/(val.data.length-1))*100;
-						var colorCode = getColor(colorVal);
-						
-						var putId = val.headers[dataKey].replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, "_");
-						var currentClass = $('#'+ival[0]).attr('class');
-						$('#'+key+' #'+ival[0]).attr(putId,dataVal);
-						$('#'+key+' #'+ival[0]).css({'fill': colorCode }).attr('class','mapArea '+currentClass);
-					});
-					index++;
-					//console.log(ival);
-				});
-			});
-			$('.chart-wrapperr .mapArea').mouseover(function (e) {
-                var elm = $(this);
-                var title=$(this).attr('title');
-                var html = '';
-                html += '<div class="inf">';
-                html += '<span class="title">'+title + '</span>';
-                $.each(JSON.parse(chartsList), function(key, val){
-                	$.each(val.headers, function(k_in, v){
-	                    if(k_in > 0){
-	                        var atr_id = v.replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, "_");
-	                        html += '<span class="data">'+v+': '+ elm.attr(atr_id)+'</span>';
-	                    }
-	                });
-                });
-                html += '</div>';
-                $(html).appendTo('body');
-            })
-            .mouseleave(function () {
-                $('.inf').remove();
-            }).mousemove(function(e) {
-                var mouseX = e.pageX, //X coordinates of mouse
-                    mouseY = e.pageY; //Y coordinates of mouse
+<script src="{{asset('/bower_components/admin-lte/plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
+<script src="{{asset('/js/visualization.js')}}" type="text/javascript"></script>
 
-                $('.inf').css({
-                    'top': mouseY-($('.inf').height()+30),
-                    'left': mouseX
-                });
-            });
-            /*console.log(lava);
-            lava.getChart('chart_2', function (googleChart, lavaChart) {
+@if(isset($meta['custom_js_code']) && $meta['custom_js_code'] != '')
+	<script type="text/javascript">  
+		<?php echo @$meta['custom_js_code']; ?>
+	</script>
+@endif
 
-			    
-			});*/
-				setTimeout(function(){
-					console.log(lava.charts.BarChart['chart_1'].data.Mf);
-					data = new google.visualization.DataTable();
-			        data.addColumn('string', 'Topping');
-			        data.addColumn('number', 'Slices');
-			        data.addRows([
-			          ['Mushrooms', 3],
-			          ['Onions', 1],
-			          ['Olives', 1],
-			          ['Zucchini', 1],
-			          ['Pepperoni', 2]
-			        ]);
+@if(isset($meta['custom_css_code']) && $meta['custom_css_code'] != '')
+	<style type="text/css"> 
+		<?php echo @$meta['custom_css_code']; ?>
+	</style>
+@endif
 
-			        // Set chart options
-			        var options = {'title':'How Much Pizza I Ate Last Night',
-			                       'width':400,
-			                       'height':300};
-
-			        // Instantiate and draw our chart, passing in some options.
-			        chart = new google.visualization.PieChart(document.getElementById('chart_1'));
-			        
-			        chart.draw(data, options);
-				},3000);
-				
-		      
-		      
-
-			function getColor(value){
-	            var hue=((1-value)*50).toString(10);
-	            return ["hsl(",hue,",100%,50%)"].join("");
-	        }
-
-	        $('.show-hide-charts').click(function(){
-	        	if($(this).is(':checked')){
-	        		$('#'+$(this).attr('data-hide')).parents('.chart-row').show();
-	        	}else{
-	        		$('#'+$(this).attr('data-hide')).parents('.chart-row').hide();
-	        	}
-	        });
+<script type="text/javascript">  
+	$( document ).ready(function() {
+		$( '.aione-loader' ).hide();
+	});
+	$('.aione-widget-options .aione-options input').change(function(){
+		var target_widget_id = $(this).val();
+		var is_checked = $(this).prop('checked');
+		if(is_checked){
+			$("#"+target_widget_id).show();
+		} else{
+			$("#"+target_widget_id).hide();
+		}
+	});
+	$('.aione-widget-collapse').click(function(){
+		$(this).toggleClass('active');
+		$(this).parent().parent().parent().find('.aione-chart-content').slideToggle(100);
+	});
+	$('.aione-widget-close').click(function(){
+		var target_option_name = $(this).parent().parent().parent().attr('data-option');
+		$(".widget-toggles .widget-toggle [name="+target_option_name+"]").prop('checked', false);
+		$(this).parent().parent().parent().hide(); 
+	});
+	$('.aione-options-handle').click(function(){
+		$(this).find('.fa').toggleClass('fa-rotate-180');
+		$(this).parent().find('.aione-options').slideToggle(300);
 	});
 </script>
+
 <style type="text/css">
-.inf {
-    position: absolute;
-    background: #ffffff;
-    border: 1px solid #e8e8e8;
-    width: 250px;
-    margin: 0 0 0 -125px;
-    padding: 8px;
-    z-index: 9999;
-    border-radius: 4px;
-    font-size: 15px;
-    line-height: 18px;
+.theme-clean_light .main{
+	max-width:980px;
+	margin-top: 20px;
+	margin-bottom: 20px; 
 }
-.inf:after {
-	content: "";
-    position: absolute;
+.aione-topbar {
+    border: 1px solid #e8e8e8;
+    margin-bottom: 20px;
+    position: relative;
+}
+.widget-toggles {
+    padding: 10px 0;
+}
+.widget-toggles .widget-toggle{
+	display: inline-block;
+	margin: 0 20px 0 0;
+}
+.widget-toggles .widget-toggle label{
+	cursor: pointer;
+}
+.aione-header {
+    border: 1px solid #e8e8e8;
+    margin-bottom: 20px;
+    position: relative;
+}
+.aione-header-title{
+	color: #666666;
+	text-align: center;
+	font-size: 24px;
+	line-height: 30px;
+	font-weight: 400;
+	padding: 10px 0 10px 0;
+	margin: 0;
+	position: relative;
+	font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+/*
+.aione-header-title:before {
+    content: "";
+    width: 160px;
+    height: 0;
+    background: #ffffff;
+    border-bottom: 1px solid #a8a8a8;
     display: block;
+    position: absolute;
+    top: 55px;
+    left: 50%;
+    margin: 0 0 0 -80px;
+}
+
+
+.aione-header-title:after {
+    content: "";
+    width: 16px;
+    height: 16px;
+    background: #ffffff;
+    border: 2px solid #747474;
+    display: block;
+    position: absolute;
+    top: 47px;
+    border-radius: 50%;
+    left: 50%;
+    margin: 0 0 0 -8px;
+    box-shadow: 0px 0px 0px 4px #FFFFFF;
+}
+*/
+.aione-header-description{
+	color: #747474;
+    text-align: center;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 400;
+    padding: 10px 0 10px 0;
+    margin: 0;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+
+.aione-section-header{
+	border-bottom: 1px solid #e8e8e8;
+}
+.aione-section-header .aione-section-header-title{
+	float:left;
+	padding: 0 0 0 15px;
+}
+.aione-section-header .aione-section-header-actions{
+	float: right;
+    width: 100px;
+    text-align: right;
+    position: relative;
+}
+
+.aione-section-header .aione-section-header-title .aione-section-handle{
+	display: inline-block;
+    padding: 15px 0 0 0;
+    width: 20px;
+    margin-right: 10px;
+    position: relative;
+    cursor:move;
+}
+.aione-section-header:hover .aione-section-header-title .aione-section-handle:before,
+.aione-section-header:hover .aione-section-header-title .aione-section-handle:after{
+	border-color:#999999; 
+}
+.aione-section-header .aione-section-header-title .aione-section-handle:before{
+	content: "";
+    width: 20px;
+    height: 4px;
+    background: #ffffff;
+    border-top: 3px solid #d2d2d2;
+    border-bottom: 3px solid #d2d2d2;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+}
+.aione-section-header .aione-section-header-title .aione-section-handle:after{
+	content: "";
+    width: 20px;
+    height: 0;
+    background: #ffffff;
+    border-top: 3px solid #d2d2d2;
+    display: block;
+    position: absolute;
+    top: 14px;
+    left: 0;
+    margin: 0;
+}
+.aione-section-header .aione-section-header-title .aione-section-title{
+	display:inline-block;
+	color: #747474;
+    text-align: left;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 400;
+    padding: 10px 0 10px 0;
+    margin: 0;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+.aione-section-header .aione-section-header-actions .aione-section-header-action{
+	display: inline-block;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    cursor: pointer;
+    margin: 10px 10px 10px 0;
+    transition: all 200ms ease-in-out;
+}
+.aione-section-header .aione-section-header-actions .aione-widget-close{
+	transform: rotate(45deg);
+}
+.aione-section-header .aione-section-header-actions .aione-widget-close:hover{
+	transform: rotate(135deg);
+}
+.aione-section-header .aione-section-header-actions .aione-widget-close:before{
+	content: "";
+    width: 20px;
+    height: 0;
+    border-top: 1px solid #d2d2d2;
+    display: block;
+    position: absolute;
+    top: 9.5px;
+    left: 0;
+    margin: 0;
+}
+.aione-section-header .aione-section-header-actions .aione-widget-close:after{
+	content: "";
+    width: 0;
+    height: 20px;
+    border-left: 1px solid #d2d2d2;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 9.5px;
+    margin: 0;
+}
+.aione-section-header:hover .aione-section-header-actions .aione-widget-close:before,
+.aione-section-header:hover .aione-section-header-actions .aione-widget-close:after{
+    border-color: #cc0000;
+}
+
+.aione-section-header .aione-section-header-actions .aione-widget-collapse:before{
+	content: "";
     width: 0;
     height: 0;
-    bottom: -10px;
-    left: 50%;
-    margin: 0 0 0 -10px;
-    border-top: 10px solid #ffffff;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    z-index: 9999;
+    border-top: 6px solid #d2d2d2;
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+    display: block;
+    position: absolute;
+    top: 8px;
+    left: 4px;
+}
+.aione-section-header .aione-section-header-actions .aione-widget-collapse.active:before{
+    border-top: none;
+    border-bottom: 6px solid #d2d2d2;
+}
+.aione-section-header:hover .aione-section-header-actions .aione-widget-collapse:before{
+    border-top-color: #999999;
+}
+.aione-section-header:hover .aione-section-header-actions .aione-widget-collapse.active:before{
+    border-bottom-color: #999999;
 }
 
-.inf .title {
-    font-size: 17px;
-    line-height: 20px;
-    border-bottom: 1px solid #666666;
+.aione-sidebar {
+    margin-bottom:20px;
+    border: 1px solid #e8e8e8;
+}
+
+.aione-content-left-sidebar .aione-content-main,
+.aione-content-right-sidebar .aione-content-main{
+	width:72%;
+}
+.aione-content-left-sidebar .aione-content-main{
+	float:right;
+}
+.aione-content-right-sidebar .aione-content-main{
+	float:left;
+}
+
+
+.aione-sidebar.aione-sidebar-position-left,
+.aione-sidebar.aione-sidebar-position-right{
+	width:25%;
+}
+
+.aione-sidebar.aione-sidebar-position-right{
+	float:right;
+}
+.aione-sidebar.aione-sidebar-position-left{
+	float:left;
+}
+
+.aione-charts .aione-chart{
+	display: block;
+	overflow: hidden;
+	margin-bottom:20px;
+    border: 1px solid #e8e8e8;
+}
+
+
+
+
+.aione-footer {
     text-align: center;
-    color: #168dc5;
-    padding: 0px 0 8px 0;
-    margin: 0;
-    display: block;
-}
-.inf .data {
-    display: block;
-    border-bottom: 1px dotted #e8e8e8;
-    padding: 4px 0;
-    margin: 0;
-}
-.google-visualization-table{
-	min-width: 100% !important;
-}
-.google-visualization-table .google-visualization-table-table{
-	width: 100% !important;
-}
-.fixed-action-btn{
-	position: static !important;
-}
-.fixed-action-btn.horizontal ul{
-	right: 120px !important;
-}
-.main-chart-row .row{
-	margin-bottom: 0px;
-}
-.fixed-action-btn.horizontal ul{
-	top:48% !important;
-}
-select{
-	display: inline-block !important;
-}
-table {
-    border-collapse: collapse !important;
-    width: 100% !important;
+    padding: 20px;
+    margin-bottom:20px;
+    border: 1px solid #e8e8e8;
 }
 
-th, td {
-    text-align: left !important;
-    padding: 8px !important;
-
+.padding-0{
+	padding: 0;
+	padding-top: 0;
+	padding-right: 0;
+	padding-bottom: 0; 
+	padding-left: 0;
 }
 
 
-tr:nth-child(even){background-color: #f2f2f2 !important}
+.aione-loader{
+	position: fixed;
+	top:0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 80;
+	display: block;
+	text-align: center;
+	background-color: #ffffff;
+} 
 
-th {
-    background-color: #26a69a !important;
-    color: white !important;
-    background-image: none !important;
+.loading-animation{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 280px;
+    margin: -2px 0 0 -140px;
+    -o-transform: scale(1);
+    -ms-transform: scale(1);
+    -moz-transform: scale(1);
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    transition: -webkit-transform .5s ease;
+    transition: transform .5s ease;
+    transition: transform .5s ease, -webkit-transform .5s ease;
 }
-</style>
+.loading-animation .loading-bar{
+    width: 60%;
+    height: 4px;
+    margin: 0 auto;
+    border-radius: 2px;
+    background-color: #cfcfcf;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: -webkit-transform .3s ease-in;
+    transition: transform .3s ease-in;
+    transition: transform .3s ease-in, -webkit-transform .3s ease-in;
+}
+.loading-animation .loading-bar .blue-bar{
+    height: 100%;
+    width: 50%;
+    position: absolute;
+    background-color: #3596d8;
+    border-radius: 2px;
+    -moz-animation: initial-loading 1.5s infinite ease;
+    -webkit-animation: initial-loading 1.5s infinite ease;
+    animation: initial-loading 1.5s infinite ease;
+}
+
+@-webkit-keyframes initial-loading{
+    0%,100%{
+        -webkit-transform:translate(-50%,0);
+        transform:translate(-50%,0);
+    }
+    50%{
+        -webkit-transform:translate(150%,0);
+        transform:translate(150%,0);
+    }
+}
+@keyframes initial-loading{
+    0%,100%{
+        -webkit-transform:translate(-50%,0);
+        transform:translate(-50%,0);
+    }
+    50%{
+        -webkit-transform:translate(150%,0);
+        transform:translate(150%,0);
+    }
+}
+
+</style> 
+
+@endsection

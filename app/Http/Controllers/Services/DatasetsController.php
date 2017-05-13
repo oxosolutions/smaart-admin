@@ -195,98 +195,119 @@ class DatasetsController extends Controller
 
     protected function createNewColumns($columns, $table, $orgColumns){
 
-
-
         foreach(json_decode($columns) as $key => $value){
-
             $columnsList = DB::select('SHOW COLUMNS FROM `'.$table.'`');
             $colCount = rand(1000,2000);//count($columnsList)-1;
-
             $column_name =  $value->col_name;
             $excute_formula =  $value->formula;
-            $operation = $value->operation;
+            
+            switch($value->formula_type){
+                case'static':
+                    DB::select('ALTER TABLE `'.$table.'` ADD COLUMN column_'.$colCount.' TEXT NULL AFTER '.$value->col_after.';');
+                    DB::table($table)->where('id','!=',1)->update(['column_'.$colCount => $excute_formula->static]);
+                    DB::table($table)->where('id',1)->update(['column_'.$colCount => $value->col_name]);
+                    break;
 
-            try{
-                DB::select('ALTER TABLE `'.$table.'` ADD COLUMN column_'.$colCount.' TEXT NULL AFTER '.$value->col_after.';');
-                DB::table($table)->update(['column_'.$colCount => $operation]);
+                case 'formula':
+                    try{
+                        DB::select('ALTER TABLE `'.$table.'` ADD COLUMN column_'.$colCount.' TEXT NULL AFTER '.$value->col_after.';');
+                        DB::table($table)->update(['column_'.$colCount => $operation]);
 
-                if($excute_formula){
-                    $rawdata = Excel::create('Filename', function($excel) use ($operation,$table,$colCount) {
-                        $excel->sheet('Sheetname', function($sheet) use ($operation,$table,$colCount){
-                            $data = DB::select('SELECT * FROM `'.$table.'`');
-                            foreach ($data as $key => $data_row) {
-                                $data_row = (Array)$data_row;
-                                if($key==0)
-                                {
-                                    $count_colum = 802;//count($data_row); 
-                                     $key_map = array("A","B","C","D","E","F","G","H","I","J","k","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z");
+                        if($excute_formula){
+                            $rawdata = Excel::create('Filename', function($excel) use ($operation,$table,$colCount) {
+                                $excel->sheet('Sheetname', function($sheet) use ($operation,$table,$colCount){
+                                    $data = DB::select('SELECT * FROM `'.$table.'`');
+                                    foreach ($data as $key => $data_row) {
+                                        $data_row = (Array)$data_row;
+                                        if($key==0)
+                                        {
+                                            $count_colum = 802;//count($data_row); 
+                                             $key_map = array("A","B","C","D","E","F","G","H","I","J","k","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z");
 
-                                     $first_prefix= $first_index = $second = null;
+                                             $first_prefix= $first_index = $second = null;
 
-                                         for($i=0; $i<$count_colum; $i++)
-                                         {
-                                          if($i<26)
-                                          {
-                                            $new_data[] =  $key_map[$i];
-                                          }
-                                          elseif(($i % 26)==0)
-                                          {
-                                            $second_index = ($i / 26) * 26;
-                                            $first_index = ($i / 26);
-                                            if($first_index >26)
-                                            {
-                                                $first_prefix = $key_map[0];
-                                            if($first_index >52)
-                                            {
-                                              $first_prefix = $key_map[1];
-                                            }
+                                                 for($i=0; $i<$count_colum; $i++)
+                                                 {
+                                                  if($i<26)
+                                                  {
+                                                    $new_data[] =  $key_map[$i];
+                                                  }
+                                                  elseif(($i % 26)==0)
+                                                  {
+                                                    $second_index = ($i / 26) * 26;
+                                                    $first_index = ($i / 26);
+                                                    if($first_index >26)
+                                                    {
+                                                        $first_prefix = $key_map[0];
+                                                    if($first_index >52)
+                                                    {
+                                                      $first_prefix = $key_map[1];
+                                                    }
 
-                                            $first_index = $first_index-26; 
-                                            }
-                                          }
+                                                    $first_index = $first_index-26; 
+                                                    }
+                                                  }
 
-                                          if($first_index !=null && $second_index !=null)
-                                          {
-                                            $next_index = $i - $second_index;
-                                            $new_data[] = $first_prefix.''.$key_map[$first_index - 1].''.$key_map[$next_index];
-                                          }
-                                         
-                                         }
-                                         dump($new_data);   
-                                   
-                                }
-                                $row_id = $data_row['id']; 
+                                                  if($first_index !=null && $second_index !=null)
+                                                  {
+                                                    $next_index = $i - $second_index;
+                                                    $new_data[] = $first_prefix.''.$key_map[$first_index - 1].''.$key_map[$next_index];
+                                                  }
+                                                 
+                                                 }
+                                                 dump($new_data);   
+                                           
+                                        }
+                                        $row_id = $data_row['id']; 
 
-                                $data_row['column_'.$colCount] = str_replace("$",$row_id,$data_row['column_'.$colCount]);
-                                $column_keys = array_keys($data_row);
-                                $search = array_search('column_'.$colCount , $column_keys);
+                                        $data_row['column_'.$colCount] = str_replace("$",$row_id,$data_row['column_'.$colCount]);
+                                        $column_keys = array_keys($data_row);
+                                        $search = array_search('column_'.$colCount , $column_keys);
 
-                               
+                                       
 
-                                
+                                        
 
 
-                                $sheet->row($row_id, $data_row);
-                                $column_value = $sheet->getCell($key_map[$search].$row_id)->getCalculatedValue();
-                                //$operation_val[] = $column_value;
-                                DB::table($table)->where(['id'=>$row_id])->update(['column_'.$colCount => $column_value]);
-                            }
+                                        $sheet->row($row_id, $data_row);
+                                        $column_value = $sheet->getCell($key_map[$search].$row_id)->getCalculatedValue();
+                                        //$operation_val[] = $column_value;
+                                        DB::table($table)->where(['id'=>$row_id])->update(['column_'.$colCount => $column_value]);
+                                    }
 
-                        });
-                    });
-                }
+                                });
+                            });
+                        }
 
-                DB::table($table)->where(['id'=>1])->update(['column_'.$colCount => $column_name]);
-                $orgColumns['column_'.$colCount] = $value->col_type;
+                        DB::table($table)->where(['id'=>1])->update(['column_'.$colCount => $column_name]);
+                        $orgColumns['column_'.$colCount] = $value->col_type;
 
-            }catch(\Exception $e){
-                throw $e;
+                    }catch(\Exception $e){
+                        throw $e;
+                    }
+                    break;
+
+                case 'value_ref':
+                    
+                    $currentDatasetID = $value->formula->current_dataset;
+                    $datasetTabelRecord = DL::find($currentDatasetID);
+
+                    $withDSTable = DL::find($value->formula->withDataset);
+
+
+                    $datasetTableName = $datasetTabelRecord->dataset_table;
+                    $createColumn = DB::select('ALTER TABLE `'.$datasetTableName.'` ADD COLUMN column_'.$colCount.' TEXT NULL AFTER '.$value->col_after.';');
+                    DB::table($table)->where('id',1)->update(['column_'.$colCount => $value->col_name]);
+                    DB::select('update '.$datasetTableName.' JOIN '.$withDSTable->dataset_table.' on '.$withDSTable->dataset_table.'.'.$value->formula->selecteddbColumn.'  = '.$datasetTableName.'.'.$value->formula->currentDSColumn.' set '.$datasetTableName.'.column_'.$colCount.' = '.$withDSTable->dataset_table.'.'.$value->formula->replaceWithColumn.' where '.$datasetTableName.'.id != 1');
+                    
+                    break;
             }
+            
         }
 
-        dump($orgColumns);
+       //dump($orgColumns);
 
-        return $orgColumns;
+        //return $orgColumns;
 
 
             // try{
@@ -574,6 +595,30 @@ class DatasetsController extends Controller
         return ['status'=>'success','columns'=>$columnsArray];
     }
 
-    
+    public function getColumnsForSelectedDataset($dataset_id){
+
+        $model = DL::find($dataset_id);
+        $datasetTable = DB::table($model->dataset_table)->where('id',1)->first();
+        return ['status'=>'success','columns'=>$datasetTable];
+    }
+
+    public function creaetClone($datasetId){
+
+        $model = DL::where('id',$datasetId)->first();
+        $orgID = Auth::user()->organization_id;
+        $newTableName = $orgID.'_data_table_'.time();
+        DB::select('CREATE TABLE '.$newTableName.' as SELECT * FROM `'.$model->dataset_table.'`');
+        DB::select('ALTER TABLE '.$newTableName.' ADD PRIMARY KEY(id)');
+
+        DB::select('CREATE TABLE cloning_dataset as SELECT * FROM `'.$orgID.'_datasets` WHERE id = '.$datasetId);
+        DB::update('UPDATE cloning_dataset SET dataset_table = "'.$newTableName.'"');
+
+        $newSurveyID = DB::select('SELECT MAX(id) maxId FROM `'.$orgID.'_datasets`');
+        $newSurveyID = $newSurveyID[0]->maxId + 1;
+        DB::update('UPDATE cloning_dataset SET id = '.$newSurveyID);
+        DB::select('INSERT into `'.$orgID.'_datasets` SELECT * FROM cloning_dataset');
+        DB::select('DROP TABLE cloning_dataset');
+        return ['status'=>'success','message'=>'Successfully cloned dataset!'];
+    }
 
 }

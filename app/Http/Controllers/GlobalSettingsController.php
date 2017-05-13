@@ -26,7 +26,8 @@ class GlobalSettingsController extends Controller
         $plugins['siteTagline_model']  = $this->getSiteSetting('site_tagline'); 
         $plugins['siteUrl_model']      = $this->getSiteSetting('site_url'); 
         $plugins['visual_setting']      = $this->getSiteSetting('visual_setting'); 
-        $plugins['default_setting']      = $this->getSiteSetting('default_setting'); 
+        $plugins['default_setting']      = $this->getSiteSetting('default_setting');
+        $plugins['survey_themes']      = $this->getSiteSetting('survey_themes');
 
 
     	return view('settings.index',$plugins);
@@ -296,6 +297,26 @@ class GlobalSettingsController extends Controller
         return redirect()->route('global.settings');
 
     }
+
+    public function saveSurveyThemes(Request $request){
+
+        try{
+            $count =GS::where('meta_key',$request->meta_type)->count();
+            if($count==0){
+                $GS =  new GS;
+                $GS->meta_key = $request->meta_type;
+                $GS->meta_value = $request->value;
+                $GS->updated_by = Auth::user()->id;
+                $GS->save();
+            }else{
+                GS::where('meta_key',$request->meta_type)->update(['meta_value'=>$request->value]);
+            }
+        }catch(\Exception $e){
+            throw $e;
+        }
+        return redirect()->route('global.settings');
+    }
+
     public function siteValue(Request $request)
     {
        

@@ -24,6 +24,37 @@ class DrawSurveyController extends Controller
     
 public function survey_statistics($token)
   {
+        function multidimensional_search($parents, $searched) { 
+          if (empty($searched) || empty($parents)) { 
+            return false; 
+          } 
+
+          foreach ($parents as $key => $value) { 
+            $exists = true; 
+            foreach ($searched as $skey => $svalue) { 
+              $exists = ($exists && IsSet($parents[$key][$skey]) && $parents[$key][$skey] == $svalue); 
+              
+            } 
+            if($exists){ 
+                $m[] =$key; } 
+          } 
+
+          if($exists){ 
+                dump($m);
+            }
+
+          return false; 
+        } 
+
+$parents = array(); 
+$parents[] = array('date'=>1320883200, 'uid'=>3,'new'=>'new'); 
+$parents[] = array('date'=>1318204800, 'uid'=>5,'new'=>'new'); 
+$parents[] = array('date'=>1318204800, 'uid'=>5,'new'=>'new'); 
+
+echo $key = multidimensional_search($parents, array('date'=>1318204800, 'uid'=>5)); // 1 
+
+
+
         $data = SEMBED::where('embed_token',$token)->first();
         if($data == null){
             $errors[] = 'Survey id not valid!';
@@ -32,12 +63,9 @@ public function survey_statistics($token)
         $sid = $data->survey_id;
         Session::put('org_id', $data->org_id);
         $survey_data = Surrvey::find($sid);
+        
 
-        foreach ($survey_data->group() as $key => $value) {
-            dump($value);
-         } 
-
-         die;
+        
         if(Schema::hasTable($survey_data->survey_table))
         {
             $survey_data['created_on'] = Carbon::parse($survey_data->created_at)->diffForHumans();
@@ -45,9 +73,9 @@ public function survey_statistics($token)
         }
 
        return view('survey.stats', ['survey_data'=>$survey_data]);
-  } 
+  }  
 
-    protected function getSettings(Array $settingsArray, $keyValue){
+    public static function getSettings(Array $settingsArray, $keyValue){
         $keyArray = array_map(function($array) use ($keyValue){
             if($array['key'] == $keyValue){
                 return $array;
@@ -56,9 +84,124 @@ public function survey_statistics($token)
 
         return $keyArray[array_search($keyValue, array_column($settingsArray, 'key'))]['value'];
     }
+protected function surveyViewType($surveyViewType , $token , $sid , $request=null )
+{
+        if (!empty($request) && $request->isMethod('post'))
+        {
+            $viewType['token'] = $request['token']; 
+            $viewType['type'] = $request['type'];
+            $viewType['group_no'] = $request['group_no'];
+            if($surveyViewType=="question")
+            {
+                $number = $request['number'];
+                $group_id = $request['group_id'];
+                $ques_count = SQ::where('group_id', $group_id)->count();
+                $gcount =  GROUP::where('survey_id',$sid)->count();
 
-    public function draw_survey($token, $theme=null ,$skip_auth = null )
-    {//2017-03-24T17:00:00.000Z
+                if(isset($request['next']))
+                {
+                    $number++;
+                    $id = $this->survey_store($request);
+                    $viewType['filled_id'] = $id;
+                    $viewType['ques_filled_count'] = $number + @Session::get('que_count');
+
+                }else if(isset($request['previous'])){
+                    $number--;
+                     Session::put('number',$number);
+                    $viewType['filled_id'] = session::get('filled_id');
+                }
+                
+                Session::put('number',$number);
+                $viewType['number'] = $number;
+
+               if($ques_count == $number)
+                {
+                    Session::put('que_count',$number);
+                  $group_no = $viewType['group_no'];
+                  $group_no++;
+                  $viewType['group_no'] =$group_no;
+                  $viewType['number'] = 0;
+                  Session::put('number',0);
+                }
+
+                if($gcount== $viewType['group_no'])
+                {
+                    Session::forget(["filled_id", 'table','que_count']);
+                    Session::flash('successfullSaveSurvey','Survey saved successfully!');
+                }
+            }
+
+            if($surveyViewType=="group")
+            {                   
+
+                $ques_count = SQ::where('group_id', $request['group_id'])->count();
+                $viewType['ques_filled_count'] = $ques_count + @Session::get('que_count');
+                Session::put('que_count',$ques_count);
+                $gcount =  GROUP::where('survey_id',$sid)->count();
+                $group_no = $request['group_no'];
+                if(isset($request['next']))
+                {
+                   $id =  $this->survey_store($request);
+                    $viewType['filled_id'] = $id;
+                    $group_no++;
+                }else if(isset($request['previous'])){
+
+                    $viewType['filled_id'] = session::get('filled_id');
+                    $group_no--;
+                } 
+                if($gcount==$group_no)
+                {
+                    Session::forget(["filled_id", 'table','que_count']);
+                    Session::flash('successfullSaveSurvey','Survey saved successfully!');
+                }
+                $viewType['group_no'] =$group_no;
+            }
+
+            if($surveyViewType=="survey")
+            {
+                $this->survey_store($request);
+            }
+         }else if($surveyViewType=="question")
+        {   
+            $viewType['group_no'] = 0;
+            $viewType['token'] =   $token;
+            $viewType['type'] = 'question';
+            $group = $number =    $viewType['number'] = 0;
+        }else if($surveyViewType=="group")
+        {   
+            $viewType['group_no'] = 0;
+            $viewType['token'] =   $token;
+            $viewType['type'] = 'group';
+        }elseif($surveyViewType=="survey" || $surveyViewType ==null)
+        {
+            $viewType['type'] = 'survey';
+            $viewType['token'] =   $token;
+        }
+
+        return $viewType;
+}
+
+    protected function survey_filled_data()
+    {
+        $filled_data = null;
+         if(!empty(Session::get('filled_id')) && !empty(Session::get('table')))
+         {
+               $filled_data = DB::table(Session::get('table'))->where('id',Session::get('filled_id'))->first();
+         }  
+         return $filled_data;
+    }
+    public function draw_survey( Request $request , $token=null, $theme=null ,$skip_auth = null  )
+    {
+        Session::forget('successfullSaveSurvey');
+        $group = null;
+        if ($request->isMethod('post'))
+        {
+            $token = $request['token']; 
+            $req = $request;
+         }
+        else{
+                $req =null;
+            }
         Surrvey::$group_take = null;
         Surrvey::$group_random = null;
 
@@ -74,14 +217,40 @@ public function survey_statistics($token)
     	Session::put('org_id', $data->org_id);
         $errors = [];
          
+        $survey_settings = SSETTING::where(["survey_id" => $sid ])->get()->toArray();
+        $surveyViewType = $this->getSettings($survey_settings,'surveyViewType');
+        
+        $viewType = null;
+        $viewType = $this->surveyViewType($surveyViewType, $token, $sid, $req);
 
-    	$survey_data = Surrvey::find($sid);
+        $filled_data = $this->survey_filled_data();
+        //dump($filled_data);
+        //dump(Session::get('filled_id'));
+      //  dump(Session::get('table'));
+       //dd($viewType);
+    	$survey_data = Surrvey::with(['group'=>function($query)use($viewType) {
+            if($viewType['type']=="survey")
+            {
+                $query->orderBy('group_order')->with(['question'=>function($que) {
+                        $que->orderBy('quest_order');                            
+                }]);
+            }
+            else{
+                    $query->orderBy('group_order')->skip($viewType['group_no'])->take(1)->with(['question'=>function($que) use($viewType){
+                            if(isset($viewType['number']))
+                            {
+                                $que->orderBy('quest_order')->skip($viewType['number'])->take(1);
+                            }else{
+                                $que->orderBy('quest_order');
+                            }
+                        }]);
+                }
+                    }])->find($sid);
+
         if($survey_data == null){
             $errors[] = 'Survey id not valid!';
             return view('survey.draw_survey',['err_msg'=>$errors]);
         }
-    	$survey_settings = SSETTING::where(["survey_id" => $sid ])->get()->toArray();
-        
         $error_message_status = $this->getSettings($survey_settings,'survey_custom_error_message_status');
         if($error_message_status =='0')
         {
@@ -130,14 +299,25 @@ public function survey_statistics($token)
                         $authentication_type = $this->getSettings($survey_settings,'authentication_type');
                         if($authentication_type == 'role'){
                             $roles = json_decode($this->getSettings($survey_settings,'authorized_roles'),true);
-                            if(!in_array(Auth::user()->role_id, $roles)){
+                            if(is_array($roles) && !empty($roles)){
+                                if(!in_array(Auth::user()->role_id, $roles)){
+                                    $errors[] = $messages_list['survey_unauth_role'];
+                                }
+                            }else{
                                 $errors[] = $messages_list['survey_unauth_role'];
                             }
+                            
                         }else{
+                            $users = [];
                             $users = json_decode($this->getSettings($survey_settings,'authorized_users'),true);
-                            if(!in_array(Auth::user()->id, $users)){
+                            if(is_array($users) && !empty($users)){
+                                if(!in_array(Auth::user()->id, $users)){
+                                    $errors[] = $messages_list['survey_unauth_user'];
+                                }
+                            }else{
                                 $errors[] = $messages_list['survey_unauth_user'];
                             }
+                            
 
                          }
 //Response limit Per user                           
@@ -176,8 +356,6 @@ public function survey_statistics($token)
             
         $survey_start_date = $this->getSettings($survey_settings,'survey_start_date');
         $survey_expiry_date = $this->getSettings($survey_settings,'survey_expiry_date');
-           // dump('start'.$survey_start_date);
-                        //dump('end'.$survey_expiry_date);
 
 
             if($today_date < $survey_start_date){
@@ -187,6 +365,15 @@ public function survey_statistics($token)
             }
             
         }
+//progress Bar setting 
+                $progress_bar_question =null;
+                $progressbar_status = $this->getSettings($survey_settings,'showProgressbar');
+                if(($progressbar_status == 1 || $progressbar_status == '1') && $progressbar_status != null){
+                    $progress_bar_question = $this->progress_bar($sid);
+                   
+                }
+
+
             @$timer['survey_timer_status'] = $this->getSettings($survey_settings,'survey_timer_status');
             @$timer['survey_timer_type']   = $this->getSettings($survey_settings,'survey_timer_type');
             @$timer['survey_duration']     = $this->getSettings($survey_settings,'survey_duration');
@@ -195,20 +382,28 @@ public function survey_statistics($token)
             @$custom_code['custom_js'] = $this->getSettings($survey_settings,'customJs');
             @$custom_code['custom_css'] = $this->getSettings($survey_settings,'customCss');
 
-                    
-    	
+                
         if(!empty($errors)){
             return view('survey.draw_survey',['err_msg'=>$errors,'theme'=>$theme, 'skip_auth'=>$skip_auth ,'token'=>$token]);
         }else{
-            return view('survey.draw_survey',['custom_code'=>$custom_code, 'timer'=>$timer ,'theme'=>$theme , 'skip_auth'=>$skip_auth , 'sdata'=>$survey_data, 'token'=>$token]);
+            return view('survey.draw_survey',[ 'custom_code'=>$custom_code, 'timer'=>$timer ,'theme'=>$theme , 'skip_auth'=>$skip_auth , 'sdata'=>$survey_data, 'token'=>$token, 'design_settings'=>$survey_settings , 'progress_bar_question'=>$progress_bar_question,'viewType'=>$viewType, 'filled_data'=>$filled_data]);
         }
 
     	
     }
 
-    public function survey_store(Request $request)
+    protected function progress_bar($sid)
     {
-        try{
+        return SQ::where('survey_id',$sid)->count();
+    }
+
+    public function survey_store($request)
+    {
+       // dd($request->all());
+       // try{
+       $type = $request['type'];
+      
+        unset($request['token'], $request['type'], $request['group_id'], $request['group_no'], $request['number'], $request['next']);
             $data = SEMBED::where('embed_token',$request->code)->first();
 
             if($data == null){
@@ -249,14 +444,36 @@ public function survey_statistics($token)
             $insert["unique_id"] = $data->survey_id.''.date('YmdHis').''.substr((string)microtime(), 2, 6).''.rand(1000,9999); 
     		$insert["created_by"] = $uid;
         	$insert["ip_address"] = $request->ip();
-            unset($insert['code']);
-        	DB::table($table)->insert($insert);
-            Session::flash('successfullSaveSurvey','Survey saved successfully!');
-            return redirect()->route('survey.draw',['id'=>$request->code]);
-        }catch(\Exception $e)
-        {
-            return ['status'=>'error', 'message'=>"Something goes wrong try again"];
-        }
+
+            if($type=='survey')
+            {
+                 unset($insert['filled_id'],$insert['code']);
+                DB::table($table)->insertGetId($insert);
+                  Session::flash('successfullSaveSurvey','Survey saved successfully!');
+             return redirect()->route('survey.draw',['id'=>$request->code]);
+            }
+            else if(isset($request['filled_id']))
+            {   $id = $request['filled_id'];
+                unset($insert['filled_id'],$insert['code']);
+                DB::table($table)->where('id',$id)->update($insert);
+                Session::put("filled_id",$id);
+                return $id;
+            }else{
+                    unset($insert['code']);
+                    $id  = DB::table($table)->insertGetId($insert);
+                    Session::put(["filled_id"=>$id, 'table'=>$table]);
+                    return $id;
+                }
+
+            // dump('inser_id' . $id);
+            // die;
+            
+        //     Session::flash('successfullSaveSurvey','Survey saved successfully!');
+        //     return redirect()->route('survey.draw',['id'=>$request->code]);
+        // }catch(\Exception $e)
+        // {
+        //     return ['status'=>'error', 'message'=>"Something goes wrong try again"];
+        // }
     }
 
     public function view_filled_survey($sid , $uid)
@@ -265,9 +482,7 @@ public function survey_statistics($token)
     	$table = "_survey_data_".$sid;
     	$data = DB::table($table)->where('created_by',$uid)->first();
     	$Ques = SQ::where('survey_id',$sid)->get();
-//dump($data->SID13_GID1_QID1);
     	foreach ($Ques as $key => $value) {
-    		# code...
     		echo "<br>Question :".$value->question.'<br>';
     		$ans = json_decode($value->answer);
     		  $qid = $ans->question_id;
@@ -346,4 +561,4 @@ public function survey_statistics($token)
         return redirect()->route('survey.draw',['id'=>$token]);
 
     }
-}
+} 

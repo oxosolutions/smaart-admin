@@ -47,9 +47,20 @@ class VirtualTableGenController extends Controller
           "`answer` text COLLATE utf8_unicode_ci NOT NULL",
           "`question` varchar(255) COLLATE utf8_unicode_ci NOT NULL",
           "`group_id` int(10) UNSIGNED NOT NULL",
+          "`quest_order` int(10) DEFAULT NULL",
           "`created_at` timestamp NULL DEFAULT NULL",
           "`updated_at` timestamp NULL DEFAULT NULL",
           "`deleted_at` timestamp NULL DEFAULT NULL"
+          ]
+        ],
+        [
+          'tab_name'=>$org_name.'_visualization_metas',
+          'columns'=>[
+          "`visualization_id` int(10) UNSIGNED NOT NULL",
+          "`key` text COLLATE utf8_unicode_ci NOT NULL",
+          "`value` text COLLATE utf8_unicode_ci NOT NULL",
+          "`created_at` timestamp NULL DEFAULT NULL",
+          "`updated_at` timestamp NULL DEFAULT NULL"
           ]
         ],
         [
@@ -58,6 +69,7 @@ class VirtualTableGenController extends Controller
             "`survey_id` int(10) UNSIGNED NOT NULL",
             "`title` varchar(255) COLLATE utf8_unicode_ci NOT NULL",
             "`description` text COLLATE utf8_unicode_ci",
+            "`group_order` int(10) DEFAULT NULL",
             "`created_at` timestamp NULL DEFAULT NULL",
             "`updated_at` timestamp NULL DEFAULT NULL",
             "`deleted_at` timestamp NULL DEFAULT NULL"
