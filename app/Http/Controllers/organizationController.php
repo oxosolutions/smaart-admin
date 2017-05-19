@@ -90,11 +90,22 @@ class organizationController extends Controller
     }
 
     public function destroy($id){
-
+     
+    
+  
       $model = ORG::findOrFail($id);
       try{
           $model->delete();
-          Session::flash('success','Successfully deleted!');
+
+         $data =   DB::select("select CONCAT('DROP TABLE `',t.table_schema,'`.`',t.table_name,'`;') AS dropTable
+          FROM information_schema.tables t
+          WHERE t.table_schema = 'smartframework-admin'
+          AND t.table_name LIKE '".$id."%' 
+          ORDER BY t.table_name");
+        foreach ($data as $key => $value) {
+             DB::select($value->dropTable);
+          }
+        Session::flash('success','Successfully deleted!');
           return redirect()->route('organization.list');
         }catch(\Exception $e){
             throw $e;

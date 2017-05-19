@@ -76,6 +76,7 @@ Route::get('view_survey_saved_data/{id}' , ['as'=>'survey.savedata' , 'uses'=>'S
 	
 	Route::post('survey_embeds', ['as'=>'surrvey.surrvey_save', 'uses'=>'Services\SurrveyApiController@survey_embeds', 'route_name'=> 'Survey Embeds Created']);
 
+	Route::post('survey_share/append', ['as'=>'append.survey_share', 'uses'=>'Services\SurrveyApiController@survey_share_append']);
 	Route::post('surrvey/save', ['as'=>'surrvey.surrvey_save', 'uses'=>'Services\SurrveyApiController@surrvey_save', 'route_name'=> 'Survey Created']);
 	Route::get('surrvey/list', ['as'=>'apisurrvey.list', 'uses'=>'Services\SurrveyApiController@surrvey_list' , 'route_name'=> 'Survey List View']);
 	Route::get('surrvey/enableDisable/{id}', ['as'=>'apisurrvey.status', 'uses'=>'Services\SurrveyApiController@enableDisable']);

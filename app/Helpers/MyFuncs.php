@@ -4,10 +4,63 @@ use App\SurveyQuestion as SQ;
 use App\Surrvey;
 use DB;
 use App\FileManager as FM;
+use App\User;
+use App\organization;
 
 
 
 class MyFuncs{
+
+	Public static function user_detail_by_id($id)
+	{
+		$userDetail = User::find($id);
+		return $userDetail;
+	}
+	Public static function survey_save_data($sid)
+	{
+
+			$survey_data = Surrvey::with(['group'=>function($query) {
+				$query->orderBy('group_order')->with(['question'=>function($que) {
+					$que->orderBy('quest_order');                            
+				}]);
+			}])->find($sid);
+			foreach ($survey_data->group as $gkey => $gvalue) {
+				foreach ($gvalue->question as $qkey => $qvalue) {
+					$decode = json_decode($qvalue->answer);
+					$q_id =	$decode->question_id;
+					$quesId[$q_id] = $q_id;
+					$quesText[$q_id] = $qvalue->question;
+					$quesType[$q_id] = 	$decode->question_type;
+
+				}
+			}
+			$newData[0] = $quesText;
+			Surrvey::findORfail($sid);
+			$table = Surrvey::select('survey_table')->where('id',$sid)->first()->survey_table;
+			$data = DB::table($table)->get();
+			foreach ($data as $key => $value) {
+				unset($value->device_detail);
+				$key++;
+				foreach ($quesId as $qqkey => $qqvalue) {
+					$newData[$key][$qqvalue] = $value->$qqvalue;
+				
+					if($quesType[$qqkey]=="checkbox")
+					{
+						unset($optVal);
+						foreach (json_decode($value->$qqvalue, true) as $aKey => $ansValue) {
+						if($ansValue==true)
+							{
+								$optVal[] = $aKey;
+							}
+						}
+						$newData[$key][$qqvalue] = implode(', ', $optVal);
+					}		
+				}
+			}
+
+			return $newData;
+		
+	}
 
 public static function create_survey_table($survey_id , $org_id)
 	{
@@ -26,6 +79,7 @@ public static function create_survey_table($survey_id , $org_id)
 			$colums[] =    "`mac_address` varchar(255) NULL DEFAULT  NULL";
 			$colums[] =    "`imei` varchar(255) NULL DEFAULT  NULL";
 			$colums[] =    "`unique_id` varchar(255) NULL DEFAULT  NULL";
+			$colums[] =    "`device_detail` text NULL DEFAULT  NULL";
 			$colums[] =    "`created_by` int(11)  NULL";
 			$colums[] =    "`created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP";
 			$colums[] =    "`deleted_at` timestamp NULL DEFAULT NULL";

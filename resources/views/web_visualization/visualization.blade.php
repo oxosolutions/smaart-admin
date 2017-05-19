@@ -129,12 +129,16 @@ echo "</pre>";
 										</div>
 										@endif
 										<div id="" class="aione-chart-content">
-											<div id="{{$chart_id}}" class="chart-wrapperr"></div>
+											
 
 											@if($chart_type == 'CustomMap')
+												<div id="{{$chart_id}}" class="map-wrapper">
 												{!! $details[$chart_key]['map'] !!}
+												</div>
 											@else
+												<div id="{{$chart_id}}" class="chart-wrapperr"></div>
 												{!! lava::render($chart_type,$chart_key,$chart_id) !!}
+
 											@endif
 										</div>
 									</div>
@@ -208,6 +212,111 @@ echo "</pre>";
 <script src="{{asset('/bower_components/admin-lte/plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
 <script src="{{asset('/js/visualization.js')}}" type="text/javascript"></script>
 
+<script type="text/javascript">
+	$(document).ready(function(){
+			var chartsList = '{!! json_encode($javascript) !!}';
+
+			//console.log("==111111");
+			
+			$.each(JSON.parse(chartsList), function(key,val){
+				//console.log("==22222222--"+key);
+				//console.log("==22222222--"+key);
+				$.each(val.data, function(ikey, ival){
+					//console.log("==333333--"+ikey);
+					var index = 0;
+					$.each(ival, function(dataKey, dataVal){
+						
+						var colorVal = index/val.data.length;
+						var leagendWidth = (1/(val.data.length-1))*100;
+						var colorCode = getColor(colorVal);
+						
+						var putId = val.headers[dataKey].replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, "_");
+						var currentClass = $('#'+ival[0]).attr('class');
+						//console.log("--"+currentClass);
+						$('#'+key+' #'+ival[0]).attr(putId,dataVal);
+						$('#'+key+' #'+ival[0]).css({'fill': colorCode }).attr('class','mapArea '+currentClass);
+					});
+					index++;
+					//console.log(ival);
+				});
+			});
+
+			$('.map-wrapper .mapArea').mouseover(function (e) {
+                var elm = $(this);
+                var title=$(this).attr('title');
+                var html = '';
+                html += '<div class="inf">';
+                html += '<span class="title">'+title + '</span>';
+                $.each(JSON.parse(chartsList), function(key, val){
+                	$.each(val.headers, function(k_in, v){
+	                    if(k_in > 0){
+	                        var atr_id = v.replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, "_");
+	                        html += '<span class="data">'+v+': '+ elm.attr(atr_id)+'</span>';
+	                    }
+	                });
+                });
+                html += '</div>';
+                $(html).appendTo('body');
+            })
+            .mouseleave(function () {
+                $('.inf').remove();
+            }).mousemove(function(e) {
+                var mouseX = e.pageX, //X coordinates of mouse
+                    mouseY = e.pageY; //Y coordinates of mouse
+
+                $('.inf').css({
+                    'top': mouseY-($('.inf').height()+30),
+                    'left': mouseX
+                });
+            });
+            /*console.log(lava);
+            lava.getChart('chart_2', function (googleChart, lavaChart) {
+
+			    
+			});*/
+				/*setTimeout(function(){
+					console.log(lava.charts.BarChart['chart_1'].data.Mf);
+					data = new google.visualization.DataTable();
+			        data.addColumn('string', 'Topping');
+			        data.addColumn('number', 'Slices');
+			        data.addRows([
+			          ['Mushrooms', 3],
+			          ['Onions', 1],
+			          ['Olives', 1],
+			          ['Zucchini', 1],
+			          ['Pepperoni', 2]
+			        ]);
+
+			        // Set chart options
+			        var options = {'title':'How Much Pizza I Ate Last Night',
+			                       'width':400,
+			                       'height':300};
+
+			        // Instantiate and draw our chart, passing in some options.
+			        chart = new google.visualization.PieChart(document.getElementById('chart_1'));
+			        
+			        chart.draw(data, options);
+				},3000);*/
+				
+		      
+		      
+
+			function getColor(value){
+	            var hue=((1-value)*50).toString(10);
+	            return ["hsl(",hue,",100%,50%)"].join("");
+	        }
+
+	        $('.show-hide-charts').click(function(){
+	        	if($(this).is(':checked')){
+	        		$('#'+$(this).attr('data-hide')).parents('.chart-row').show();
+	        	}else{
+	        		$('#'+$(this).attr('data-hide')).parents('.chart-row').hide();
+	        	}
+	        });
+	});
+</script>
+
+
 @if(isset($meta['custom_js_code']) && $meta['custom_js_code'] != '')
 	<script type="text/javascript">  
 		<?php echo @$meta['custom_js_code']; ?>
@@ -254,6 +363,27 @@ echo "</pre>";
 	margin-top: 20px;
 	margin-bottom: 20px; 
 }
+.theme-clean_dark .main{
+	background-color:#333333; 
+}
+.theme-clean_dark .land{
+	fill: #454545;
+    stroke: #282828; 
+    stroke-width: 0.3; 
+}
+.theme-clean_dark .mapArea{
+	fill:#ff9800;
+}
+ 
+ .map-wrapper{
+	 text-align:center;
+ }
+ .map-wrapper svg {
+    max-width: 100%;
+}
+
+
+
 .aione-topbar {
     border: 1px solid #e8e8e8;
     margin-bottom: 20px;
@@ -485,8 +615,6 @@ echo "</pre>";
 .aione-charts .aione-chart{
 	display: block;
 	overflow: hidden;
-	margin-bottom:20px;
-    border: 1px solid #e8e8e8;
 }
 
 
@@ -580,6 +708,71 @@ echo "</pre>";
     }
 }
 
+
+
+
+
+
+.wrapper.theme-clean_light .aione-charts .aione-chart{
+	margin-bottom:20px;
+    border: 1px solid #e8e8e8;
+}
+
+
+
+
+
+
+
+.inf {
+    position: absolute;
+    background: #ffffff;
+    border: 1px solid #e8e8e8;
+    width: 250px;
+    margin: 0 0 0 -125px;
+    padding: 8px;
+    z-index: 9999;
+    border-radius: 4px;
+    font-size: 15px;
+    line-height: 18px;
+}
+.inf:after {
+	content: "";
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    bottom: -10px;
+    left: 50%;
+    margin: 0 0 0 -10px;
+    border-top: 10px solid #ffffff;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    z-index: 9999;
+}
+
+.inf .title {
+    font-size: 17px;
+    line-height: 20px;
+    border-bottom: 1px solid #666666;
+    text-align: center;
+    color: #168dc5;
+    padding: 0px 0 8px 0;
+    margin: 0;
+    display: block;
+}
+.inf .data {
+    display: block;
+    border-bottom: 1px dotted #e8e8e8;
+    padding: 4px 0;
+    margin: 0;
+}
+.google-visualization-table{
+	min-width: 100% !important;
+}
+.google-visualization-table .google-visualization-table-table{
+	width: 100% !important;
+}
 </style> 
 
 @endsection

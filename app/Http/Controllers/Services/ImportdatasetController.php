@@ -312,7 +312,7 @@ class ImportdatasetController extends Controller
             $model = new MySQLWrapper();
             $tableName = $org_id.'_data_table_'.time();
             
-            $result = $model->wrapper->createTableFromCSV($filePath,$tableName,',','"', '\\', 0, array(), 'generate','\r\n');
+            $result = $model->wrapper->createTableFromCSV($filePath,$tableName,',','"', '\\', 0, array(), 'generate','\n');
             
             if($result){
                 $model = new DL;

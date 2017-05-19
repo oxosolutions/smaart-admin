@@ -31,6 +31,7 @@
 		<script type="text/javascript">  
 				<?php echo @$custom_code['custom_js']; ?>
 		</script>
+		<script type="text/javascript" src="{{asset('/js/custom-survey.js')}}"></script>
 
 
 

@@ -25,7 +25,7 @@ $(document).ready(function(){
 				$.each(nameArray, function( index, value ) {  
 
 					type = $("."+value).attr('type');
-					console.log('type---'+type);
+					//console.log('type---'+type);
 
 					if(type =="radio" )
 					{
@@ -33,18 +33,31 @@ $(document).ready(function(){
 
 					}else{
 					val  = $.trim($("."+value).val());
-					console.log(val);
+					//console.log(val);
 					}
 
 					if(val)
 					{
-						countQues++;	
-
-						//$("input[name='gender']:checked").val();
+						console.log(value);
+						// mark = $("#mark_"+value).html('<b style="color:Green;">Filled</b>');
+						mark = $("#mark_"+value).parent().css({'background':'rgba(0, 128, 0, 0.2)'});
+						console.log(mark);
+							countQues++;	
+					}else{
+						$("#mark_"+value).parent().css({'background':'rgba(255, 0, 0, 0.2)'});
+						// $("#mark_"+value).html('<b style="color:red;">Pending</b>');
 					}
 				});
 			console.log(countQues);
+
+				$("#sum_filled_ques").html(countQues);
 				$("#progress").val(countQues);
+				$('.aione-progress-inside').css({'width':countQues+'%'});
+
+				// $( window ).bind("resize", function(){
+				//     $(".aione-progress-inside").width( 600 );
+				// });
+
 			});
 
 

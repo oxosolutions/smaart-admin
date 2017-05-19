@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use App\Survey;
 use App\Surrvey;
 use App\SurveyQuestion as SQ;
@@ -22,67 +21,39 @@ use Carbon\Carbon;
 
 class DrawSurveyController extends Controller
 {
-
-    Public function survey_save_data($id)
-    {
-       $sdata = SurveyHelper::survey_save_data($id);
-       return view('survey.survey_save_data',['sdata'=>$sdata , 'sid'=>$id]);
-
-    }
-
-    public function export_survey_data($id)
-    {
-
-        // echo $id;
-
-
-       
-        // $data = [
-        //             ['abc'=>"121", 'abc1'=>"1211",'abc2'=>"121ss1"],
-        //             ['abc'=>"121", 'abc1'=>"1211",'abc2'=>"121fgss1"],
-        //             ['abc'=>"1df21", 'abc1'=>"12cdf11",'abc2'=>"12xd1ss1"],
-
-        // ]; //array()SurveyHelper::survey_save_data($id);
-
-        // Excel::create('Filename', function($data) {
-
-        //     })->export('xls');
-        
-    }
     
-    public function survey_statistics($token)
-    {
-//         function multidimensional_search($parents, $searched) { 
-//             if (empty($searched) || empty($parents)) { 
-//                 return false; 
-//             } 
+public function survey_statistics($token)
+  {
+        function multidimensional_search($parents, $searched) { 
+          if (empty($searched) || empty($parents)) { 
+            return false; 
+          } 
 
-//             foreach ($parents as $key => $value) { 
-//                 $exists = true; 
-//                 foreach ($searched as $skey => $svalue) { 
-//                     $exists = ($exists && IsSet($parents[$key][$skey]) && $parents[$key][$skey] == $svalue); 
+          foreach ($parents as $key => $value) { 
+            $exists = true; 
+            foreach ($searched as $skey => $svalue) { 
+              $exists = ($exists && IsSet($parents[$key][$skey]) && $parents[$key][$skey] == $svalue); 
+              
+            } 
+            if($exists){ 
+                $m[] =$key; } 
+          } 
 
-//                 } 
-//                 if($exists){ 
-//                     $m[] =$key; 
-//                 } 
-//             } 
+          if($exists){ 
+                dump($m);
+            }
 
-//             if($exists){ 
-//                 dump($m);
-//             }
+          return false; 
+        } 
 
-//             return false; 
-//         } 
+$parents = array(); 
+$parents[] = array('date'=>1320883200, 'uid'=>3,'new'=>'new'); 
+$parents[] = array('date'=>1318204800, 'uid'=>5,'new'=>'new'); 
+$parents[] = array('date'=>1318204800, 'uid'=>5,'new'=>'new'); 
 
-//         $parents = array(); 
-//         $parents[] = array('date'=>1320883200, 'uid'=>3,'new'=>'new'); 
-//         $parents[] = array('date'=>1318204800, 'uid'=>5,'new'=>'new'); 
-//         $parents[] = array('date'=>1318204800, 'uid'=>5,'new'=>'new'); 
+echo $key = multidimensional_search($parents, array('date'=>1318204800, 'uid'=>5)); // 1 
 
-//         echo $key = multidimensional_search($parents, array('date'=>1318204800, 'uid'=>5)); // 1 
 
-// die;
 
         $data = SEMBED::where('embed_token',$token)->first();
         if($data == null){
@@ -92,23 +63,17 @@ class DrawSurveyController extends Controller
         $sid = $data->survey_id;
         Session::put('org_id', $data->org_id);
         $survey_data = Surrvey::find($sid);
+        
 
+        
         if(Schema::hasTable($survey_data->survey_table))
         {
             $survey_data['created_on'] = Carbon::parse($survey_data->created_at)->diffForHumans();
-            $filled_data = DB::table($survey_data->survey_table);
-            $survey_data['total_filled'] = $total_filled = $filled_data->count();     
-            $survey_data['completed_survey'] =  $filled_data->where('survey_status',1)->count();     
-            $survey_data['pending_survey'] =  $filled_data->where('survey_status',0)->count();     
-           // $survey_data['pending_survey'] =  $filled_data->select()->groupBy('survey_submitted_by');
-
-            $survey_data['user_filled_count'] = DB::table($survey_data->survey_table)->selectRaw('count(id) as total , survey_submitted_by')->groupBy('survey_submitted_by')->pluck('total','survey_submitted_by');
-          
-          // dump($sdata->count('id')->groupBy('survey_submitted_by'));     
+           $survey_data['total_filled'] = $total_filled = DB::table($survey_data->survey_table)->count();     
         }
 
-        return view('survey.stats', ['survey_data'=>$survey_data]);
-    }  
+       return view('survey.stats', ['survey_data'=>$survey_data]);
+  }  
 
     public static function getSettings(Array $settingsArray, $keyValue){
         $keyArray = array_map(function($array) use ($keyValue){
@@ -244,13 +209,13 @@ protected function surveyViewType($surveyViewType , $token , $sid , $request=nul
             foreach ($filled_data as $fkey => $fvalue) {
                 if(!empty($fvalue))
                 {
-                   // dump($fvalue);
+                    dump($fvalue);
                     $c++;
                 }
             }
         } 
          $real_count = $c - 10; 
-         //dump('count'.$real_count); 
+         dump('count'.$real_count); 
          return $filled_data;
     }
     public function draw_survey( Request $request , $token=null, $theme=null ,$skip_auth = null  )
@@ -287,8 +252,8 @@ protected function surveyViewType($surveyViewType , $token , $sid , $request=nul
         $viewType = $this->surveyViewType($surveyViewType, $token, $sid, $req);
         $filled_data = $this->survey_filled_data();
         //dump($filled_data);
-       // dump(Session::get('filled_id'));
-      //dump(Session::get('table'));
+        dump(Session::get('filled_id'));
+      dump(Session::get('table'));
        //dd($viewType);
     	$survey_data = Surrvey::with(['group'=>function($query)use($viewType) {
             if($viewType['type']=="survey")
@@ -448,7 +413,7 @@ protected function surveyViewType($surveyViewType , $token , $sid , $request=nul
         if(!empty($errors)){
             return view('survey.draw_survey',['err_msg'=>$errors,'theme'=>$theme, 'skip_auth'=>$skip_auth ,'token'=>$token]);
         }else{
-            return view('survey.draw_survey',[ 'custom_code'=>$custom_code, 'timer'=>$timer ,'theme'=>$theme , 'skip_auth'=>$skip_auth , 'sdata'=>$survey_data, 'token'=>$token, 'design_settings'=>$survey_settings , 'progress_bar_question'=>$progress_bar_question,'viewType'=>$viewType, 'filled_data'=>$filled_data,'sid'=>$sid]);
+            return view('survey.draw_survey',[ 'custom_code'=>$custom_code, 'timer'=>$timer ,'theme'=>$theme , 'skip_auth'=>$skip_auth , 'sdata'=>$survey_data, 'token'=>$token, 'design_settings'=>$survey_settings , 'progress_bar_question'=>$progress_bar_question,'viewType'=>$viewType, 'filled_data'=>$filled_data]);
         }
 
     	

@@ -23,9 +23,66 @@ use App\GlobalSetting as GS;
 class SurrveyApiController extends Controller
 {
 
+	public function survey_share_append(Request $request)
+	{
+		// $data = DB::table('126_survey_questions')->get();
+		// foreach ($data as $key => $value) {
+		// 	$id = $value->id;
+		// 	$survey_id = $value->survey_id;
+		// 	$group_id = $value->group_id;
+		// 	$qid = "SID$survey_id"."_GID$group_id"."_QID$id";
+		// $data = DB::table('126_survey_questions')->where('id',$id)->update(['question_id'=>$qid]);
+		// 	dump($qid);
+		// 	$qid = json_decode($value->answer)->question_id;
+		// }
+		
+
+		// die;
+
+		$current_org_id = Auth::user()->organization_id;
+		$shareCodes = json_decode($request->code);
+		foreach ($shareCodes as $key => $value) {
+			$expCode = explode('.', $value);
+			$org_id	 =		$expCode[0];
+			$survey_id =		$expCode[1];
+		//survey	
+			$survey = $org_id."_surveys";
+			$group = $org_id."_survey_question_groups";
+			$ques = $org_id."_survey_questions";
+			$current_survey = $current_org_id."_surveys";
+
+		//group
+			$current_group = $current_org_id."_survey_question_groups";
+			$group = $org_id."_survey_question_groups";
+	
+			$current_ques = $current_org_id."_survey_questions";
+			$ques = $org_id."_survey_questions";
+		//Insert survey From Shared
+	  		DB::select("INSERT INTO $current_survey (`name`, `created_by`, `description`)  SELECT `name`, `created_by`, `description` FROM $survey WHERE id=$survey_id");
+
+			$inserted_survey_id = DB::getPdo()->lastInsertId(); 
+		//Total count of group
+			$total =  DB::table($group)->where('survey_id',$survey_id)->count();
+
+			for($i=0; $i<$total; $i++)
+			{	//insert group one  by One
+				DB::select("INSERT INTO $current_group ( `title`, `description`)  SELECT  `title`, `description` FROM $group WHERE survey_id=$survey_id LIMIT $i,1 ");
+
+				$inserted_goup_id = DB::getPdo()->lastInsertId(); 
+			// update SURVEY ID
+				DB::table($current_group)->whereNull('survey_id')->update(['survey_id' => $inserted_survey_id]);
+			//GET GROUP ID FROM SHARE SURVEY	
+				$group_id = DB::table($group)->where('survey_id',$survey_id)->skip($i)->take(1)->first()->id;
+			//INSERT QUESTION GROUP WISE	
+				DB::select("INSERT INTO $current_ques ( `answer`, `question`)  SELECT  `answer`, `question` FROM $ques WHERE survey_id=$survey_id and group_id=$group_id");
+			//UPDATE SURVEY ID & GROUP ID
+				 DB::table($current_ques)->whereNull('group_id')->update(['survey_id'=>$inserted_survey_id ,'group_id'=>$inserted_goup_id]);
+			}		
+		}
+	}
+
 	public function save_survey_filled_data(Request $request)
 	{
-
 		$org_id = org::select('id')->where('activation_code' ,$request->activation_code)->first()->id;
 		Session::put('org_id', $org_id);
 		$data = json_decode($request->export,true);
@@ -52,13 +109,18 @@ class SurrveyApiController extends Controller
 			$insert["survey_completed_on"] = 	$value['endon']; 
 			$insert["ip_address"] = $request->ip();
 			$insert["survey_submitted_from"] = "APP";
+			if(isset($value['user_id']))
+			{
+				$insert["survey_submitted_by"] = $value['user_id'];
+			}
+
 			if(isset($value['unique_id']))
 			{
 				$insert["unique_id"] = 	@$value['unique_id'];
 			$survey_check = DB::table($table)->where('unique_id',$insert["unique_id"])->count();
 			//dd($surve_check);
 			}
-			dump($value);
+			//dump($value);
 			foreach ($value['answers'] as $ansKey => $ansValue) {	
 				if(isset($ansValue["answer"]))
 				{
@@ -72,34 +134,27 @@ class SurrveyApiController extends Controller
 					}
 				}				 
 			}
+			$insert["device_detail"] =		$request->device_details;
+
 			if($survey_check==0)
 			{		
 				DB::table($table)->insert($insert);	
 			}	
 		}		
 	}
-//VIEW SURVEY SAVED DATA 
+//VIEW SURVEY SAVED DATA fuse
 	public function view_survey_saved_data($sid)
 	{
 		try{
-			Surrvey::findORfail($sid);
-			$table = Surrvey::select('survey_table')->where('id',$sid)->first()->survey_table;
-			$data = DB::table($table)->get();
-			foreach ($data as $key => $value) {
-				foreach ($value as $aKey => $ansValue) {
-					if(is_array(json_decode($ansValue,true)))
-					{
-						$data[$key]->$aKey = implode(', ', json_decode($ansValue,true));
-					}
-				}
-			}
-			return ['status'=>'success', 'data'=> $data];
+			$newData = SurveyHelper::survey_save_data($sid);
 
-		}catch(\Exception $e)
-		{
-			throw $e;			
+			return ['status'=>'success', 'data'=> $newData ];
+
+			}catch(\Exception $e)
+			{
+			//throw $e;			
 			return ['status'=>'error', 'message'=>'something goes wrong try again'];	
-		}
+			}
 	} 
 	//embeds  surrvey
 	public function survey_embeds(Request $request)
@@ -180,6 +235,7 @@ class SurrveyApiController extends Controller
 					unset($val["question"]);
 					$sq->answer = 	json_encode($val);
 					$sq->survey_id = $survey_id;
+					$sq->question_id = $val['question_id'];
 					$sq->group_id = $grp;
 					$sq->quest_order = $sortIndex;
 					$sq->save();
@@ -256,6 +312,7 @@ class SurrveyApiController extends Controller
 					$survey['group'][1]['group_questions'][$index]['survey_id'] = $question->survey_id;
 					$survey['group'][1]['group_questions'][$index]['question']  = $question->question;
 		        	$survey['group'][1]['group_questions'][$index]['group_id']  = $question->group_id;
+		        	$survey['group'][1]['group_questions'][$index]['question_id']  = $question->question_id;
 					$index++;
 				}
 				return ['status'=>'success','data'=>$survey,'survey_name'=>$surveyName->name,'group_name'=>$groupName->title];

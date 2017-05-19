@@ -45,6 +45,7 @@ class VirtualTableGenController extends Controller
           'columns'=>[
           "`survey_id` int(10) UNSIGNED NOT NULL",
           "`answer` text COLLATE utf8_unicode_ci NOT NULL",
+          "`question_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL",
           "`question` varchar(255) COLLATE utf8_unicode_ci NOT NULL",
           "`group_id` int(10) UNSIGNED NOT NULL",
           "`quest_order` int(10) DEFAULT NULL",

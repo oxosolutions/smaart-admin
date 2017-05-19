@@ -245,6 +245,9 @@ class VisualisationController extends Controller
 
 						}
 					}
+					if($value['chart_type'] == 'CustomMap'){
+						$columns[] = $value['customData'];
+					}
 					$dataset_data = DL::find($dataset_id);
 
 					/************* if request has filters ***************/

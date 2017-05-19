@@ -5,6 +5,12 @@ Route::get('/func', function () {
 });
 
 		Route::get('survey_stats/{token}',['as'=>'survey.statistic' , 'uses'=>'DrawSurveyController@survey_statistics']);
+		
+		Route::get('survey_save_data/{sid}',['as'=>'survey.survey_save_data' , 'uses'=>'DrawSurveyController@survey_save_data']);
+
+		Route::get('export_survey_data/{sid}',['as'=>'survey.export_survey_data' , 'uses'=>'DrawSurveyController@export_survey_data']);
+
+
 
 		Route::get('custom_excel_formula',['uses'=>'FormBuilderController@custom_excel_formula']);
 
@@ -34,9 +40,10 @@ Route::get('/func', function () {
 
 		});
 
-		Route::get('s/{id}/{theme?}/{skip?}',['as'=>'survey.draw', 'uses'=>'DrawSurveyController@draw_survey']);
+		Route::match(['get', 'post'],'s/{id}/{theme?}/{skip?}',['as'=>'survey.nxt', 'uses'=>'DrawSurveyController@draw_survey']);
+		Route::get('survey/reset/{token}', ['as'=>'reset.survey', 'uses'=>'DrawSurveyController@reset_survey' ]);
 
-		Route::post('s/{token}',['as'=>'survey.nxt', 'uses'=>'DrawSurveyController@draw_survey']);
+		//Route::post('s/{token}',['as'=>'survey.nxt', 'uses'=>'DrawSurveyController@draw_survey']);
 
 		Route::match(['get','post'],'v/{id?}',['as'=>'draw.visualisation','uses'=>'VisualisationController@embedVisualization']);
 		Route::get('surveyStats',['as'=>'stats,survey','uses'=>function(){
