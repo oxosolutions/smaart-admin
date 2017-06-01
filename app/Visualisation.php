@@ -19,7 +19,7 @@ class Visualisation extends Model
       }
     }
     use SoftDeletes;
-    protected $fillable = ['dataset_id','visual_name','options','settings','created_by'];
+    protected $fillable = ['name','description','dataset_id','created_by'];
     protected $dates = ['deleted_at'];
     protected $softDelete = true;
 
@@ -28,7 +28,19 @@ class Visualisation extends Model
     }
 
     public function dataset(){
-    	return $this->belongsTo('App\DatasetsList');
+    	return $this->belongsTo('App\DatasetsList','dataset_id','id');
+    }
+
+    public function charts(){
+        return $this->hasMany('App\VisualizationChart','visualization_id','id');
+    }
+
+    public function meta(){
+        return $this->hasMany('App\VisualizationMeta','visualization_id','id');
+    }
+
+    public function chart_meta(){
+        return $this->hasMany('App\VisualizationChartMeta','visualization_id','id');
     }
 
     static function visualisationCount()

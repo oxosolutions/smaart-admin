@@ -43,7 +43,7 @@
 				
 			</div>
 			<div style="float: right;width: 50%;text-align: right;padding: 14px 0px	">
-				<span id="sum_filled_ques">0</span>/{{$progress_bar_question}}
+				<span id="sum_filled_ques">0</span>/{{@$progress_bar_question}}
 			</div>
 			
 		</div>
@@ -63,7 +63,7 @@
 			<a href="javascript:;" style="border:1px solid #a8a8a8;padding:4px 8px" class="menu-close"><i class="fa fa-times"></i></a>
 		</div>
 
-		@if(count($sdata->group)>0)
+		@if(count(@$sdata->group)>0)
 			<ul style="margin: 0">
 				@foreach ($sdata->group as $key => $survey_group)
 					<li class="root">
@@ -147,20 +147,7 @@
 			<div id="survey_topbar_{{$sdata->id}}" class="survey-topbar">
 				<div class="wrapper-row">
 					<div class="survey-topbar-left">
-						@if($timer['survey_timer_status'] == 1)
-							<?php
-							$expire_time = "";
-							if($timer['survey_timer_type'] == 'duration'){
-								$date = new DateTime(date("Y-m-d H:i:s"));
-								$date->add(new DateInterval('PT'.$timer['survey_duration'].'M'));
-								$expire_time = $date->format('Y/m/d H:i:s');
-							} 
-							if($timer['survey_timer_type'] == 'expiry'){
-								$expire_time = date("Y/m/d H:i:s", strtotime($timer['survey_expiry_date']));
-							}
-							?>
-							Time left <span id="survey_timer" class="survey-timer" data-expire-time="{{$expire_time}}"></span>
-						@endif
+						
 					</div>
 					<div class="survey-topbar-right">
 						@if(Auth::check()!=false)
@@ -316,14 +303,14 @@
 																	@php
 																		$index++;
 																	@endphp
-																	@if($Drawer::getSettings($design_settings,'questionPlacement') == 'above')
+												{{-- by sandeep	--}}		{{--@if($Drawer::getSettings($design_settings,'questionPlacement') == 'above') --}}
 																		<p class="field-description">
 																			<?php
 																				$media = SurveyHelper::get_survey_media($field_meta['question_desc']);
 																			 	echo $media['text']; 
 																			 ?>
 																		 </p>
-																	@endif
+												{{-- by sandeep	--}}	{{-- 	@endif --}}
 																</label>
 															</div> <!-- field-label -->
 															<div  id="field_{{$field_meta['question_id']}}" class="field {{$field_meta['question_type']}} field-type-{{$field_meta['question_type']}} ">

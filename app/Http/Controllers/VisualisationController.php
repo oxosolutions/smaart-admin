@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
-use App\Visualisation as VS;
+use App\Visualisation;
 use Auth;
 use App\DatasetsList as DL;
 use App\GeneratedVisual as GV;
@@ -19,10 +19,14 @@ use App\Map;
 use App\GMap;
 use Excel;
 use App\VisualizationMeta as VisualMeta;
+use App\VisualizationChart;
+use App\VisualizationChartMeta;
+use App\GlobalSetting;
 
 class VisualisationController extends Controller
 {
 	protected $ipAdress;
+	protected $errors_list = [];
 	public function __construct(Request $request)
 	{ 
 	  $this->ipAdress =  $request->ip();
@@ -188,259 +192,594 @@ class VisualisationController extends Controller
 
 	  }
 
-	public function embedVisualization(Request $request){
-	    
-		$model = Embed::where('embed_token',$request->id)->first();
-		if($model == null){
 
-			echo "Error";
 
-		}else{
-			Session::put('org_id',$model->org_id);
-			$visual = GV::find($model->visual_id);
-			$chart_type = json_decode($visual->chart_type,true);
-			if($chart_type == null){
 
-				echo "Error";	
 
-			}else{
-				
-				foreach ($chart_type as $ckey => $cvalue) {
-				   $array['visualizations'][$ckey]['chart_type'] = $cvalue;
-				   $chart_type = $cvalue;
-				}
-			   	
-				$dataset_id = $visual->dataset_id;
-				$columns = json_decode($visual->columns, true);
-				$chartType = json_decode($visual->chart_type, true);
-				$embedCss = @$columns['embedCss'];
-				$embedJS = @$columns['embedJS'];
 
-				$keys = array_keys($columns);
-				$charts = array_keys($columns[$keys[0]]);
+	/************************************************************ Complete Visualization Work ********************************************************/
 
-				foreach ($charts as $key => $val) {
-					foreach($columns as $colKey => $colVal){
-						if(is_array($colVal)){
-							
-							if($colKey=="title")
-								{
-									$title = $colVal[$val];
-								}
-							 if(array_key_exists($val, $colVal)){
-								$array['visualizations'][$val][$colKey] = $colVal[$val];
-							}else{
-								$array['visualizations'][$val][$colKey] = [];
-							}
+	/*
+	* Called internally from craeteVisualization to validate requqest
+	* @param $request
+	* return JSON to API
+	*/
+	protected function validateRequest($request){
+
+        if($request->has('dataset') && $request->has('visual_name')){
+            return ['status'=>'true','errors'=>''];
+        }else{
+            return ['status'=>'false','error'=>'Fill required fields!'];
+        }
+    }
+
+    /*
+    * Used in Smaart Framework Api index.api.js to create new visualization
+    * @param $request (posted request)
+    * return JSON to API
+    */
+	public function createVisualization(Request $request)
+	{
+        $validate = $this->validateRequest($request);
+        if($validate['status'] == 'false'){
+
+            $response = ['status'=>'error','error'=>$validate['error']];
+            return $response;
+        }
+        try{
+            $model = new Visualisation();
+            $model->dataset_id = $request->dataset;
+            $model->name = $request->visual_name;
+            $model->description = $request->visual_description;
+            $model->created_by = Auth::User()->id;
+            $model->save();
+        }catch(\Exception $e){
+
+            if($e instanceOf \Illuminate\Database\QueryException){
+                return ['status'=>'error','message'=>'No dataset found!'];
+            }else{
+                return ['status'=>'error','message'=>'something went wrong!'];
+            }
+        }
+		return ['status'=>'success','message'=>'Successfully created!','visual_id'=>$model->id];
+	}
+
+	/*
+	* Used to update visualization details like chart data and meta
+	* @param $request (posted request)
+	* return JSON to API
+	*/
+	public function updateVisualization(Request $request){
+		try{
+			$charts = json_decode($request->charts); //if charts not null
+		}catch(\Exception $e){
+			$charts = [];
+		}
+		try{
+			if(!empty($charts)){
+				VisualizationChart::where('visualization_id',$request->visualization_id)->forceDelete(); // deleting old entries for update new values
+				VisualizationChartMeta::where('visualization_id',$request->visualization_id)->forceDelete();
+				foreach($charts as $key => $chart){
+					$visualization_chart = new VisualizationChart();
+					$visualization_chart->visualization_id = $request->visualization_id;
+					$visualization_chart->chart_title = $chart->title;
+					$visualization_chart->primary_column = $chart->column_one;
+					$visualization_chart->secondary_column = json_encode($chart->columns_two);
+					$visualization_chart->chart_type = $chart->chartType;
+					$visualization_chart->status = 'true';
+					$visualization_chart->save();
+					unset($chart->title);			// unset all those values which one we
+					unset($chart->column_one);		// don't want to store in meta table
+					unset($chart->columns_two);		
+					unset($chart->chartType);
+					foreach ($chart as $chart_meta_key => $chart_meta_value) {
+						$visualization_chart_meta = new VisualizationChartMeta();
+						$visualization_chart_meta->visualization_id = $request->visualization_id;
+						$visualization_chart_meta->chart_id = $visualization_chart->id;
+						$visualization_chart_meta->key = $chart_meta_key;
+						if(is_array($chart_meta_value)){
+							$chart_meta_value = json_encode($chart_meta_value);
 						}
+						$visualization_chart_meta->value = $chart_meta_value;
+						$visualization_chart_meta->save();
 					}
 				}
-
-				foreach($array['visualizations'] as $k => $value){
-					$columns = [];
-					$columns[] = $value['column_one'];
-					if(!empty($value['columns_two'])){
-						foreach($value['columns_two'] as $key => $columnName){
-							$columns[] = $columnName;
-
-						}
-					}
-					if($value['chart_type'] == 'CustomMap'){
-						$columns[] = $value['customData'];
-					}
-					$dataset_data = DL::find($dataset_id);
-
-					/************* if request has filters ***************/
-
-					if($request->has('applyFilter')){
-						$dataset_table_data = DB::table($dataset_data->dataset_table);
-						if($request->has('multipledrop')){
-							$filters = $request->except(['_token','applyFilter']);
-							foreach($filters['multipledrop'] as $key => $dropdown){
-								foreach($dropdown as $columnKey => $filter){
-									$dataset_table_data->where(function($query) use ($filter, $columnKey){
-										foreach ($filter as $filterValue) {
-											$query->orWhere($columnKey, $filterValue);
-										}
-									});
-								}
-							}
-						}
-						if($request->has('singledrop')){
-							$filters = $request->except(['_token','applyFilter']);
-							foreach($filters['singledrop'] as $key => $dropdown){
-								foreach($dropdown as $columnKey => $filter){
-									$dataset_table_data->where(function($query) use ($filter, $columnKey){
-										foreach ($filter as $filterValue) {
-											$query->orWhere($columnKey, $filterValue);
-										}
-									});
-								}
-							}
-						}
-						if($request->has('range')){
-							$filters = $request->except(['_token','applyFilter']);
-							foreach($filters['range'] as $key => $range){
-								$dataset_table_data->where(function($query) use ($range, $key){
-									foreach ($range as $columnKey => $filterValue) {
-										$explodeRange = explode(',',$filterValue);
-										$query->whereBetween($columnKey,[$explodeRange[0],$explodeRange[1]]);
-									}
-								});
-							}
-						}
-						if($value['formula'] == 'count'){
-							$collected_records = [];
-							foreach($columns as $colKey => $column){
-								$records = $dataset_table_data->select([$column, DB::raw('COUNT(id) as count')])->groupBy($column)->get()->toArray();
-								if(!empty($dataset_table_data)){
-									array_walk($records, function($value) use (&$collected_records){
-										array_push($collected_records,$value);
-									});
-								}else{
-									$collected_records = $records;
-								}
-							}
-							$dataset_table_data = $collected_records;
-						}elseif($value['formula'] == 'addition'){
-							$collected_records = [];
-							foreach($columns as $colKey => $column){
-								$records = $dataset_table_data->selectRaw('SUM('.$column.') as SUM')->first();
-								$totalAddition[] = $records->SUM;
-								$header = DB::table($dataset_data->dataset_table)->select($column)->where('id',1)->first();
-								$columnHeader[] = $header->{$column};
-							}
-							$dataset_table_data = [];
-							$dataset_table_data[] = $columnHeader;
-							$dataset_table_data[] = $totalAddition;
-						}else{
-							$dataset_table_data = $dataset_table_data->orWhere('id',1)->select($columns)->get()->toArray();
-						}
-						
-					}else{
-						if($value['formula'] == 'count'){
-							$dataset_table_data = [];
-							foreach($columns as $colKey => $column){
-								$records = DB::table($dataset_data->dataset_table)->select([$column,DB::raw('COUNT(id) as count')])->groupBy($column)->get()->toArray();
-								if(!empty($dataset_table_data)){
-									array_walk($records, function($value) use (&$dataset_table_data){
-										array_push($dataset_table_data,$value);
-									});
-								}else{
-									$dataset_table_data = $records;
-								}
-							}
-						}elseif($value['formula'] == 'addition'){
-							$dataset_table_data = [];
-							foreach($columns as $colKey => $column){
-								$records = DB::table($dataset_data->dataset_table)->selectRaw('SUM('.$column.') as SUM')->first();
-								$totalAddition[] = $records->SUM;
-								$header = DB::table($dataset_data->dataset_table)->select($column)->where('id',1)->first();
-								$columnHeader[] = $header->{$column};
-							}
-							$dataset_table_data[] = $columnHeader;
-							$dataset_table_data[] = $totalAddition;
-						}elseif($value['formula'] == 'percent'){
-
-						}else{
-							$dataset_table_data = DB::table($dataset_data->dataset_table)->select($columns)->get()->toArray();
-						}
-					}
-
-					/***************************************************/
-					$dataset_table_data = json_decode(json_encode($dataset_table_data),true);
-					$prepareDataArray = [];
-					foreach($dataset_table_data as $dateKey => $dataVal){
-						$prepareDataArray[] = array_values($dataVal);
-					}
-					$headers = array_shift($prepareDataArray);
-					$array['visualizations'][$k]['headers'] = $headers;
-		            $array['visualizations'][$k]['data'] = $prepareDataArray;
-				}
-				//dd($array);
-				$obj = new VisualApiController;
-				$datasetColumns = (array)DB::table($dataset_data->dataset_table)->where('id',1)->first();
-				$filters = [];
-				try{       
-					$filters = $obj->getFIlters($dataset_data->dataset_table, json_decode($visual->filter_columns, true),$datasetColumns);
-				}catch(\Exception $e){
-					// throw $e;
-				}
-				// dd($filters);
-				$visualMetas = VisualMeta::where('visualization_id',$visual->id)->get()->toArray();
-				
-				$valueColumns = array_column($visualMetas, 'value');
-				$keyColumns = array_column($visualMetas, 'key');
-
-				$array['visualization_meta'] = array_combine($keyColumns,$valueColumns);
-				$array['visualization_id'] =  $visual->id;
-				$array['visualization_name'] =  $visual->visual_name;
-				$array['dataset_id'] =  $visual->dataset_id;
-				$array['dataset_name'] = $dataset_data->dataset_name;
-				$array['filters'] = @$filters;
-				$array['custom_code'] = ['custom_css'=>$embedCss,'custom_js'=>$embedJS];
-				$array['data'] = $dataset_table_data;
-
-				$chartDetailsForJquery = [];
-				foreach($array['visualizations'] as $key => $value){
-					if($value['chart_type'] != 'CustomMap'){
-						$lavaschart = lava::DataTable();
-						foreach($value['headers'] as $index => $header){
-							if($index == 0){
-
-								$lavaschart->addStringColumn($header);
-							}else{
-								$lavaschart->addNumberColumn($header);
-							}
-						}
-						$lavaschart->addRows($value['data']);
-						$chartDetailsForView[$key] = [
-														'type'=>$value['chart_type'],
-														'id'=>$key,
-														'data'=>$value['data'],
-														'chartWidth' => @$value['chartWidth']
-													];
-						lava::{$value['chart_type']}($key,$lavaschart)->setOptions([
-								'title' => $value['title']
-							]);
-						$chartTitles[$key] = $value['title'];	
-					}elseif($value['chart_type'] == 'CustomMap'){
-
-						$SVGContent = Map::find($value['mapArea']);
-						if($SVGContent == null){
-							$SVGContent = GMap::find($value['mapArea']);
-						}
-						$array['visualizations'][$key]['map'] = $SVGContent['map_data'];
-						$chartDetailsForView[$key] = [
-														'type'=>$value['chart_type'],
-														'id'=>$key,
-														'data'=>$value['data'],
-														'map'=>$SVGContent['map_data'],
-														'data'=>$value['data'],
-														'chartWidth'=> @$value['chartWidth']
-													];
-						$chartTitles[$key] = $value['title'];
-						$chartDetailsForJquery[$key] = ['type'=>$value['chart_type'],'id'=>$key,'data'=>$value['data'],'headers'=>$value['headers']];
-					}
-				}
-				
-				if($request->has('downloadData')){
-					$chartsData = $value['data'];
-					array_unshift($chartsData,$headers);
-					Excel::create('Generated-Chart-Data', function($excel) use ($chartsData) {
-
-					    $excel->sheet('Records', function($sheet) use ($chartsData) {
-
-					        $sheet->fromArray($chartsData);
-
-					    });
-
-					})->download('xls');
-				}
-
-				//dd($chartDetailsForJquery); 
-		 		return view('web_visualization.visualization',['details'=>$chartDetailsForView,'filters'=>$filters,'titles'=>$chartTitles,'javascript'=>$chartDetailsForJquery,'customeCode'=>$array['custom_code'],'visualizations'=>$array]);
 			}
+			/*
+			* insert visualization meta values
+			* inserting filters in visualization meta
+			 */
+			$filters = [];
+			VisualMeta::where('visualization_id',$request->visualization_id)->forceDelete();
+			$filters = json_decode(@$request->filters);
+			if(!empty($filters)){
+				$visualization_meta = new VisualMeta;
+				$visualization_meta->visualization_id = $request->visualization_id;
+				$visualization_meta->key = 'filters';
+				$visualization_meta->value = json_encode($filters);
+				$visualization_meta->save();
+			}
+			/*
+			* Inserting visualization settings in 
+			* visualization meta table
+			 */
+			$settings = [];
+			$settings = json_decode($request->settings);
+			foreach($settings as $setting_key => $setting_value) {
+				$visualization_meta = new VisualMeta;
+				$visualization_meta->visualization_id = $request->visualization_id;
+				$visualization_meta->key = $setting_key;
+				$visualization_meta->value = $setting_value;
+				$visualization_meta->save();
+			}
+		}catch(\Exception $e){
+			// throw $e;
+			return ['status'=>'error','message'=>$e->getMessage()];
+		}
+
+		return ['status'=>'success','message'=>'Successfully updated!'];
+	}
+
+	/*
+	* To display pre-filled details in edit visualization 
+	* $param $id (visualization id)
+	* return JSON to API
+	*/
+	public function visualization_details($id){
+		try{
+			$model = Visualisation::with(['dataset','charts','meta','chart_meta'])->find($id);
+			$dataset_table = $model->dataset->dataset_table; //get dataset table name from visualization table with relation (with('dataset'))
+			$dataset_model = DB::table($dataset_table)->first();
+        	unset($dataset_model->id);
+        	$responseArray = [];
+        	$responseArray['dataset_columns'] = (array)$dataset_model;
+        	$charts = [];
+        	$chartIndex = 0;
+        	if(!$model->charts->isEmpty()){
+        		foreach($model->charts as $chart_key => $chart_value){
+        			$charts[$chartIndex]['title'] = $chart_value->chart_title;
+        			$charts[$chartIndex]['column_one'] = $chart_value->primary_column;
+        			$charts[$chartIndex]['columns_two'] = json_decode($chart_value->secondary_column);
+        			$charts[$chartIndex]['chartType'] = $chart_value->chart_type;
+        			$chart_meta = VisualizationChartMeta::where('chart_id',$chart_value->id)->get();
+        			if(!$chart_meta->isEmpty()){
+        				foreach($chart_meta as $meta_key => $chart_meta_value){
+        					json_decode($chart_meta_value->value);
+        					if(json_last_error() == JSON_ERROR_NONE){
+        						$charts[$chartIndex][$chart_meta_value->key] = json_decode($chart_meta_value->value);
+        					}else{
+        						$charts[$chartIndex][$chart_meta_value->key] = $chart_meta_value->value;
+        					}
+        				}
+        			}
+        			$chartIndex++;
+        		}
+        	}
+        	
+        	$responseArray['charts'] = $charts; // gettings all chart of this visualizaton with 'hasMany' eloquent relation
+        	$responseArray['visualization_meta'] = [];
+        	if(!$model->meta->isEmpty()){
+        		foreach($model->meta as $key => $meta_data){
+        			$responseArray['visualization_meta'][$meta_data->key] = $meta_data->value; //get all visualization_meta data from relation
+        		}
+        	}
+        	$responseArray['maps'] = [
+        								'organization_maps'=>Map::select(['id','title'])->where('status','enable')->get(),
+        								'global_maps'=>GMap::select(['id','title'])->where('status','enable')->get()
+        							];
+        	$responseArray['chart_settings'] = GlobalSetting::where('meta_key','visual_setting')->first()->meta_value;
+        	return ['status'=>'success','data'=>$responseArray];
+		}catch(\Exception $e){
+			return ['status'=>'error','message'=>$e->getMessage()];
 		}
 	}
+
+	public function visualization_list(){
+
+		$responseArray = [];
+		$model = Visualisation::with('dataset')->get();
+		foreach ($model as $key => $value) {
+			$responseArray['visuals'][] = $value;
+			$responseArray['dataset'][] = $value->dataset;
+		}
+		return ['status'=>'success','list'=>$responseArray];
+	}
+
+	public function generateEmbed(Request $request){
+        $user = Auth::user();
+        $org_id = $user->organization_id;
+        $exist = Embed::where(['user_id'=>$user->id,'visual_id'=>$request->visual_id])->first();
+        if($exist == null){
+            $model = new Embed;
+            $embed_token = str_random(20);
+            $model->visual_id = $request->visual_id;
+            $model->org_id  = $org_id;
+            $model->user_id = $user->id;
+            $model->embed_token = $embed_token;
+            $model->save();
+        }else{
+            $embed_token = $exist->embed_token;
+        }
+
+        return ['status'=>'success','message'=>'Successfully generated!','token'=>$embed_token];
+    }
+
+	protected function put_in_errors_list($error, $break = false){
+		array_push($this->errors_list, $error);
+		if($break){
+			return view(); // load error view
+			dd();
+		}
+		return true;
+	}
+
+	protected function getMetaValue($metaArray, $metaKey){
+		$metaArray = collect($metaArray);
+		$metaData = $metaArray->where('key',$metaKey);
+		$metaValue = false;
+		foreach($metaData as $key => $value){
+			$metaValue = $value->value;
+		}
+		return $metaValue;
+	}
+
+	protected function get_meta_in_correct_format($visualMetas){
+		$visualMetas = json_decode(json_encode($visualMetas),true);
+		$valueColumns = array_column($visualMetas, 'value');
+		$keyColumns = array_column($visualMetas, 'key');
+		return array_combine($keyColumns,$valueColumns);
+	}
+
+	public function getFIlters($table, $columns, $columnNames){
+        
+        $columnsWithType = $columns;
+        $columns = (array)$columns;
+        $columns = array_column($columns, 'column');
+        $resultArray = [];
+        $model = DB::table($table)->select($columns)->where('id','!=',1)->get()->toArray();
+        $tmpAry = [];
+        $max =0;
+        foreach($model as $k => $v){
+            
+            $tmpAry[] = (array)$v;
+        }
+        
+        
+        $index = 1;
+        foreach($columns as $key => $value){           
+            $filter = [];
+            if($columnsWithType['filter_'.$index]['type'] == 'range'){
+               
+                $allData = array_column($tmpAry, $value);
+                $min = min($allData);
+                $max = max($allData);
+                $filter['column_name'] = $columnNames[$value];
+                $filter['column_min'] = (int)$min;
+                $filter['column_max'] = (int)$max;
+                $filter['column_type'] = $columnsWithType['filter_'.$index]['type'];
+            }else{
+                $filter['column_name'] = $columnNames[$value];
+                $filter['column_data'] = array_unique(array_column($tmpAry, $value));
+                $filter['column_type'] = $columnsWithType['filter_'.$index]['type'];
+            }
+            
+            $index++;
+            $data[$value] = $filter;
+        }
+     
+        return $data;
+    }
+
+    protected function apply_filters($request, $dataset_table, $columns){
+    	/* 
+    	* Sample data array of filters
+    	* 
+    	*array:2 [▼
+		*  "singledrop" => array:1 [▼
+		*    0 => array:1 [▼
+		*      "column_3" => array:1 [▼
+		*        0 => "Designing"
+		*      ]
+		*    ]
+		*  ]
+		*  "multipledrop" => array:1 [▼
+		*    0 => array:1 [▼
+		*      "column_4" => array:2 [▼
+		*        0 => "Senior"
+		*        1 => "Junior"
+		*      ]
+		*    ]
+		*  ]
+		*]
+		*/
+    	$filterColumns = [];
+    	$requested_filters = $request->except(['_token','applyFilter']);
+    	$filterKeys = ['dropdown','mdropdown','checkbox','radio'];
+    	foreach ($filterKeys as $key) { // $key contains filters key --> singledrop, multidrop etc
+    		if(array_key_exists($key, $requested_filters)){ // check if the specific key exist in requested filters
+    			foreach ($requested_filters[$key] as $k => $column) { // if key exist in request filter then get that all columns of that key
+    				foreach($column as $columnName => $columnValue){
+    					// array_filter removing all empty values from $columnValue, in case if user selected "All" in filters
+    					$filterColumns[$columnName] = array_filter($columnValue); // create a single array of all selected filters columns
+    				}
+    			}
+    		}
+    	}
+    	$with_whereIn = false; // with_whereId for check the status if whereIn added in query or not
+    	$db = DB::table($dataset_table);
+    	foreach($filterColumns as $columnName => $columnsData){
+    		if(!empty($columnsData)){ // if $columnData array is empty that means user selected "All" in this filter, so we do not need to add in "whereIn" clause
+    			$db->whereIn($columnName, $columnsData); // will create multiple "where in" clause in query 
+    			$with_whereIn = true; // set status true if query have where in clause
+    		}
+    	}
+    	if($with_whereIn == true){ // if there is whereIn clause then we need to get the id row also, otherwise select all data from table 
+    		$db->orWhere('id',1); // for also get the columns header we need to get first record from datatable
+    	}
+
+    	// Finaly it will generate query: "select * from `126_data_table_1495705270` where `column_3` in (?) and `column_4` in (?, ?) or `id` = ?"
+    	//dd($db->toSql());
+    	
+    	return $db->select($columns)->get()->toArray(); // return final query result in the form or array
+    	
+    }
+
+   
+
+    protected function getSVGMaps($chartMeta){
+    	$map = '';
+    	$mapId = $this->getMetaValue($chartMeta,'mapArea');
+    	$maps_table_and_id = explode('-',$mapId);
+    	if($maps_table_and_id[0] == 'globalmaps'){
+    		$map = GMap::find($maps_table_and_id[1]);
+    	}else{
+    		$map = Map::find($maps_table_and_id[1]);
+    	}
+    	if($map != null && $map != ''){
+    		return $map->map_data;
+    	}else{
+    		return $map;
+    	}
+    }
+
+    protected function apply_formula($records, $formula){
+    	$records_array = [];
+		foreach(json_decode(json_encode($records),true) as $record){ // convert associative array into indexd array
+			$records_array[] = array_values($record);
+		}
+    	if($formula == 'count'){
+    		
+    		$collection = collect($records_array); // convert simple array to laravel collection
+    		$countedArray = [];
+    		$index = 0;
+    		foreach($collection->groupBy(0) as $key => $value){ // getting data from collection with group by first column or primary column
+    			$countedArray[$index][] = $key;
+    			$countedArray[$index][] = $value->count();
+    			$index++;
+    		}
+    		return $countedArray;
+    	}
+    	if($formula == 'addition'){
+    		$collection = collect($records_array); // convert simple array to laravel collection
+    		$recordsToSum = count(json_decode(json_encode($records[0]),true))-1;
+			$preparedArray = [];
+			$headers = $collection->pull(0); // get headers from collection
+			$index = 0;
+			foreach ($collection->groupBy(0) as $key => $value) {
+				for($i = 1; $i <= $recordsToSum; $i++){ // recordsToSum contain that how much secondory columns we have selected 
+					if($i == 1){
+						$preparedArray[$index][] = $key;
+					}
+					$preparedArray[$index][] = $value->sum($i);
+				}
+				$index++;
+			}
+    		$records_array = collect($preparedArray);
+    		$records_array->prepend($headers);
+    		return $records_array;
+    	}
+
+    	if($formula == 'percent'){
+    		$columns = count($records_array[0])-1;
+    		$collection = collect($records_array);
+    		$records_total_array = [];
+    		for($i = 1; $i <= $columns; $i++){
+    			$records_total_array[$i] = $collection->sum($i);
+    		}
+    		$headers = $collection->pull(0);
+    		$records_array = [];
+    		foreach($collection as $key => $value){
+    			$tempArray = [];
+    			foreach($value as $k => $v){
+    				if(array_key_exists($k, $records_total_array)){
+    					$tempArray[] = ($v*100)/$records_total_array[$k];
+    				}else{
+    					$tempArray[] = $v;
+    				}
+    			}
+    			$records_array[] = $tempArray;
+    		}
+    		$records_array = collect($records_array);
+    		$records_array->prepend($headers);
+    		return $records_array;
+    	}
+    }
+
+
+	public function embedVisualization(Request $request){
+		
+		$embedModel = Embed::where('embed_token',$request->id)->first();
+		if($embedModel == null){
+			$this->put_in_errors_list('Wrong embed token!', true);
+		}
+		Session::put('org_id',$embedModel->org_id); // putting organization id into session for get the data from models
+
+		$visualization = Visualisation::with([
+
+		'dataset','charts'=>function($query){
+
+				$query->with('meta');
+
+		},'meta','chart_meta'])->find($embedModel->visual_id); //getting dataset, visualization charts and meta from eloquent relations
+
+		if($visualization->charts->isEmpty()){ //if there is not chart exist in generated visualization
+
+			$this->put_in_errors_list('No charts found!', true);
+		}
+
+		$dataset_table = $visualization->dataset->dataset_table; //getting dataset table name from visualization query
+		$drawer_array = [];
+		$chartTitles = [];
+		$javascript = [];
+		$drawer_array['visualization_name'] = $visualization->name;
+		$drawer_array['visualization_id'] = $visualization->id;
+		$drawer_array['visualization_meta'] = $this->get_meta_in_correct_format($visualization->meta);
+		$drawer_array['visualizations'] = [];
+		foreach ($visualization->charts as $key => $chart) {
+			$columns = [];
+			$columns[] = $chart->primary_column;
+			// dd($columns);
+			foreach(json_decode($chart->secondary_column) as $column){
+				$columns[] = $column;
+			}
+			if($chart->chart_type == 'CustomMap'){
+
+				$viewData_meta = $this->getMetaValue($chart->meta,'viewData');
+				$customData_meta = json_decode($this->getMetaValue($chart->meta,'customData'));
+				dd($columns);
+				$columns[] = $viewData_meta;
+				if(!empty($customData_meta)){
+					foreach ($customData_meta as $customColumn) {
+						$columns[] = $customColumn;
+					}
+				}
+				$columns = array_unique($columns);
+			}
+			try{
+				/*
+				*	if request has any filter
+				*/
+				if($request->has('applyFilter')){
+					$dataset_records = $this->apply_filters($request, $dataset_table, $columns);
+				}else{
+					$dataset_records = DB::table($dataset_table)->select($columns)->get()->toArray(); //getting records with selected columns from dataset table
+				}
+
+				$formula = $this->getMetaValue($chart->meta,'formula');
+				if($formula != 'no'){
+					$dataset_records = $this->apply_formula($dataset_records, $formula);
+				}
+
+				$dataset_records = json_decode(json_encode($dataset_records),true); // generating pure array from colection of stdClass object
+				$headers = array_shift($dataset_records);
+				if($chart->chart_type != 'CustomMap'){
+
+					$lavaschart = lava::DataTable();
+					$index = 0;
+					foreach ($headers as $header) { // to add headers into lavacharts datatable
+						if($index == 0){
+							$lavaschart->addStringColumn($header); //for string header
+						}else{
+							if($chart->chart_type == 'TableChart'){
+								$lavaschart->addStringColumn($header); //for string header
+							}else{
+								$lavaschart->addNumberColumn($header); //for all numeric headers
+							}
+						}
+						$index++;
+					}
+				}
+
+				$records_array = [];
+				foreach($dataset_records as $record){ // convert associative array into indexd array
+					$records_array[] = array_values($record);
+				}
+
+				if(!empty($records_array)){ // if after filter or without filter there is no data in records list
+					if($chart->chart_type != 'CustomMap'){
+						$lavaschart->addRows($records_array); // lavachart add only indexed array of arrays (inserting multiple rows in to lavacharts datatable)
+
+						lava::{$chart->chart_type}('chart_'.$key,$lavaschart)->setOptions([
+										'title' => $chart->chart_title
+									]);
+					}else{
+						$drawer_array['visualizations']['chart_'.$key]['map'] = $this->getSVGMaps($chart->meta); // get svg maps global or local
+						$headers = array_values($headers);
+						$this->create_map_array($records_array, $headers);
+						$javascript['chart_'.$key] = ['type'=>$chart->chart_type,'id'=>'chart_'.$key,'data'=>$records_array,'headers'=>$headers];
+					}
+					/*
+					* Prepare data for draw visualization
+					* on front
+					*/
+					$chartTitles['chart_'.$key] = $chart->chart_title; //collect all chart titles in single array
+					$drawer_array['visualizations']['chart_'.$key]['chart_type'] = $chart->chart_type;
+					$drawer_array['visualizations']['chart_'.$key]['title'] = $chart->chart_title;
+					$drawer_array['visualizations']['chart_'.$key]['enableDisable'] = $this->getMetaValue($chart->meta,'enableDisable');
+				}else{
+					$this->put_in_errors_list('No records found with selected filters');
+				}
+
+			}catch(\Exception $e){
+
+				$this->put_in_errors_list($e->getMessage());
+				throw $e;
+			}
+		}
+		/*
+		* Prepare filters for front view
+		 */
+		$datasetColumns = (array)DB::table($dataset_table)->where('id',1)->first();
+		$filter_columns = $this->getMetaValue($visualization->meta,'filters');
+		$filters = [];
+		if(!empty(json_decode($filter_columns,true))){
+			$filters = $this->getFIlters($dataset_table, json_decode($filter_columns, true),$datasetColumns);
+		}
+		
+		// adding selected values of filters in filters array
+		$selectedFilters = $request->except(['_token','applyFilter']);
+		foreach ($selectedFilters as $type => $array) {
+			foreach($array as $indexedkey => $columnNames){
+				foreach($columnNames as $colKey => $colArray){
+					if($filters[$colKey]['column_type'] == $type){
+						$filters[$colKey]['selected_value'] = $colArray;
+					}
+				}
+			}
+		}
+		// dd($javascript);
+		//Finaly load view
+		return view('web_visualization.visualization',
+								[
+									'filters'=>$filters, // contain all filters
+									'titles'=>$chartTitles, // contains all titles 
+									'visualizations'=>$drawer_array, // data for draw all charts from lava charts
+									'javascript'=>$javascript, //data for custom map popup details
+									'custom_map_data'=>[] //data for pop click event
+								]
+					);
+	}
+
+	public function create_map_array($records, $headers){
+		$records = collect($records);
+		$records = $records->groupBy(0)->toArray();
+		foreach($records as $key => $record){
+			foreach($record as $k => $value){
+				$records[$key][$k] = array_combine($headers, $value);
+			}
+		}
+
+		//Don't remove this, this is working code
+		/*$records_array = [];
+		foreach ($records as $key => $record) {
+			foreach($record as $k => $value){
+				if($k != 0){
+					$records_array[$record[0]][$headers[$k]][] = $value;
+				}
+			}
+		}*/
+
+		dd($records);
+	}
+
 }

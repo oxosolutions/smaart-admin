@@ -661,24 +661,7 @@ class VisualApiController extends Controller
         return ['status'=>'success','list_visuals'=>$responseArray];
     }
 
-    public function generateEmbed(Request $request){
-        $user = Auth::user();
-        $org_id = $user->organization_id;
-        $exist = Embed::where(['user_id'=>$user->id,'visual_id'=>$request->visual_id])->first();
-        if($exist == null){
-            $model = new Embed;
-            $embed_token = str_random(20);
-            $model->visual_id = $request->visual_id;
-            $model->org_id  = $org_id;
-            $model->user_id = $user->id;
-            $model->embed_token = $embed_token;
-            $model->save();
-        }else{
-            $embed_token = $exist->embed_token;
-        }
-
-        return ['status'=>'success','message'=>'Successfully generated!','token'=>$embed_token];
-    }
+    
 
 
     public function EmbedVisualById(Request $request){

@@ -10,13 +10,7 @@ Route::get('/func', function () {
 
 		Route::get('export_survey_data/{sid}',['as'=>'survey.export_survey_data' , 'uses'=>'DrawSurveyController@export_survey_data']);
 
-
-
-		Route::get('custom_excel_formula',['uses'=>'FormBuilderController@custom_excel_formula']);
-
-
 		Route::get('lava_test',['uses'=>'VisualisationController@lava_test']);
-
 
 		Route::get('/viewemail',function(){
 			return view('mail.layout.email',

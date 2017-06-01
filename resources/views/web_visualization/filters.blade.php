@@ -24,9 +24,13 @@
 							<div class="row" style="margin-top: 5%;">
 								<div class=" col-md-12">
 									<label>{{ucfirst($value['column_name'])}}</label>
-									<select name='multipledrop[{{$multidrop}}][{{$key}}][]' multiple>
+									<select name='mdropdown[{{$multidrop}}][{{$key}}][]' multiple>
 										@foreach($value['column_data'] as $option)
-											<option value="{{$option}}">{{$option}}</option>
+											<option value="{{$option}}"
+											@if(isset($value['selected_value']) && in_array($option, $value['selected_value']))
+												selected="selected"
+											@endif
+											>{{$option}}</option>
 										@endforeach
 									</select>
 								</div>
@@ -39,9 +43,14 @@
 							<div class="row" style="margin-top: 5%;">
 								<div class="col-md-12">
 									<label>{{ucfirst($value['column_name'])}}</label>
-									<select name='singledrop[{{$singledrop}}][{{$key}}][]'>
+									<select name='dropdown[{{$singledrop}}][{{$key}}][]'>
+										<option value="">All</option>
 										@foreach($value['column_data'] as $option)
-											<option value="{{$option}}">{{$option}}</option>
+											<option value="{{$option}}" 
+											@if(isset($value['selected_value']) && in_array($option, $value['selected_value']))
+												selected="selected"
+											@endif
+											>{{$option}}</option>
 										@endforeach
 									</select>
 								</div>

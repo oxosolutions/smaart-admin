@@ -8,7 +8,6 @@ $visualization_name = $visualizations['visualization_name'];
 
 $meta = $visualizations['visualization_meta'];
 $charts = $visualizations['visualizations'];
-
 $visualization_theme = 'minimal';
 
 if(isset($meta['theme']) && $meta['theme'] != ''){
@@ -133,7 +132,15 @@ echo "</pre>";
 
 											@if($chart_type == 'CustomMap')
 												<div id="{{$chart_id}}" class="map-wrapper">
-												{!! $details[$chart_key]['map'] !!}
+												{!! $charts[$chart_key]['map'] !!}
+												</div>
+												<div id="map_data_{{$chart_id}}" class="map-data-wrapper">
+													<div id="map_data_header_{{$chart_id}}" class="map-data-header">
+														<span class="map-data-title"></span>
+														<span class="map-data-close">+</span>
+													</div>
+													<div id="map_data_content_{{$chart_id}}" class="map-data-content">
+													</div>
 												</div>
 											@else
 												<div id="{{$chart_id}}" class="chart-wrapperr"></div>
@@ -143,22 +150,8 @@ echo "</pre>";
 										</div>
 									</div>
 								@endif
-
-
-
-
-								
-
-
-
-
-
-
-
 							@endforeach
 
-					
-								
 
 							</div> <!-- wrapper-row -->
 						</div> <!-- aione_charts -->
@@ -215,29 +208,26 @@ echo "</pre>";
 <script type="text/javascript">
 	$(document).ready(function(){
 			var chartsList = '{!! json_encode($javascript) !!}';
-
-			//console.log("==111111");
-			
+			console.log(JSON.parse(chartsList));
 			$.each(JSON.parse(chartsList), function(key,val){
-				//console.log("==22222222--"+key);
-				//console.log("==22222222--"+key);
+				
 				$.each(val.data, function(ikey, ival){
-					//console.log("==333333--"+ikey);
 					var index = 0;
 					$.each(ival, function(dataKey, dataVal){
-						
 						var colorVal = index/val.data.length;
 						var leagendWidth = (1/(val.data.length-1))*100;
 						var colorCode = getColor(colorVal);
-						
+
 						var putId = val.headers[dataKey].replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, "_");
 						var currentClass = $('#'+ival[0]).attr('class');
-						//console.log("--"+currentClass);
 						$('#'+key+' #'+ival[0]).attr(putId,dataVal);
 						$('#'+key+' #'+ival[0]).css({'fill': colorCode }).attr('class','mapArea '+currentClass);
+						if(currentClass != undefined){
+							$('#'+key+' #'+ival[0]).attr('class','mapArea '+currentClass.replace("mapArea", ""));
+						}
+						
 					});
 					index++;
-					//console.log(ival);
 				});
 			});
 
@@ -269,36 +259,67 @@ echo "</pre>";
                     'left': mouseX
                 });
             });
-            /*console.log(lava);
-            lava.getChart('chart_2', function (googleChart, lavaChart) {
-
-			    
-			});*/
-				/*setTimeout(function(){
-					console.log(lava.charts.BarChart['chart_1'].data.Mf);
-					data = new google.visualization.DataTable();
-			        data.addColumn('string', 'Topping');
-			        data.addColumn('number', 'Slices');
-			        data.addRows([
-			          ['Mushrooms', 3],
-			          ['Onions', 1],
-			          ['Olives', 1],
-			          ['Zucchini', 1],
-			          ['Pepperoni', 2]
-			        ]);
-
-			        // Set chart options
-			        var options = {'title':'How Much Pizza I Ate Last Night',
-			                       'width':400,
-			                       'height':300};
-
-			        // Instantiate and draw our chart, passing in some options.
-			        chart = new google.visualization.PieChart(document.getElementById('chart_1'));
-			        
-			        chart.draw(data, options);
-				},3000);*/
+			
+			
+			$('.map-wrapper .mapArea').click(function (e) {
+                e.preventDefault();
+				$('.map-data-wrapper').addClass('active'); 
+				var position = $(this).position();
+				$('.map-data-wrapper').css({
+                    'top': position.top,
+                    'left':  position.left
+                });
 				
-		      
+				var title = $(this).attr('title');
+				var area_id = $(this).attr('id');
+				$('.map-data-title').html(title);
+				var custom_map_data = '{!! json_encode($custom_map_data) !!}';
+				var custom_map_data_array = JSON.parse(custom_map_data);
+				
+				//console.log("DATA==========");
+				//console.log("=============");
+				
+				//var custom_map_data_headers = custom_map_data.shift();
+				//console.log(custom_map_data_headers);
+				var html = '<div class="map-data-rows">';
+				$.each(custom_map_data_array, function(key, val){
+					var row_status = 0;
+					var row_html = '';
+					row_html += '<div class="map-data-row">'; 
+					console.log("=============");
+					$.each(val, function(k, v){
+						row_html += '<span class="map-data-col '+k.replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, "_")+'">';
+						row_html += v;
+						row_html += '</span>';
+						if(k == 'column_1' && v == area_id){
+							row_status = 1;
+						}
+					});
+					row_html += '</div>';
+					if(row_status == 1){
+						html += row_html;
+					}
+                });
+				html += '</div>';
+				$(".map-data-content").html(html); 
+				
+				
+				
+				
+            });
+			
+			
+			
+			
+			$('.map-data-close').click(function (e) {
+                e.preventDefault();
+				$('.map-data-wrapper').removeClass('active');
+            });
+			$('.reset-filters-button').click(function (e) {
+                e.preventDefault();
+				window.location.reload();
+            });
+
 		      
 
 			function getColor(value){
@@ -329,40 +350,147 @@ echo "</pre>";
 	</style>
 @endif
 
-<script type="text/javascript">  
-	$( document ).ready(function() {
-		$( '.aione-loader' ).hide();
-	});
-	$('.aione-widget-options .aione-options input').change(function(){
-		var target_widget_id = $(this).val();
-		var is_checked = $(this).prop('checked');
-		if(is_checked){
-			$("#"+target_widget_id).show();
-		} else{
-			$("#"+target_widget_id).hide();
-		}
-	});
-	$('.aione-widget-collapse').click(function(){
-		$(this).toggleClass('active');
-		$(this).parent().parent().parent().find('.aione-chart-content').slideToggle(100);
-	});
-	$('.aione-widget-close').click(function(){
-		var target_option_name = $(this).parent().parent().parent().attr('data-option');
-		$(".widget-toggles .widget-toggle [name="+target_option_name+"]").prop('checked', false);
-		$(this).parent().parent().parent().hide(); 
-	});
-	$('.aione-options-handle').click(function(){
-		$(this).find('.fa').toggleClass('fa-rotate-180');
-		$(this).parent().find('.aione-options').slideToggle(300);
-	});
-</script>
 
 <style type="text/css">
-.theme-clean_light .main{
-	max-width:980px;
-	margin-top: 20px;
-	margin-bottom: 20px; 
+.wrapper{
+	position: relative;
 }
+.map-data-row {
+    margin: 0 0 10px 0;
+    padding: 0 0 10px 0;
+    border-bottom: 1px solid #989898;
+}
+
+.map-data-row .map-data-col {
+	display:block;
+}
+
+
+
+
+
+.aione-sidebar{
+	background-color:#ffffff;
+}
+.filter-title {
+        margin: 0px;
+    padding: 10px 0;
+    font-size: 18px;
+    color: #168dc5;
+}
+.aione-button {
+    margin: 20px 0 30px 0;
+    padding: 10px 20px;
+    color: #FFFFFF;
+    background-color: #666666;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    line-height: 20px;
+    cursor: pointer;
+}
+.map-data-wrapper{
+	width:0px;
+	height:0px;
+	position:absolute;
+	left:0;
+	top:0;
+	z-index: 10;
+	ovrflow:hidden;
+	opacity:0;
+	border:1px solid #e8e8e8;
+	background-color:rgba(255,255,255,1);
+	-moz-transition: all 200ms ease-in-out;
+	-webkit-transition: all 200ms ease-in-out;
+	transition: all 200ms ease-in-out;
+}
+.map-data-wrapper.active{
+	width:300px;
+	height:400px;
+	opacity:1;
+	transform:translate(-300px,-200px)
+}
+/*
+.map-data-wrapper.active{
+	left:0;
+}
+
+.map-data-wrapper:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 11;
+    background-color: rgba(255,255,255,0.6);
+    -moz-transition: all 100ms ease-in-out;
+    -webkit-transition: all 100ms ease-in-out;
+    transition: all 100ms ease-in-out;
+}
+*/
+.map-data-wrapper:hover:before{
+	background-color:rgba(255,255,255,0.9);
+}
+.map-data-header {
+    border-bottom: 1px solid #e8e8e8;
+    z-index: 12;
+    position: relative;
+    margin: 0;
+}
+.map-data-title {
+    display: block;
+    margin-right: 40px;
+    color: #333333;
+    font-size: 16px;
+    line-height: 40px;
+    padding: 0 10px;
+}
+.map-data-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 30px;
+    line-height: 40px;
+    text-align: center;
+    transform: rotate(45deg);
+    width: 40px;
+    height: 40px;
+    display: block;
+    color: #cc0000;
+	cursor: pointer
+}
+.map-data-content {
+    z-index: 14;
+    position: relative;
+    padding: 10px;
+	
+	height: 90.7%;
+	height: calc(100% - 61px);
+    overflow-y: scroll;
+}
+
+
+
+.theme-clean_light .main{
+
+}
+.theme-clean_light .land{
+	fill: #f2f2f2;
+    stroke: #282828; 
+    stroke-width: 0.3;
+}
+.theme-clean_light .land:hover{
+	fill: #d2d2d2;
+}
+.theme-clean_light .mapArea{
+	fill:#03a9f4;
+} 
+.theme-clean_light .mapArea:hover{
+	fill:#0288d1;
+} 
+
+
 .theme-clean_dark .main{
 	background-color:#333333; 
 }
@@ -371,7 +499,14 @@ echo "</pre>";
     stroke: #282828; 
     stroke-width: 0.3; 
 }
+.theme-clean_dark .land:hover{
+	fill: #666666;
+    stroke: #222222;
+}
 .theme-clean_dark .mapArea{
+	fill:#FFB300;
+}
+.theme-clean_dark .mapArea:hover{
 	fill:#ff9800;
 }
  
@@ -379,9 +514,14 @@ echo "</pre>";
 	 text-align:center;
  }
  .map-wrapper svg {
-    max-width: 100%;
+    min-width:100%;
+	max-width: 100%;
 }
-
+ .map-wrapper .land {
+    -moz-transition: all 150ms ease-in;
+    -webkit-transition: all 150ms ease-in;
+    transition: all 150ms ease-in;
+}
 
 
 .aione-topbar {
@@ -617,6 +757,19 @@ echo "</pre>";
 	overflow: hidden;
 }
 
+/*
+.aione-sidebar.aione-sidebar-position-right:before{
+	content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 11;
+	background-color:#FFFFFF;
+}
+*/
+
 
 
 
@@ -713,15 +866,6 @@ echo "</pre>";
 
 
 
-.wrapper.theme-clean_light .aione-charts .aione-chart{
-	margin-bottom:20px;
-    border: 1px solid #e8e8e8;
-}
-
-
-
-
-
 
 
 .inf {
@@ -775,4 +919,33 @@ echo "</pre>";
 }
 </style> 
 
-@endsection
+<script type="text/javascript">  
+	$(window).load(function() {
+		$( '.aione-loader' ).hide(); 
+		
+	});
+	
+	$('.aione-widget-options .aione-options input').change(function(){
+		var target_widget_id = $(this).val();
+		var is_checked = $(this).prop('checked');
+		if(is_checked){
+			$("#"+target_widget_id).show();
+		} else{
+			$("#"+target_widget_id).hide();
+		}
+	});
+	$('.aione-widget-collapse').click(function(){
+		$(this).toggleClass('active');
+		$(this).parent().parent().parent().find('.aione-chart-content').slideToggle(100);
+	});
+	$('.aione-widget-close').click(function(){
+		var target_option_name = $(this).parent().parent().parent().attr('data-option');
+		$(".widget-toggles .widget-toggle [name="+target_option_name+"]").prop('checked', false);
+		$(this).parent().parent().parent().hide(); 
+	});
+	$('.aione-options-handle').click(function(){
+		$(this).find('.fa').toggleClass('fa-rotate-180');
+		$(this).parent().find('.aione-options').slideToggle(300);
+	});
+</script>
+@endsection 

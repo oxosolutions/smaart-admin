@@ -91,8 +91,6 @@ class organizationController extends Controller
 
     public function destroy($id){
      
-    
-  
       $model = ORG::findOrFail($id);
       try{
           $model->delete();

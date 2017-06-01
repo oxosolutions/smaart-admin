@@ -16,7 +16,7 @@ class DatasetsList extends Model
         $this->table = Session::get('org_id').'_datasets';
       }
      
-   }
+     }
     protected $fillable = ['dataset_name','dataset_records','uploaded_by'];
 
     public static function datasetList(){

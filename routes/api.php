@@ -70,8 +70,8 @@ Route::group(['prefix' => 'v1'], function () {
 	
 	//surrvey
 
-Route::get('answeredSurveysList',['as'=> 'organization' , 'uses'=>'Services\SurrveyApiController@answeredSurveysList']);
-Route::get('view_survey_saved_data/{id}' , ['as'=>'survey.savedata' , 'uses'=>'Services\SurrveyApiController@view_survey_saved_data']);
+	Route::get('answeredSurveysList',['as'=> 'organization' , 'uses'=>'Services\SurrveyApiController@answeredSurveysList']);
+	Route::get('view_survey_saved_data/{id}' , ['as'=>'survey.savedata' , 'uses'=>'Services\SurrveyApiController@view_survey_saved_data']);
 
 	
 	Route::post('survey_embeds', ['as'=>'surrvey.surrvey_save', 'uses'=>'Services\SurrveyApiController@survey_embeds', 'route_name'=> 'Survey Embeds Created']);
@@ -94,7 +94,7 @@ Route::get('view_survey_saved_data/{id}' , ['as'=>'survey.savedata' , 'uses'=>'S
 	//file manager
 	Route::get('sharedFile', ['as'=>'shared.file', 'uses'=>'Services\FileManagerController@listFiles']);
 
-//role list 
+	//role list 
 	Route::get('role/list', ['as'=>'role.list', 'uses'=>'Services\ApiauthController@roleList']);
 	
 	Route::get('surrveyData/{id}',['as'=>'surrvey.data','uses'=>'Services\SurrveyApiController@surrveyData']);
@@ -124,7 +124,7 @@ Route::get('view_survey_saved_data/{id}' , ['as'=>'survey.savedata' , 'uses'=>'S
 	Route::get('/dataset/view/{id}/{skip}',		['as'=>'list','uses'=>'Services\DatasetsController@getDatasets']);
 	Route::get('/dataset/columns/{id}',			['as'=>'list','uses'=>'Services\DatasetsController@getDatasetsColumnsForSubset']);
 	Route::get('/dataset/export/{id}',			['as'=>'dataset.export','uses'=>'Services\ExportDatasetController@export'  , 'route_name'=>  'Export Dataset']);
-	Route::post('/store/visual',				['as'=>'visualization.store','uses'=>'Services\VisualizationController@store'  , 'route_name'=>  'Store Visual']);
+	// Route::post('/store/visual',				['as'=>'visualization.store','uses'=>'Services\VisualizationController@store'  , 'route_name'=>  'Store Visual']);
 	Route::get('/visual/list',					['as'=>'visualization.list','uses'=>'Services\VisualizationController@visualList']);
 	Route::get('/visual/{id}',					['as'=>'visualization.single','uses'=>'Services\VisualizationController@visualByID']);
 	Route::get('/dataset/chartdata/{id}',		['as'=>'list','uses'=>'Services\DatasetsController@getFormatedDataset']);
@@ -144,15 +144,15 @@ Route::get('view_survey_saved_data/{id}' , ['as'=>'survey.savedata' , 'uses'=>'S
 	Route::get('dataset/validate/columns/{id}', ['as'=>'dataset.column.validate', 'uses'=>'Services\DatasetsController@validateColums']);
 	Route::get('dataset/static/dataset', 		['as'=>'dataset.column.validate', 'uses'=>'Services\DatasetsController@staticDatsetFunction']);
 
-	Route::get('/generatedVisual/list',			['as'=>'visual.list','uses'=>'Services\VisualApiController@visualList' , 'route_name'=>  'View Visualisation']);
+	//Route::get('/generatedVisual/list',			['as'=>'visual.list','uses'=>'Services\VisualApiController@visualList' , 'route_name'=>  'View Visualisation']);
 	Route::get('/datsetColumns/{id}',			['as'=>'columns.list','uses'=>'Services\VisualApiController@getColumnByDataset']);
 	Route::get('/getVisualdetails/{id}',		['as'=>'visual.details','uses'=>'Services\VisualApiController@getVisualDetails']);
-	Route::post('/updatevisual', 				['as'=>'update.visual','uses'=>'Services\VisualApiController@saveVisualData' ,'route_name'=>  'Update Visual']);
+	//Route::post('/updatevisual', 				['as'=>'update.visual','uses'=>'Services\VisualApiController@saveVisualData' ,'route_name'=>  'Update Visual']);
 	Route::get('/visualChartList',				['as'=>'visual.chartList','uses'=>'Services\VisualApiController@visualList']);
 	Route::get('/calculate/visual/{id}',		['as'=>'calc.visual','uses'=>'Services\VisualApiController@calculateVisuals']);
 	Route::post('/saveVisualSettings',			['as'=>'save.visual.settings','uses'=>'Services\VisualApiController@saveVisualSettings' ,'route_name'=>  'Save Visual Setting']);
 	Route::get('/getVisualList/{dataset_id}',	['as'=>'visual.list.byDataset','uses'=>'Services\VisualApiController@getVisualsFromDatsetID' ]);
-	Route::post('/generateEmbedToken',			['as'=>'generate.embed','uses'=>'Services\VisualApiController@generateEmbed']);
+	//Route::post('/generateEmbedToken',			['as'=>'generate.embed','uses'=>'Services\VisualApiController@generateEmbed']);
 
 	Route::post('/uplaodFile',['as'=>'file_manager.upload','uses'=>'Services\FileManagerController@uploadFile']);
 
@@ -169,5 +169,10 @@ Route::get('view_survey_saved_data/{id}' , ['as'=>'survey.savedata' , 'uses'=>'S
 	Route::get('/create/clone/{surveyId}' ,['as'=>'create.clone','uses'=>'Services\SurrveyApiController@createClone']);
 	Route::get('/create/dataset/clone/{datasetId}',['as'=>'create.survey.clone','uses'=>'Services\DatasetsController@creaetClone']);
 	Route::get('/create/visualization/clone/{visualID}',['as'=>'create.viausl.clone','uses'=>'Services\VisualApiController@createClone']);
+	Route::post('visualization/create', ['as'=>'visualization.create','uses'=>'VisualisationController@createVisualization']);
+	Route::post('visualization/update', ['as'=>'visualization.update','uses'=>'VisualisationController@updateVisualization']);
+	Route::get('visualization/details/{id}',['as'=>'visualization.details','uses'=>'VisualisationController@visualization_details']);
+	Route::get('/visualization/list',['as'=>'visualization.list','uses'=>'VisualisationController@visualization_list' , 'route_name'=>  'List Visualisation']);
+	Route::post('/generateEmbedToken',['as'=>'generate.embed','uses'=>'VisualisationController@generateEmbed']);
 	});
 });

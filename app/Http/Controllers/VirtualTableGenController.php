@@ -55,9 +55,47 @@ class VirtualTableGenController extends Controller
           ]
         ],
         [
+          'tab_name'=>$org_name.'_visualisations',
+          'columns'=>[
+            "`name` varchar(255) COLLATE utf8_unicode_ci NOT NULL",
+            "`description` text COLLATE utf8_unicode_ci",
+            "`dataset_id` int(10) UNSIGNED NOT NULL",
+            "`embed_code` text DEFAULT NULL",
+            "`created_by` int(10) UNSIGNED NOT NULL",
+            "`deleted_at` timestamp NULL DEFAULT NULL",
+            "`created_at` timestamp NULL DEFAULT NULL",
+            "`updated_at` timestamp NULL DEFAULT NULL"
+          ]
+        ],
+        [
           'tab_name'=>$org_name.'_visualization_metas',
           'columns'=>[
           "`visualization_id` int(10) UNSIGNED NOT NULL",
+          "`key` text COLLATE utf8_unicode_ci NOT NULL",
+          "`value` text COLLATE utf8_unicode_ci NOT NULL",
+          "`created_at` timestamp NULL DEFAULT NULL",
+          "`updated_at` timestamp NULL DEFAULT NULL"
+          ]
+        ],
+        [
+          'tab_name'=>$org_name.'_visualization_charts',
+          'columns'=>[
+          "`visualization_id` int(10) UNSIGNED NOT NULL",
+          "`chart_title` text COLLATE utf8_unicode_ci NOT NULL",
+          "`primary_column` varchar(255) COLLATE utf8_unicode_ci NOT NULL",
+          "`secondary_column` text COLLATE utf8_unicode_ci NOT NULL",
+          "`chart_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL",
+          "`status` varchar(100) COLLATE utf8_unicode_ci NOT NULL",
+          "`deleted_at` timestamp NULL DEFAULT NULL",
+          "`created_at` timestamp NULL DEFAULT NULL",
+          "`updated_at` timestamp NULL DEFAULT NULL"
+          ]
+        ],
+        [
+          'tab_name'=>$org_name.'_visualization_chart_metas',
+          'columns'=>[
+          "`visualization_id` int(10) UNSIGNED NOT NULL",
+          "`chart_id` int(10) UNSIGNED NOT NULL",
           "`key` text COLLATE utf8_unicode_ci NOT NULL",
           "`value` text COLLATE utf8_unicode_ci NOT NULL",
           "`created_at` timestamp NULL DEFAULT NULL",
@@ -121,19 +159,7 @@ class VirtualTableGenController extends Controller
             "`updated_at` timestamp NULL DEFAULT NULL"
           ]
         ], 
-        [
-          'tab_name'=>$org_name.'_visualisations',
-          'columns'=>[
-            "`dataset_id` int(10) UNSIGNED NOT NULL",
-            "`visual_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL",
-            "`settings` text COLLATE utf8_unicode_ci",
-            "`options` text COLLATE utf8_unicode_ci",
-            "`created_by` int(10) UNSIGNED NOT NULL",
-            "`deleted_at` timestamp NULL DEFAULT NULL",
-            "`created_at` timestamp NULL DEFAULT NULL",
-            "`updated_at` timestamp NULL DEFAULT NULL"
-          ]
-        ],
+        
         [
           'tab_name'=>$org_name.'_user_roles',
           'columns'=>[

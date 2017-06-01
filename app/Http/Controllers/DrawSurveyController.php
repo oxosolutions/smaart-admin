@@ -26,28 +26,19 @@ class DrawSurveyController extends Controller
     Public function survey_save_data($id)
     {
        $sdata = SurveyHelper::survey_save_data($id);
-       return view('survey.survey_save_data',['sdata'=>$sdata , 'sid'=>$id]);
-
+       return view('survey.survey_save_data',['sdata'=>$sdata['data'] , 'sid'=>$id]);
     }
 
     public function export_survey_data($id)
     {
-
-        // echo $id;
-
-
-       
-        // $data = [
-        //             ['abc'=>"121", 'abc1'=>"1211",'abc2'=>"121ss1"],
-        //             ['abc'=>"121", 'abc1'=>"1211",'abc2'=>"121fgss1"],
-        //             ['abc'=>"1df21", 'abc1'=>"12cdf11",'abc2'=>"12xd1ss1"],
-
-        // ]; //array()SurveyHelper::survey_save_data($id);
-
-        // Excel::create('Filename', function($data) {
-
-        //     })->export('xls');
-        
+         $data = SurveyHelper::survey_save_data($id);
+         $model = $data['data']; 
+         Excel::create($data['table'], function($excel) use ($model) {
+              $excel->sheet('mySheet', function($sheet) use ($model)
+                {
+                    $sheet->fromArray($model);
+                });
+            })->download('csv');
     }
     
     public function survey_statistics($token)
@@ -103,8 +94,6 @@ class DrawSurveyController extends Controller
            // $survey_data['pending_survey'] =  $filled_data->select()->groupBy('survey_submitted_by');
 
             $survey_data['user_filled_count'] = DB::table($survey_data->survey_table)->selectRaw('count(id) as total , survey_submitted_by')->groupBy('survey_submitted_by')->pluck('total','survey_submitted_by');
-          
-          // dump($sdata->count('id')->groupBy('survey_submitted_by'));     
         }
 
         return view('survey.stats', ['survey_data'=>$survey_data]);
@@ -119,8 +108,8 @@ class DrawSurveyController extends Controller
 
         return $keyArray[array_search($keyValue, array_column($settingsArray, 'key'))]['value'];
     }
-protected function surveyViewType($surveyViewType , $token , $sid , $request=null )
-{
+    protected function surveyViewType($surveyViewType , $token , $sid , $request=null )
+    {
         if (!empty($request) && $request->isMethod('post'))
         {
             $viewType['token'] = $request['token']; 
@@ -214,7 +203,7 @@ protected function surveyViewType($surveyViewType , $token , $sid , $request=nul
         }
 
         return $viewType;
-}
+    }
 
     public function reset_survey($token)
     {
@@ -266,10 +255,10 @@ protected function surveyViewType($surveyViewType , $token , $sid , $request=nul
                 $req =null;
             }
         Surrvey::$group_take = null;
-        Surrvey::$group_random = null;
+        Surrvey::$group_random = true;
 
         GROUP::$question_take = null;
-        GROUP::$question_random = null;
+        GROUP::$question_random = true;
         $ip = \Request::ip();
     	$data = SEMBED::where('embed_token',$token)->first();
         if($data == null){
@@ -308,6 +297,8 @@ protected function surveyViewType($surveyViewType , $token , $sid , $request=nul
                         }]);
                 }
                     }])->find($sid);
+
+       // dd($survey_data);
 
         if($survey_data == null){
             $errors[] = 'Survey id not valid!';
@@ -414,13 +405,14 @@ protected function surveyViewType($surveyViewType , $token , $sid , $request=nul
         
         $scheduling_status = $this->getSettings($survey_settings,'survey_scheduling_status');
         if(($scheduling_status == 1 || $scheduling_status == '1') && $scheduling_status != null){
-             $today_date = date('Y-m-d H:i:s');
-            
+             $today_date = date('Y-m-d h:i:s');
+            //dump($today_date);
         $survey_start_date = $this->getSettings($survey_settings,'survey_start_date');
         $survey_expiry_date = $this->getSettings($survey_settings,'survey_expiry_date');
+           // dump($survey_start_date);
+            //dump($survey_expiry_date);
 
-
-            if($today_date < $survey_start_date){
+           if($today_date < $survey_start_date){
                 $errors[] = $messages_list['survey_not_started'];
             }elseif($today_date > $survey_expiry_date){
                 $errors[] = $messages_list['survey_expired'];
@@ -444,7 +436,8 @@ protected function surveyViewType($surveyViewType , $token , $sid , $request=nul
             @$custom_code['custom_js'] = $this->getSettings($survey_settings,'customJs');
             @$custom_code['custom_css'] = $this->getSettings($survey_settings,'customCss');
 
-                
+              
+
         if(!empty($errors)){
             return view('survey.draw_survey',['err_msg'=>$errors,'theme'=>$theme, 'skip_auth'=>$skip_auth ,'token'=>$token]);
         }else{
@@ -603,7 +596,7 @@ protected function surveyViewType($surveyViewType , $token , $sid , $request=nul
         $this->validateAuth($request);
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
             Session::put('survey_logined',$request->email);
-            return redirect()->route('survey.draw',['id'=>Session::get('token')]);
+            return redirect()->route('survey.nxt',['id'=>Session::get('token')]);
         }
     }
 

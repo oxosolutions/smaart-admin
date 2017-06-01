@@ -6,6 +6,7 @@ use DB;
 use App\FileManager as FM;
 use App\User;
 use App\organization;
+use App\Role;
 
 
 
@@ -16,9 +17,20 @@ class MyFuncs{
 		$userDetail = User::find($id);
 		return $userDetail;
 	}
+// Bind with Service/SurveyApiController -(view_survey_saved_data)
+// Bind with DrawSurveyController -(survey_save_data , export_survey_data)
+ 	Public static function role_name_by_id($id)
+ 	{
+ 		return Role::where('id',$id)->select('name')->first()->name;		
+ 	}
+
+ 	Public static function user_name_by_id($id)
+ 	{
+ 		return User::where('id',$id)->select('name')->first()->name;		
+ 	}
+
 	Public static function survey_save_data($sid)
 	{
-
 			$survey_data = Surrvey::with(['group'=>function($query) {
 				$query->orderBy('group_order')->with(['question'=>function($que) {
 					$que->orderBy('quest_order');                            
@@ -34,33 +46,82 @@ class MyFuncs{
 
 				}
 			}
+			$quesId['device_detail'] = 'device_detail';
+			$quesType['device_detail'] = 'device_detail';
+			$quesText['device_detail'] = 'Device Information';
+			//dump($quesId);
 			$newData[0] = $quesText;
 			Surrvey::findORfail($sid);
 			$table = Surrvey::select('survey_table')->where('id',$sid)->first()->survey_table;
 			$data = DB::table($table)->get();
 			foreach ($data as $key => $value) {
-				unset($value->device_detail);
 				$key++;
+				//dump($value->device_detail);
+				//unset($value->device_detail);
 				foreach ($quesId as $qqkey => $qqvalue) {
-					$newData[$key][$qqvalue] = $value->$qqvalue;
-				
-					if($quesType[$qqkey]=="checkbox")
+					if(@$value->$qqvalue)
 					{
-						unset($optVal);
-						foreach (json_decode($value->$qqvalue, true) as $aKey => $ansValue) {
-						if($ansValue==true)
-							{
-								$optVal[] = $aKey;
-							}
+						$newData[$key][$qqvalue] = $value->$qqvalue;
+						$jsonData =	 json_decode($value->$qqvalue,true);
+
+					}
+
+						
+				if(json_last_error() === JSON_ERROR_NONE)
+					{	unset($optVal);
+						 $qid = array_search('checkbox', $quesType);
+						 if(!empty($value->device_detail))
+						 {
+						 		$devqid = array_search('device_detail', $quesType);
 						}
+						 if($qid==$qqvalue)
+						 {
+							if(!empty($jsonData)){
+								foreach ($jsonData as $aKey => $ansValue) {
+									if($ansValue==true)
+									{
+										$optVal[] = $aKey;
+									}
+								}
+							}
+						}elseif(@$devqid==$qqvalue){
+
+							//dump($jsonData);
+							foreach ($jsonData as $devkey => $devValue) {
+								if(is_array($devValue))
+								{
+									foreach ($devValue as $infokey => $infoValue) {
+										$optVal[] = "$infokey :  $infoValue";
+									}
+								}else{
+
+									$optVal[] = "$devkey :  $devValue";
+								}
+
+								# code...
+							}
+
+							$optVal[] = 'NULL';
+						}else{
+							$optVal[] = 'NULL';
+						}
+					
 						$newData[$key][$qqvalue] = implode(', ', $optVal);
 					}		
 				}
 			}
-
-			return $newData;
+			//dump($newData);
+			//die;
+			return ['data'=>$newData, 'table'=>$table];
 		
 	}
+
+	Public function isJson($string) {
+		 json_decode($string);
+		 return (json_last_error() == JSON_ERROR_NONE);
+	}
+
+	
 
 public static function create_survey_table($survey_id , $org_id)
 	{

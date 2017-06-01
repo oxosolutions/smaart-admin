@@ -80,14 +80,15 @@ class SurrveyApiController extends Controller
 			}		
 		}
 	}
-
+// SURVEY SYNC FROM APP
 	public function save_survey_filled_data(Request $request)
 	{
-		$org_id = org::select('id')->where('activation_code' ,$request->activation_code)->first()->id;
+		$sdata = $request->all();
+		$surveyid = $sdata['survey_id'];
+		$activation_code = $sdata['activation_code'];
+		$org_id = org::select('id')->where('activation_code' ,$activation_code)->first()->id;
 		Session::put('org_id', $org_id);
-		$data = json_decode($request->export,true);
 		
-		$surveyid = $data[0]["surveyid"];
 		$table = $org_id.'_survey_data_'.$surveyid;
 		if(!Schema::hasTable($table))
     	{
@@ -96,51 +97,90 @@ class SurrveyApiController extends Controller
 		else{
 			SurveyHelper::alter_survey_table($surveyid , $org_id);
 		}
-		foreach ($data as $key => $value) {
-			$survey_check =0;
-			if($value['status']=="completed")
-			{
-				$status =1;	
-			}else{
-				$status =0;
-			}
-			$insert["survey_status"] = $status;
-			$insert["survey_started_on"] = 	$value['starton'];
-			$insert["survey_completed_on"] = 	$value['endon']; 
-			$insert["ip_address"] = $request->ip();
-			$insert["survey_submitted_from"] = "APP";
-			if(isset($value['user_id']))
-			{
-				$insert["survey_submitted_by"] = $value['user_id'];
-			}
-
-			if(isset($value['unique_id']))
-			{
-				$insert["unique_id"] = 	@$value['unique_id'];
-			$survey_check = DB::table($table)->where('unique_id',$insert["unique_id"])->count();
-			//dd($surve_check);
-			}
-			//dump($value);
-			foreach ($value['answers'] as $ansKey => $ansValue) {	
-				if(isset($ansValue["answer"]))
+		$survey_data = json_decode($sdata['survey_data'],true);
+		$count_sdata = count($survey_data);
+		for ($i=0; $i < $count_sdata; $i++) { 
+			$unique_id = $survey_data[$i]['unique_id'];
+			$check_unique_id = DB::table($table)->where('unique_id',$unique_id)->count();
+			if($check_unique_id ==0)
+			{	
+				unset($survey_data[$i]['survey_sync_status'], $survey_data[$i]['id'], $survey_data[$i]['incomplete_name'], $survey_data[$i]['completed_groups'], $survey_data[$i]['last_group_id'] , $survey_data[$i]['last_field_id'] );
+				if($survey_data[$i]['survey_status']=="completed")
 				{
-					if(is_array($ansValue["answer"]))
-					{
-					$insert[$ansValue["questkey"]] = json_encode($ansValue["answer"]);
-					}
-					else
-					{
-						$insert[$ansValue["questkey"]] = $ansValue["answer"];
-					}
-				}				 
-			}
-			$insert["device_detail"] =		$request->device_details;
+					$status =1;	
+				}else{
+					$status =0;
+				}
 
-			if($survey_check==0)
-			{		
+				$survey_data[$i]['survey_status'] = $status;
+				$insert = $survey_data[$i];
 				DB::table($table)->insert($insert);	
-			}	
-		}		
+				return ['status'=>"successfully" , 'message'=>'survey insert sucessfully'];
+
+			}else{
+				return ['status'=>"exist" , 'message'=>'Already exist'];
+			}
+		}
+
+
+		// $org_id = org::select('id')->where('activation_code' ,$request->activation_code)->first()->id;
+		// Session::put('org_id', $org_id);
+		// $data = json_decode($request->export,true);
+		
+		// $surveyid = $data[0]["surveyid"];
+		// $table = $org_id.'_survey_data_'.$surveyid;
+		// if(!Schema::hasTable($table))
+  //   	{
+  //   		SurveyHelper::create_survey_table($surveyid , $org_id);
+		// }
+		// else{
+		// 	SurveyHelper::alter_survey_table($surveyid , $org_id);
+		// }
+		// foreach ($data as $key => $value) {
+		// 	$survey_check =0;
+		// 	if($value['status']=="completed")
+		// 	{
+		// 		$status =1;	
+		// 	}else{
+		// 		$status =0;
+		// 	}
+		// 	$insert["survey_status"] = $status;
+		// 	$insert["survey_started_on"] = 	$value['starton'];
+		// 	$insert["survey_completed_on"] = 	$value['endon']; 
+		// 	$insert["ip_address"] = $request->ip();
+		// 	$insert["survey_submitted_from"] = "APP";
+		// 	if(isset($value['user_id']))
+		// 	{
+		// 		$insert["survey_submitted_by"] = $value['user_id'];
+		// 	}
+
+		// 	if(isset($value['unique_id']))
+		// 	{
+		// 		$insert["unique_id"] = 	@$value['unique_id'];
+		// 	$survey_check = DB::table($table)->where('unique_id',$insert["unique_id"])->count();
+		// 	//dd($surve_check);
+		// 	}
+		// 	//dump($value);
+		// 	foreach ($value['answers'] as $ansKey => $ansValue) {	
+		// 		if(isset($ansValue["answer"]))
+		// 		{
+		// 			if(is_array($ansValue["answer"]))
+		// 			{
+		// 			$insert[$ansValue["questkey"]] = json_encode($ansValue["answer"]);
+		// 			}
+		// 			else
+		// 			{
+		// 				$insert[$ansValue["questkey"]] = $ansValue["answer"];
+		// 			}
+		// 		}				 
+		// 	}
+		// 	$insert["device_detail"] =		$request->device_details;
+
+		// 	if($survey_check==0)
+		// 	{		
+		// 		DB::table($table)->insert($insert);	
+		// 	}	
+		// }		
 	}
 //VIEW SURVEY SAVED DATA fuse
 	public function view_survey_saved_data($sid)
@@ -148,7 +188,7 @@ class SurrveyApiController extends Controller
 		try{
 			$newData = SurveyHelper::survey_save_data($sid);
 
-			return ['status'=>'success', 'data'=> $newData ];
+			return ['status'=>'success', 'data'=> $newData['data'] ];
 
 			}catch(\Exception $e)
 			{

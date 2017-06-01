@@ -139,6 +139,8 @@ class AppApiController extends Controller
     		$questionData[$key]["question_message"]= "";
     		$questionData[$key]["required"]=  @$ansData['required'];
     		$questionData[$key]["pattern"]=  @$ansData['pattern'];
+    		$questionData[$key]["otherPattern"]=  @$ansData['otherPattern'];
+    		
 
      		$option=null;
      		$ary = [];
