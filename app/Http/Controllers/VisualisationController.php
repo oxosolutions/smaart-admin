@@ -213,6 +213,11 @@ class VisualisationController extends Controller
         }
     }
 
+    public function get_visualization_by_dataset($datasetid){
+    	$model = Visualisation::where('dataset_id',$datasetid)->get();
+    	return ['status'=>'success','list'=>$model];
+    }
+
     /*
     * Used in Smaart Framework Api index.api.js to create new visualization
     * @param $request (posted request)
@@ -385,6 +390,22 @@ class VisualisationController extends Controller
 		return ['status'=>'success','list'=>$responseArray];
 	}
 
+	public function delete_visualization($visualization_id){
+		
+		$visual = Visualisation::where('id',$visualization_id)->with([
+			'charts'=>function($query) use ($visualization_id){
+				$query->where('visualization_id',$visualization_id)->forceDelete();
+		},
+			'chart_meta'=>function($query) use ($visualization_id){
+				$query->where('visualization_id',$visualization_id)->delete();
+		},
+			'meta'=>function($query) use ($visualization_id){
+				$query->where('visualization_id',$visualization_id)->delete();
+		}])->forceDelete();
+
+		return ['status'=>'success','message'=>'Visualization deleted successfully!'];
+	}
+
 	public function generateEmbed(Request $request){
         $user = Auth::user();
         $org_id = $user->organization_id;
@@ -404,13 +425,15 @@ class VisualisationController extends Controller
         return ['status'=>'success','message'=>'Successfully generated!','token'=>$embed_token];
     }
 
-	protected function put_in_errors_list($error, $break = false){
+	protected function put_in_errors_list($error = '', $break = false){
 		array_push($this->errors_list, $error);
-		if($break){
-			return view(); // load error view
-			dd();
+		if($break == true){
+			echo view('web_visualization.errors',['errors'=>$this->errors_list])->render(); // load error view
+			die;
+		}else{
+			echo view('web_visualization.errors',['errors'=>$this->errors_list])->render(); // load error view
+			return true;
 		}
-		return true;
 	}
 
 	protected function getMetaValue($metaArray, $metaKey){
@@ -605,11 +628,52 @@ class VisualisationController extends Controller
     	}
     }
 
+    protected function string_number_to_numeric($array_data){
+    	if(!empty($array_data)){
+    		
+    		$settings_array = [];
+    		foreach($array_data as $key => $value){
+    			if(is_array($value)){
+    				foreach($value as $k => $v){
+    					if(is_numeric($v)){
+		    				$settings_array[$key][$k] = (int)$v;
+		    			}else{
+		    				$settings_array[$key][$k] = $v;
+		    			}
+    				}
+    			}else{
+    				if(is_numeric($value)){
+	    				$settings_array[$key] = (int)$value;
+	    			}else{
+	    				if($key == 'colors'){
+	    					$explodeColor = explode(',',$value);
+	    					$settings_array[$key] = $explodeColor;
+	    				}elseif($key == 'legend'){
+	    					$legendArray = [];
+	    					$legendArray['position'] =  $value;
+	    					$settings_array[$key] = $legendArray;
+	    				}elseif($key == 'backgroundColor'){
+	    					$settings_array[$key] = (array)$value;
+	    				}elseif($key == 'isStacked'){
+	    					$settings_array[$key] = ($value == 'true')?true:false;
+	    				}else{
+	    					$settings_array[$key] = ($value != '')?$value:0;
+	    				}
+	    			}
+    			}
+    		}
+    		return $settings_array;
+    		// dd($settings_array);
+    	}else{
+    		return [];
+    	}
+    }
 
 	public function embedVisualization(Request $request){
 		
 		$embedModel = Embed::where('embed_token',$request->id)->first();
-		if($embedModel == null){
+		
+		if(empty($embedModel)){
 			$this->put_in_errors_list('Wrong embed token!', true);
 		}
 		Session::put('org_id',$embedModel->org_id); // putting organization id into session for get the data from models
@@ -627,10 +691,15 @@ class VisualisationController extends Controller
 			$this->put_in_errors_list('No charts found!', true);
 		}
 
+		if(empty($visualization->dataset)){
+
+			$this->put_in_errors_list('No dataset found', true);
+		}
 		$dataset_table = $visualization->dataset->dataset_table; //getting dataset table name from visualization query
 		$drawer_array = [];
 		$chartTitles = [];
 		$javascript = [];
+		$visualization_settings = [];
 		$drawer_array['visualization_name'] = $visualization->name;
 		$drawer_array['visualization_id'] = $visualization->id;
 		$drawer_array['visualization_meta'] = $this->get_meta_in_correct_format($visualization->meta);
@@ -638,7 +707,7 @@ class VisualisationController extends Controller
 		foreach ($visualization->charts as $key => $chart) {
 			$columns = [];
 			$columns[] = $chart->primary_column;
-			// dd($columns);
+			
 			foreach(json_decode($chart->secondary_column) as $column){
 				$columns[] = $column;
 			}
@@ -646,7 +715,7 @@ class VisualisationController extends Controller
 
 				$viewData_meta = $this->getMetaValue($chart->meta,'viewData');
 				$customData_meta = json_decode($this->getMetaValue($chart->meta,'customData'));
-				dd($columns);
+				
 				$columns[] = $viewData_meta;
 				if(!empty($customData_meta)){
 					foreach ($customData_meta as $customColumn) {
@@ -666,10 +735,9 @@ class VisualisationController extends Controller
 				}
 
 				$formula = $this->getMetaValue($chart->meta,'formula');
-				if($formula != 'no'){
+				if($formula != 'no' && $formula != false){
 					$dataset_records = $this->apply_formula($dataset_records, $formula);
 				}
-
 				$dataset_records = json_decode(json_encode($dataset_records),true); // generating pure array from colection of stdClass object
 				$headers = array_shift($dataset_records);
 				if($chart->chart_type != 'CustomMap'){
@@ -698,16 +766,22 @@ class VisualisationController extends Controller
 				if(!empty($records_array)){ // if after filter or without filter there is no data in records list
 					if($chart->chart_type != 'CustomMap'){
 						$lavaschart->addRows($records_array); // lavachart add only indexed array of arrays (inserting multiple rows in to lavacharts datatable)
-
-						lava::{$chart->chart_type}('chart_'.$key,$lavaschart)->setOptions([
-										'title' => $chart->chart_title
-									]);
+						$visualization_settings = $this->getMetaValue($chart->meta,'visual_settings');
+						
+						if(!empty($visualization_settings) && $visualization_settings != false){
+							$visualization_settings = $this->string_number_to_numeric(json_decode($visualization_settings,true));
+						}else{
+							$visualization_settings = [];
+						}
+						lava::{$chart->chart_type}('chart_'.$key,$lavaschart)->setOptions($visualization_settings);
 					}else{
 						$drawer_array['visualizations']['chart_'.$key]['map'] = $this->getSVGMaps($chart->meta); // get svg maps global or local
+						$header_with_column = $headers;
 						$headers = array_values($headers);
-						$this->create_map_array($records_array, $headers);
-						$javascript['chart_'.$key] = ['type'=>$chart->chart_type,'id'=>'chart_'.$key,'data'=>$records_array,'headers'=>$headers];
+						$customMapDate = $this->create_map_array($dataset_records, $headers, $chart, $header_with_column);
+						$javascript['chart_'.$key] = ['type'=>$chart->chart_type,'id'=>'chart_'.$key,'data'=>$records_array,'headers'=>$headers, 'arranged_data'=>$customMapDate];
 					}
+					// dd($records_array);
 					/*
 					* Prepare data for draw visualization
 					* on front
@@ -723,7 +797,7 @@ class VisualisationController extends Controller
 			}catch(\Exception $e){
 
 				$this->put_in_errors_list($e->getMessage());
-				throw $e;
+				//throw $e;
 			}
 		}
 		/*
@@ -760,14 +834,48 @@ class VisualisationController extends Controller
 					);
 	}
 
-	public function create_map_array($records, $headers){
+	public function create_map_array($records, $headers, $chart, $header_with_column){
+		
 		$records = collect($records);
-		$records = $records->groupBy(0)->toArray();
-		foreach($records as $key => $record){
+		$getFirstPrimaryColumn = collect($records);
+		$collectionData = collect($getFirstPrimaryColumn->first());
+		$columnForGroup = $collectionData->keys()->first();
+	
+
+		$viewData_meta[] = $this->getMetaValue($chart->meta,'viewData');
+		$tooltipData = json_decode($chart->secondary_column);
+		$popupData = json_decode($this->getMetaValue($chart->meta,'customData'));
+
+		$viewData_array = [];
+		$tooltipData_array = [];
+		$popupData_array = [];
+
+		$recordsArray = $records->groupBy($columnForGroup)->toArray();
+		$index = 0;
+		foreach($recordsArray as $key => $record){
+			
 			foreach($record as $k => $value){
-				$records[$key][$k] = array_combine($headers, $value);
+				foreach($viewData_meta as $ck => $column_key){
+					$viewData_array[$key][str_replace(' ', '_', $k)] = $value[$column_key];
+				}
+				foreach ($tooltipData as $ck => $column_key) {
+					// dd($value);
+					$tooltipData_array[$key][str_replace(' ', '_', $k)][$header_with_column[$column_key]] = $value[$column_key];
+				}
+				
+				foreach ($popupData as $ck => $column_key) {
+					$popupData_array[$key][str_replace(' ', '_', $k)][$header_with_column[$column_key]] = $value[$column_key];
+				}
+				$recordsArray[$key][str_replace(' ', '_', $k)] = array_combine($headers, $value);
+				$index++;
 			}
 		}
+
+		//$viewData_array = collect($viewData_array);
+		
+		$viewData_array = array_map(function($item){
+			return collect($item)->sum();
+		}, $viewData_array);
 
 		//Don't remove this, this is working code
 		/*$records_array = [];
@@ -778,8 +886,15 @@ class VisualisationController extends Controller
 				}
 			}
 		}*/
-
-		dd($records);
+		/*dump('View Data Array');
+		dump($viewData_array);
+		dump('Tooltip Data Array');
+		dump($tooltipData_array);
+		dump('Popup Data Array');
+		dump($popupData_array);
+		dump('Final Data Array');
+		dd($recordsArray);*/
+		return ['view_data'=>$viewData_array, 'tooltip_data'=>$tooltipData_array,'popup_date'=>$popupData_array];
 	}
 
 }

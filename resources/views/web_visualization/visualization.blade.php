@@ -105,7 +105,7 @@ echo "</pre>";
 								$chart_enabled = $chart['enableDisable'];
 								?>
 
-								@if(1)
+								@if($chart_enabled == 1)
 									<div id="chart_wrapper_{{$chart_id}}" class="aione-chart aione-chart-{{$chart_type}}">
 										@if(isset($meta['show_chart_title']) && $meta['show_chart_title'] == 1)
 										<div class="aione-section-header aione-topbar-header">
@@ -141,6 +141,9 @@ echo "</pre>";
 													</div>
 													<div id="map_data_content_{{$chart_id}}" class="map-data-content">
 													</div>
+												</div>
+												<div class="view_data" style="display: none;">
+													{{dd($javascript[$chart_key]['arranged_data'])}}
 												</div>
 											@else
 												<div id="{{$chart_id}}" class="chart-wrapperr"></div>

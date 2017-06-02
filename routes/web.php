@@ -228,6 +228,7 @@ Route::get('/func', function () {
 		Route::post('surrvey/save', ['as'=>'surrvey.save', 'uses'=>'FormBuilderController@save']);
 		Route::get('surrvey/ques/{sid}', ['as'=>'surrvey.ques', 'uses'=>'FormBuilderController@surrvey_ques']);
 		Route::get('ques/{id}', ['as'=>'ques.single', 'uses'=>'FormBuilderController@get_ques']);
+		
 
 	//Generated Visuals Queries
 		Route::get('/visual/queries',['as'=>'visual.queries','uses'=>'VisualQueryController@index']);
@@ -249,3 +250,4 @@ Route::group(['middleware'=>['log']], function(){
 });
 
 Route::get('/approve/{from?}/{api_token?}', ['as'=>'approve','uses'=>'ApiusersController@approveUser']);
+Route::get('errors', ['as'=>'errors.list', 'uses'=>'VisualisationController@put_in_errors_list']);

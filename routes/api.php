@@ -132,7 +132,6 @@ Route::group(['prefix' => 'v1'], function () {
 	Route::post('/visual/settings',				['as'=>'store.visual.settings','uses'=>'Services\VisualizationController@storeVisualOptionsAndSettings']);
 	Route::post('/dataset/savevalidatecolumns',	['as'=>'validate.columns','uses'=>'Services\DatasetsController@SavevalidateColumns']);
 	Route::get('/dataset/delete/{id}',			['as'=>'validate.columns','uses'=>'Services\DatasetsController@deleteDataset'  , 'route_name'=>  'Delete Data Set']);
-	Route::get('/visual/delete/{id}',			['as'=>'validate.columns','uses'=>'Services\VisualizationController@deleteVisual']);
 	//User Profile API
 	 Route::get('/profile',						['as'=>'user.profile','uses'=>'Services\ProfileApiController@getUserProfile']);
 	Route::post('/profile/changepass',			['as'=>'change.password','uses'=>'Services\ProfileApiController@changePassword' , 'route_name'=>  'Change Password']);
@@ -151,7 +150,6 @@ Route::group(['prefix' => 'v1'], function () {
 	Route::get('/visualChartList',				['as'=>'visual.chartList','uses'=>'Services\VisualApiController@visualList']);
 	Route::get('/calculate/visual/{id}',		['as'=>'calc.visual','uses'=>'Services\VisualApiController@calculateVisuals']);
 	Route::post('/saveVisualSettings',			['as'=>'save.visual.settings','uses'=>'Services\VisualApiController@saveVisualSettings' ,'route_name'=>  'Save Visual Setting']);
-	Route::get('/getVisualList/{dataset_id}',	['as'=>'visual.list.byDataset','uses'=>'Services\VisualApiController@getVisualsFromDatsetID' ]);
 	//Route::post('/generateEmbedToken',			['as'=>'generate.embed','uses'=>'Services\VisualApiController@generateEmbed']);
 
 	Route::post('/uplaodFile',['as'=>'file_manager.upload','uses'=>'Services\FileManagerController@uploadFile']);
@@ -174,5 +172,8 @@ Route::group(['prefix' => 'v1'], function () {
 	Route::get('visualization/details/{id}',['as'=>'visualization.details','uses'=>'VisualisationController@visualization_details']);
 	Route::get('/visualization/list',['as'=>'visualization.list','uses'=>'VisualisationController@visualization_list' , 'route_name'=>  'List Visualisation']);
 	Route::post('/generateEmbedToken',['as'=>'generate.embed','uses'=>'VisualisationController@generateEmbed']);
+	Route::get('/visualization/delete/{id}',['as'=>'delete.visualization','uses'=>'VisualisationController@delete_visualization']);
+	Route::get('/visualization/bydataset/{id}',['as'=>'getVisualization.byDataset','uses'=>'VisualisationController@get_visualization_by_dataset']);
+
 	});
 });
