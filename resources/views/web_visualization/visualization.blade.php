@@ -97,61 +97,71 @@ echo "</pre>";
 							<!--==============================-->
 
 							@foreach($charts as $chart_key => $chart)
+								
+								@if(isset($chart['error']))
+									@include('web_visualization.errors',['errors'=>[$chart['error']]])
+								@else
+									<?php
+										$chart_id = $chart_key;
+										$chart_type = $chart['chart_type'];
+										$chart_title = $chart['title'];
+										$chart_enabled = $chart['enableDisable'];
+									?>
 
-								<?php
-								$chart_id = $chart_key;
-								$chart_type = $chart['chart_type'];
-								$chart_title = $chart['title'];
-								$chart_enabled = $chart['enableDisable'];
-								?>
+									@if($chart_enabled == 1)
+										<div id="chart_wrapper_{{$chart_id}}" class="aione-chart aione-chart-{{$chart_type}}">
+											@if(isset($meta['show_chart_title']) && $meta['show_chart_title'] == 1)
+											<div class="aione-section-header aione-topbar-header">
+												<div class="aione-section-header-title">
+													@if(isset($meta['sortable_chart_widgets']) && $meta['sortable_chart_widgets'] == 1)
+													<div class="aione-section-handle"></div>
+													@endif
 
-								@if($chart_enabled == 1)
-									<div id="chart_wrapper_{{$chart_id}}" class="aione-chart aione-chart-{{$chart_type}}">
-										@if(isset($meta['show_chart_title']) && $meta['show_chart_title'] == 1)
-										<div class="aione-section-header aione-topbar-header">
-											<div class="aione-section-header-title">
-												@if(isset($meta['sortable_chart_widgets']) && $meta['sortable_chart_widgets'] == 1)
-												<div class="aione-section-handle"></div>
-												@endif
-
-												<div class="aione-section-title">{{$chart_title}}</div>
+													<div class="aione-section-title">{{$chart_title}}</div>
+												</div>
+												<div class="aione-section-header-actions">
+													@if(isset($meta['collapsable_chart_widgets']) && $meta['collapsable_chart_widgets'] == 1)
+													<span class="aione-section-header-action aione-widget-toggle aione-widget-collapse"></span>
+													@endif
+													@if(isset($meta['show_topbar']) && $meta['show_topbar'] == 1)
+													<span class="aione-section-header-action aione-widget-toggle aione-widget-close"></span>
+													@endif
+												</div>
+												<div class="clear"></div>
 											</div>
-											<div class="aione-section-header-actions">
-												@if(isset($meta['collapsable_chart_widgets']) && $meta['collapsable_chart_widgets'] == 1)
-												<span class="aione-section-header-action aione-widget-toggle aione-widget-collapse"></span>
-												@endif
-												@if(isset($meta['show_topbar']) && $meta['show_topbar'] == 1)
-												<span class="aione-section-header-action aione-widget-toggle aione-widget-close"></span>
-												@endif
-											</div>
-											<div class="clear"></div>
-										</div>
-										@endif
-										<div id="" class="aione-chart-content">
-											
-
-											@if($chart_type == 'CustomMap')
-												<div id="{{$chart_id}}" class="map-wrapper">
-												{!! $charts[$chart_key]['map'] !!}
-												</div>
-												<div id="map_data_{{$chart_id}}" class="map-data-wrapper">
-													<div id="map_data_header_{{$chart_id}}" class="map-data-header">
-														<span class="map-data-title"></span>
-														<span class="map-data-close">+</span>
-													</div>
-													<div id="map_data_content_{{$chart_id}}" class="map-data-content">
-													</div>
-												</div>
-												<div class="view_data" style="display: none;">
-													{{dd($javascript[$chart_key]['arranged_data'])}}
-												</div>
-											@else
-												<div id="{{$chart_id}}" class="chart-wrapperr"></div>
-												{!! lava::render($chart_type,$chart_key,$chart_id) !!}
-
 											@endif
+											<div id="" class="aione-chart-content">
+												
+
+												@if($chart_type == 'CustomMap')
+													<div id="{{$chart_id}}" class="map-wrapper">
+													{!! $charts[$chart_key]['map'] !!}
+													</div>
+													<div id="map_data_{{$chart_id}}" class="map-data-wrapper">
+														<div id="map_data_header_{{$chart_id}}" class="map-data-header">
+															<span class="map-data-title"></span>
+															<span class="map-data-close">+</span>
+														</div>
+														<div id="map_data_content_{{$chart_id}}" class="map-data-content">
+														</div>
+													</div>
+													<div class="view_data" style="display: none;">
+														{{json_encode($javascript[$chart_key]['arranged_data']['view_data'])}}
+													</div>
+													<div class="tooltip_data" style="display: none;">
+														{{json_encode($javascript[$chart_key]['arranged_data']['tooltip_data'])}}
+													</div>
+													<div class="popup_data" style="display: none;">
+														{{json_encode($javascript[$chart_key]['arranged_data']['popup_data'])}}
+													</div>
+												@else
+													<div id="{{$chart_id}}" class="chart-wrapperr"></div>
+													{!! lava::render($chart_type,$chart_key,$chart_id) !!}
+
+												@endif
+											</div>
 										</div>
-									</div>
+									@endif
 								@endif
 							@endforeach
 
@@ -203,38 +213,61 @@ echo "</pre>";
 		@endif
 
 
-	</div>	
+	</div>
+	
+		
+	<div class="inf">
+   		 <span class="title">Texes</span>
+         <span class="data">Year:2015</span>
+         <span class="data">Year:2016</span>
+         <span class="data">Year:2017</span>
+    </div>
 </div>
 <script src="{{asset('/bower_components/admin-lte/plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
 <script src="{{asset('/js/visualization.js')}}" type="text/javascript"></script>
 
 <script type="text/javascript">
 	$(document).ready(function(){
-			var chartsList = '{!! json_encode($javascript) !!}';
-			console.log(JSON.parse(chartsList));
-			$.each(JSON.parse(chartsList), function(key,val){
-				
-				$.each(val.data, function(ikey, ival){
-					var index = 0;
-					$.each(ival, function(dataKey, dataVal){
-						var colorVal = index/val.data.length;
-						var leagendWidth = (1/(val.data.length-1))*100;
-						var colorCode = getColor(colorVal);
 
-						var putId = val.headers[dataKey].replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, "_");
-						var currentClass = $('#'+ival[0]).attr('class');
-						$('#'+key+' #'+ival[0]).attr(putId,dataVal);
-						$('#'+key+' #'+ival[0]).css({'fill': colorCode }).attr('class','mapArea '+currentClass);
-						if(currentClass != undefined){
-							$('#'+key+' #'+ival[0]).attr('class','mapArea '+currentClass.replace("mapArea", ""));
-						}
-						
+			$('.aione-chart-content').each(function(e){
+				var elem = $(this);
+				var chart_view_data = $(this).find('.view_data').html();
+				if(chart_view_data != undefined){
+					$.each(JSON.parse(chart_view_data), function(key, value){
+						elem.find('#'+key).css({fill:getColor(value)}).attr('class','mapArea');
 					});
-					index++;
-				});
+				}
 			});
-
 			$('.map-wrapper .mapArea').mouseover(function (e) {
+				var area_id = $(this).attr('id');
+				var tooltip_data = $(this).parents('.aione-chart-content').find('.tooltip_data').html();
+				if(tooltip_data != undefined){
+					tooltip_data = JSON.parse(tooltip_data);
+					var html = '<span class="title">'+area_id+'</span>';
+					var tooltip_array = {};
+					$.each(tooltip_data[area_id], function(key, value){
+						console.log(value);
+						$.each(value, function(k, v){
+							console.log(k);
+							return false;
+							if (k in tooltip_array){
+								var tempArray = tooltip_array[k];
+								tempArray.push(v);
+								tooltip_array[k] = tempArray;
+							}else{
+								var tempArray = [];
+								tooltip_array[k] = tempArray.push(v);
+							}
+						});
+						// html += '<span class="data">Year:2015</span>';
+					});
+					console.log(tooltip_array);
+				}
+				//console.log($(this).attr('id'));
+			});
+			
+
+			/*$('.map-wrapper .mapArea').mouseover(function (e) {
                 var elm = $(this);
                 var title=$(this).attr('title');
                 var html = '';
@@ -261,7 +294,7 @@ echo "</pre>";
                     'top': mouseY-($('.inf').height()+30),
                     'left': mouseX
                 });
-            });
+            });*/
 			
 			
 			$('.map-wrapper .mapArea').click(function (e) {

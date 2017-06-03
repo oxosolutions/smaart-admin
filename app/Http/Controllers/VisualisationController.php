@@ -791,12 +791,13 @@ class VisualisationController extends Controller
 					$drawer_array['visualizations']['chart_'.$key]['title'] = $chart->chart_title;
 					$drawer_array['visualizations']['chart_'.$key]['enableDisable'] = $this->getMetaValue($chart->meta,'enableDisable');
 				}else{
-					$this->put_in_errors_list('No records found with selected filters');
+					$drawer_array['visualizations']['chart_'.$key]['error'] = 'No records found with selected filters';
+					//$this->put_in_errors_list('No records found with selected filters');
 				}
 
 			}catch(\Exception $e){
-
-				$this->put_in_errors_list($e->getMessage());
+				$drawer_array['visualizations']['chart_'.$key]['error'] = $e->getMessage();
+				//$this->put_in_errors_list($e->getMessage());
 				//throw $e;
 			}
 		}
@@ -894,7 +895,7 @@ class VisualisationController extends Controller
 		dump($popupData_array);
 		dump('Final Data Array');
 		dd($recordsArray);*/
-		return ['view_data'=>$viewData_array, 'tooltip_data'=>$tooltipData_array,'popup_date'=>$popupData_array];
+		return ['view_data'=>$viewData_array, 'tooltip_data'=>$tooltipData_array,'popup_data'=>$popupData_array];
 	}
 
 }
