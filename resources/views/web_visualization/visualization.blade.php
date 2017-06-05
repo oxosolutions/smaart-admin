@@ -244,26 +244,28 @@ echo "</pre>";
 				if(tooltip_data != undefined){
 					tooltip_data = JSON.parse(tooltip_data);
 					var html = '<span class="title">'+area_id+'</span>';
-					var tooltip_array = {};
 					$.each(tooltip_data[area_id], function(key, value){
-						console.log(value);
-						$.each(value, function(k, v){
-							console.log(k);
-							return false;
-							if (k in tooltip_array){
-								var tempArray = tooltip_array[k];
-								tempArray.push(v);
-								tooltip_array[k] = tempArray;
-							}else{
-								var tempArray = [];
-								tooltip_array[k] = tempArray.push(v);
-							}
+						$.each(value, function(k,v){
+							html += '<span class="data">'+k+':'+v+'</span>';
 						});
-						// html += '<span class="data">Year:2015</span>';
+						html += '<hr/>';
 					});
-					console.log(tooltip_array);
+					$('.inf').html(html);
+					
 				}
-				//console.log($(this).attr('id'));
+			}).mousemove(function(e){
+				var mouseX = e.pageX, //X coordinates of mouse
+                    mouseY = e.pageY; //Y coordinates of mouse
+
+                $('.inf').css({
+                    'top': mouseY-($('.inf').height()+30),
+                    'left': mouseX,
+                    'display': 'block'
+                });
+			}).mouseleave(function(){
+				$('.inf').css({
+					'display':'none'
+				});
 			});
 			
 
@@ -298,6 +300,9 @@ echo "</pre>";
 			
 			
 			$('.map-wrapper .mapArea').click(function (e) {
+				var area_id = $(this).attr('id');
+				var popup_data = JSON.parse($(this).parents('.aione-chart-content').find('.popup_data').html());
+				var clicked_id_data = popup_data[area_id];
                 e.preventDefault();
 				$('.map-data-wrapper').addClass('active'); 
 				var position = $(this).position();
@@ -305,42 +310,24 @@ echo "</pre>";
                     'top': position.top,
                     'left':  position.left
                 });
-				
 				var title = $(this).attr('title');
-				var area_id = $(this).attr('id');
 				$('.map-data-title').html(title);
-				var custom_map_data = '{!! json_encode($custom_map_data) !!}';
-				var custom_map_data_array = JSON.parse(custom_map_data);
 				
-				//console.log("DATA==========");
-				//console.log("=============");
-				
-				//var custom_map_data_headers = custom_map_data.shift();
-				//console.log(custom_map_data_headers);
 				var html = '<div class="map-data-rows">';
-				$.each(custom_map_data_array, function(key, val){
+				$.each(clicked_id_data, function(key, val){
 					var row_status = 0;
 					var row_html = '';
-					row_html += '<div class="map-data-row">'; 
-					console.log("=============");
+					html += '<div class="map-data-row">'; 
 					$.each(val, function(k, v){
-						row_html += '<span class="map-data-col '+k.replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, "_")+'">';
-						row_html += v;
-						row_html += '</span>';
-						if(k == 'column_1' && v == area_id){
-							row_status = 1;
-						}
+						html += '<span class="map-data-col '+k.replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, "_")+'">';
+						html += k+' : '+v;
+						html += '</span>';
 					});
-					row_html += '</div>';
-					if(row_status == 1){
-						html += row_html;
-					}
+
+					html += '</div>';
                 });
 				html += '</div>';
-				$(".map-data-content").html(html); 
-				
-				
-				
+				$(".map-data-content").html(html); 			
 				
             });
 			
@@ -915,6 +902,7 @@ echo "</pre>";
     border-radius: 4px;
     font-size: 15px;
     line-height: 18px;
+    display: none;
 }
 .inf:after {
 	content: "";
@@ -952,6 +940,9 @@ echo "</pre>";
 }
 .google-visualization-table .google-visualization-table-table{
 	width: 100% !important;
+}
+table td{
+	padding: 10px
 }
 </style> 
 
