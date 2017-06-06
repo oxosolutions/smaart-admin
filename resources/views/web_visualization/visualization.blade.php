@@ -1,6 +1,5 @@
 @extends('layouts.visualization')
 @section('content')
-
 <?php
 
 $visualization_id = $visualizations['visualization_id'];
@@ -154,10 +153,18 @@ echo "</pre>";
 													<div class="popup_data" style="display: none;">
 														{{json_encode($javascript[$chart_key]['arranged_data']['popup_data'])}}
 													</div>
+												@elseif($chart_type == 'ListChart')
+													<div id="{{$chart_id}}" style="width: 98%; border: 1px solid #CCC; height: 200px; overflow: scroll; padding-left: 2%; overflow-x: hidden;">
+														@foreach($chart['list'] as $key => $values)
+															@foreach($values as $k => $val)
+																<b>{{ucwords(str_replace('_',' ',$k))}}</b> : {{$val}} <br/>
+															@endforeach
+															<hr/>
+														@endforeach
+													</div>
 												@else
 													<div id="{{$chart_id}}" class="chart-wrapperr"></div>
 													{!! lava::render($chart_type,$chart_key,$chart_id) !!}
-
 												@endif
 											</div>
 										</div>
@@ -225,16 +232,49 @@ echo "</pre>";
 </div>
 <script src="{{asset('/bower_components/admin-lte/plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
 <script src="{{asset('/js/visualization.js')}}" type="text/javascript"></script>
-
+<script src="{{asset('/js/ion.rangeSlider.js')}}" type="text/javascript"></script>
+<script src="{{asset('/js/classybrew.js')}}" type="text/javascript"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+<script type="text/javascript">
+  $('select').select2();
+</script>
+<script type="text/javascript">
+		$(document).ready(function(){
+			$('.slider').each(function(){
+				var elem = $(this);
+				$(this).ionRangeSlider({
+				    type: "double",
+				    grid: true,
+				    min: elem.attr('data-slider-min'),
+				    max: elem.attr('data-slider-max'),
+				    from: 0,
+				    step: 1
+				});
+			});
+		});
+		
+	</script>
 <script type="text/javascript">
 	$(document).ready(function(){
-
+			var cb = new classyBrew();
+			var quantile = new classyBrew();
 			$('.aione-chart-content').each(function(e){
+				
 				var elem = $(this);
 				var chart_view_data = $(this).find('.view_data').html();
 				if(chart_view_data != undefined){
+					var chart_data_array = $.map(JSON.parse(chart_view_data), function(value, index) {
+					    return [value];
+					});
+					var colors = cb.getColorCodes();
+					quantile.setSeries(chart_data_array);
+					quantile.classify('quantile', 5);
+					var index = 0;
+					quantile.setColorCode(colors[3])
 					$.each(JSON.parse(chart_view_data), function(key, value){
-						elem.find('#'+key).css({fill:getColor(value)}).attr('class','mapArea');
+						elem.find('#'+key).css({fill:quantile.getColorInRange(chart_data_array[index])}).attr('class','mapArea');
+						index++;
 					});
 				}
 			});
@@ -941,9 +981,23 @@ echo "</pre>";
 .google-visualization-table .google-visualization-table-table{
 	width: 100% !important;
 }
-table td{
-	padding: 10px
+table {
+    border-collapse: collapse !important;
+    width: 100% !important;
 }
+thead tr{
+	background-color: #4584F0 !important
+}
+thead th{
+	background: none !important;
+	color: white; 
+}
+th, td {
+    text-align: left !important;
+    padding: 8px !important;
+}
+
+tr:nth-child(even){background-color: #f2f2f2 !important}
 </style> 
 
 <script type="text/javascript">  

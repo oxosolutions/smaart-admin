@@ -7,6 +7,9 @@
 		<!-- Tell the browser to be responsive to screen width -->
 		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 		<link rel="stylesheet" href="{{asset('/css/visualization-style.css')}}">
+		<link rel="stylesheet" href="{{asset('/css/ion.rangeSlider.css')}}">
+		<link rel="stylesheet" href="{{asset('/css/ion.rangeSlider.skinFlat.css')}}">
+		<link rel="stylesheet" href="{{asset('/css/normalize.css')}}">
 	</head>  
 	<body>
 		@yield('content') 

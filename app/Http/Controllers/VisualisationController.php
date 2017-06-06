@@ -516,6 +516,7 @@ class VisualisationController extends Controller
 		*]
 		*/
     	$filterColumns = [];
+    	$filterRanges = [];
     	$requested_filters = $request->except(['_token','applyFilter']);
     	$filterKeys = ['dropdown','mdropdown','checkbox','radio'];
     	foreach ($filterKeys as $key) { // $key contains filters key --> singledrop, multidrop etc
@@ -528,12 +529,25 @@ class VisualisationController extends Controller
     			}
     		}
     	}
+    	if($request->has('range')){
+    		foreach ($request->range as $k => $column) { // if key exist in request filter then get that all columns of that key
+				foreach($column as $columnName => $columnValue){
+					$exploded_date = explode(';', $columnValue);
+					$filterRanges[$columnName] = $exploded_date;
+				}
+			}
+    	}
     	$with_whereIn = false; // with_whereId for check the status if whereIn added in query or not
     	$db = DB::table($dataset_table);
     	foreach($filterColumns as $columnName => $columnsData){
     		if(!empty($columnsData)){ // if $columnData array is empty that means user selected "All" in this filter, so we do not need to add in "whereIn" clause
     			$db->whereIn($columnName, $columnsData); // will create multiple "where in" clause in query 
     			$with_whereIn = true; // set status true if query have where in clause
+    		}
+    	}
+    	if(!empty($filterRanges)){
+    		foreach($filterRanges as $column => $values){
+    			$db->whereBetween($column, $values);
     		}
     	}
     	if($with_whereIn == true){ // if there is whereIn clause then we need to get the id row also, otherwise select all data from table 
@@ -764,7 +778,7 @@ class VisualisationController extends Controller
 				}
 
 				if(!empty($records_array)){ // if after filter or without filter there is no data in records list
-					if($chart->chart_type != 'CustomMap'){
+					if(!in_array($chart->chart_type, ['CustomMap','ListChart'])){
 						$lavaschart->addRows($records_array); // lavachart add only indexed array of arrays (inserting multiple rows in to lavacharts datatable)
 						$visualization_settings = $this->getMetaValue($chart->meta,'visual_settings');
 						
@@ -774,12 +788,18 @@ class VisualisationController extends Controller
 							$visualization_settings = [];
 						}
 						lava::{$chart->chart_type}('chart_'.$key,$lavaschart)->setOptions($visualization_settings);
-					}else{
+					}elseif($chart->chart_type == 'CustomMap'){
 						$drawer_array['visualizations']['chart_'.$key]['map'] = $this->getSVGMaps($chart->meta); // get svg maps global or local
 						$header_with_column = $headers;
 						$headers = array_values($headers);
 						$customMapDate = $this->create_map_array($dataset_records, $headers, $chart, $header_with_column);
 						$javascript['chart_'.$key] = ['type'=>$chart->chart_type,'id'=>'chart_'.$key,'data'=>$records_array,'headers'=>$headers, 'arranged_data'=>$customMapDate];
+					}elseif($chart->chart_type == 'ListChart'){
+						$list_array = [];
+						foreach($records_array as $ky => $inner_array){
+							$list_array[] = array_combine($headers, $inner_array);
+						}
+						$drawer_array['visualizations']['chart_'.$key]['list'] = $list_array;
 					}
 					// dd($records_array);
 					/*

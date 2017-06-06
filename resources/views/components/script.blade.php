@@ -38,6 +38,7 @@
 {{-- <script src="{{asset('/bower_components/admin-lte/plugins/iCheck/icheck.min.js')}}"></script>
  --}}
 
+
 <!-- bootstrap datepicker -->
  <script type="text/javascript">
   	$(document).ready(function(){
@@ -144,4 +145,5 @@ function chk()
           e.preventDefault();
       });
   });
+   
  </script>
