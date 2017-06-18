@@ -1,0 +1,170 @@
+<div class="page-layout carded fullwidth single-scroll pb-30" layout="row">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg md-accent-bg"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center" flex>
+
+        <!-- CONTENT HEADER -->
+        <div class="goal-header" layout="column">
+            <div flex>
+              <span class="h2 white-fg">Edit survey</span>
+            </div>
+
+            <!--
+            <div class="breadcrumb" flex>
+                <md-icon md-font-icon="icon-dns" class="s16"></md-icon>
+                <md-icon md-font-icon="icon-chevron-right" class="s16 separator"></md-icon>
+                <span class="parent">LIST DATA</span>
+            </div>
+            -->
+        </div>
+        <!-- / CONTENT HEADER -->
+        <style type="text/css">
+                .dataTables_wrapper .top {
+                        border-bottom: 1px solid #e8e8e8;
+                        padding: 0 0 24px 0;
+                        }
+                        .dataTables_wrapper .dataTables_filter input{
+                        width: 225px;
+                        }
+                    .goal-header{
+                            height: 75px;
+                        min-height: 75px;
+                        max-height: 90px;
+                        padding: 24px;
+
+                        }
+                        .action-separator{
+                        color:#787878;
+                        padding: 0 4px;
+                        }
+                .page-layout .top-bg{
+                    height: 139px;
+                }
+                .text-field-design{
+                border:1px solid hsla(0, 0%, 0%, 0.12) !important;
+                border-width: 1px !important;
+                padding :8px !important;
+                
+            }
+            .text-field-design:focus{
+                border:1px solid #a8a8a8 !important;
+                border-width: 1px !important;
+                padding :8px !important;
+                
+            }
+            textarea{
+                border:1px solid hsla(0, 0%, 0%, 0.12) !important;
+                border-width: 1px !important;
+                padding :8px !important;
+            }
+            textarea:focus{
+                 border:1px solid #a8a8a8 !important;
+                border-width: 1px !important;
+                padding :8px !important;
+            }
+             md-dialog md-dialog-content{
+                padding:0px !important;
+            }
+           .dtp > .dtp-content > .dtp-date-view > header.dtp-header{
+                    background: #208abe !important;
+           }
+           .dtp div.dtp-date{
+                    background: #039be5 !important;
+           }
+           .dtp table.dtp-picker-days tr > td > a.selected.hilite{
+             background: #039be5 !important;
+           }
+           .dtp .dtp-actual-meridien a.selected{
+            background: #039be5 !important;
+           }
+           .dtp .dtp-picker-time > a.dtp-select-hour.selected{
+            background: #039be5 !important;
+           }
+           .dtp .dtp-hand.on{
+            background: #039be5 !important;
+           }
+           .dtp div.dtp-picker{
+            padding: 10px 10px 10px 10px !important;
+           }
+           .dtp table.dtp-picker-days tr > td > a.hilite:not(.selected){
+            color:#039be5 !important;
+           }
+           .dtp table.dtp-picker-days tr > td > a.selected{
+                background: #039be5 !important;
+           }
+            </style>
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar" layout="row" layout-xs="column" layout-align="start center">
+                <div flex="20" layout="row" layout-align="start center" class="pv-30 h3" hide-xs>
+                    <h3 class=" "> Survey :&nbsp;</h3> <span> {{surveyDataForEdit.response.name}} </span>
+                </div>
+                <div flex >
+                   <!--  <a href="survey/add">
+                        <md-button class=" md-accent md-raised ph-15" aria-label="all surveys"><md-tooltip md-direction="top" class="md-body-1">Add a new survey </md-tooltip>Add Survey</md-button>
+                    </a>
+                   <a ui-sref="app.survey_addQuestion({id:id.id})" id="{{id.id}}/">
+                        <md-button class=" md-accent md-raised ph-15" aria-label="all surveys"><md-tooltip md-direction="top" class="md-body-1">Manage Groups and Questions in the survey</md-tooltip>Manage Survey Questions</md-button>
+                    </a>
+                    <a href="survey/list">
+                        <md-button class=" md-accent md-raised ph-15" aria-label="all surveys"><md-tooltip md-direction="top" class="md-body-1">view list of all survey</md-tooltip>All Surveys</md-button>
+                    </a> -->
+                    <div layout="row" layout-align="end center"  ng-include="'app/main/survey/_include.html'"></div>
+                </div>
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+            <!-- CONTENT -->
+            <md-content class="content" ms-scroll>
+                <form name="editSurvey">
+                    <div layout="row"  class="" layout-wrap>
+                        <div md-whiteframe="2" flex="100" flex-gt-sm="50"  class="pv-30 ph-15">
+                            <div layout="row" layout-wrap>
+                                <label class="font-size-14 font-weight-300 grey-600-fg">Survey Name</label>
+                                <md-input-container class="md-block mt-5" md-no-float flex="100">
+                                    <input type="text" name="name" aria-label="demo" ng-model="surveyDataForEdit.response.name" class="text-field-design" required style="height: 35px;">
+                                    <div ng-messages="editSurvey.name.$error" role="alert" multiple>
+                                        <div ng-message="required">
+                                            <span>Name is required</span>
+                                        </div>   
+                                    </div>
+                                </md-input-container>
+                                <label class="font-size-14 font-weight-300 grey-600-fg">Description</label>
+                                <md-input-container class="md-block mt-5" flex="100">
+                                     
+                                     <textarea ng-model="surveyDataForEdit.response.description" aria-label="demo" md-maxlength="500" rows="3" md-select-on-focus></textarea>
+                                </md-input-container>
+                                <div flex="100" layout="row" layout-align="end center">
+                                    <md-button class="md-fab md-mini" ng-click="AddCode($event)">
+                                        <md-icon  md-font-icon="icon-code-tags"></md-icon><md-tooltip md-direction="top" class="md-body-1">Add Custum JS code</md-tooltip>
+                                    </md-button>   
+                                                                     
+                                </div>
+                            </div>
+                        </div>
+                        <div layout="row" layout-wrap layout-align="center start" class="pl-20" flex-gt-sm="50" flex="100" ng-include="'app/main/survey/_include-settings.html'">
+                            
+                        </div>
+                        
+                    </div>
+                    
+                    <md-button class="md-raised md-accent white-fg mt-15 ml-0" ng-click="update_survey()">
+                    Save settings 
+                    </md-button>
+                    <md-progress-circular md-mode="indeterminate" md-diameter="20" ng-show="isLoading"></md-progress-circular>
+                </form>
+                
+                
+            </md-content>
+            <!-- / CONTENT -->
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

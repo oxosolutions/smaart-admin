@@ -374,6 +374,7 @@ class ImportdatasetController extends Controller
         $tableName = 'table_temp_'.rand(5,1000);
         $model_DL = DL::find($request->with_dataset);
         $oldTable = DB::table($model_DL->dataset_table)->get();
+        
         if(File::extension($filePath)=="xlsx" || File::extension($filePath)=="xls"){
             $assoc = [];
             $finalArray = [];
@@ -396,6 +397,8 @@ class ImportdatasetController extends Controller
             unset($oldTable[0]->id);
             $new = (array)$headers;
             $old = (array)$oldTable[0];
+            $new = preg_replace("/[^a-zA-Z 0-9]+/", "", $new );
+            $old = preg_replace("/[^a-zA-Z 0-9]+/", "", $old );
             if($new != $old){
                 return ['status'=>'false','message'=>'File columns are note same!'];
             }
@@ -406,9 +409,12 @@ class ImportdatasetController extends Controller
             $tempTableData = DB::table($tableName)->get();
             
             $oldColumns = [];
+            unset($oldTable[0]->id);
+            unset($tempTableData[0]->id);
             $new = (array)$tempTableData[0];
             $old = (array)$oldTable[0];
-            
+            $new = preg_replace("/[^a-zA-Z 0-9]+/", "", $new );
+            $old = preg_replace("/[^a-zA-Z 0-9]+/", "", $old );
             if($new != $old){
                 DB::select('DROP TABLE '.$tableName);
                 return ['status'=>'false','message'=>'File columns are note same!'];

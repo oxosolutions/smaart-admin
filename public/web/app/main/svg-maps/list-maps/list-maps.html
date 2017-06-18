@@ -1,0 +1,135 @@
+<div class="page-layout carded fullwidth single-scroll pb-100" layout="row">
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg md-accent-bg"></div>
+    <!-- / TOP BACKGROUND -->
+    <!-- CENTER -->
+    <div class="center" flex>
+        <!-- CONTENT HEADER -->
+        <div class="goal-header" layout="column">
+            <div layout="row">
+                <span flex="80" class="h2 white-fg">Svg India</span>
+               
+            </div>
+            <!--
+                <div class="breadcrumb" flex>
+                		<md-icon md-font-icon="icon-dns" class="s16"></md-icon>
+                		<md-icon md-font-icon="icon-chevron-right" class="s16 separator"></md-icon>
+                		<span class="parent">LIST DATA</span>
+                </div>
+                -->
+        </div>
+        <!-- / CONTENT HEADER -->
+        <style type="text/css">
+            .goal-header{
+                height: 75px;
+                min-height: 75px;
+                max-height: 90px;
+                padding: 24px;
+            }
+            .page-layout .top-bg{
+                height: 139px;
+            }
+           
+
+        </style>
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar" layout="row" layout-xs="column" layout-align="start center">
+                <div flex="50">
+                    Svg India
+                </div>
+                <div flex="50" layout="row" layout-align="end center">
+                    <md-button ui-sref="app.create_map" class="md-accent md-raised ph-15">
+                        Create new map
+                    </md-button>
+                </div>
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+            <!-- CONTENT -->
+            <md-content class="ph-30 pb-30" ms-scroll layout="row" layout-wrap>
+                <table class="dataTable row-border hover " datatable="ng" dt-options="dtOptions"   >
+
+                    <thead>
+                        
+                        <tr>
+                            
+                            <th class="secondary-text sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="File Name">
+                                <div class="table-header"><span class="column-title">Title</span></div>
+                            </th>
+                            <th class="secondary-text sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="File Name">
+                                <div class="table-header"><span class="column-title">Description</span></div>
+                            </th>
+                            <th class="secondary-text sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Created date">
+                                <div class="table-header"><span class="column-title">Code</span></div>
+                            </th>
+                            <th class="secondary-text sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Validated">
+                                <div class="table-header"><span class="column-title">Action</span></div>
+                            </th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="map in maps">
+                            
+                            <td>{{map.title}}</td>
+                            <td>{{map.description}}</td>
+                            <td><span md-truncate>{{map.code}}</span></td>
+                            <td>
+                                <md-menu>
+                                    <md-button aria-label="Open demo menu" class="md-accent-bg ph-15" ng-click="$mdOpenMenu($event)">
+                                        <md-tooltip md-direction="top" class="md-body-1">Click here for the survey action list. </md-tooltip>
+
+                                        <div layout="row" layout-align="center center">
+                                            <div layout="row" layout-align="center center">Actions</div>
+                                            <div layout="row" layout-align="center center"><md-icon md-font-icon="icon-drag-vertical" class="white-fg s24 md-accent font-weight-300 pl-5"></md-icon></div>
+                                        </div> 
+
+                                    </md-button>
+                                    <md-menu-content width="4" class="ActionView">
+                                        <md-menu-item >
+                                            <md-button ui-sref="app.edit_map({id:map.id})" id="">
+                                            <md-icon md-font-icon="icon-pencil" class="s24"></md-icon>
+                                                <a  class="action-link">
+                                                    Edit
+                                                </a>
+                                            </md-button>
+                                            <md-tooltip md-direction="top" class="md-body-1">Edit Name,Description and survey settings of this survey</md-tooltip>
+                                        </md-menu-item>
+                                        <md-menu-item >
+                                            <md-button ui-sref="app.view_map({id:map.id})">
+                                            <md-icon md-font-icon="icon-clipboard-text" class="s24"></md-icon>
+                                                <a class="action-link">
+                                                    View
+                                                </a>
+                                            </md-button>
+                                            <md-tooltip md-direction="top" class="md-body-1">Preview the survey</md-tooltip>
+                                        </md-menu-item>
+                                        <md-menu-item >
+                                            <md-button ng-click="deleteMap(ev,map.id)">
+                                            <md-icon md-font-icon="icon-trash" class="s24"></md-icon>
+                                                 <a class="action-link">
+                                                    delete
+                                                </a>
+                                            </md-button>
+                                            <md-tooltip md-direction="top" class="md-body-1">View survey data</md-tooltip>
+                                        </md-menu-item>
+                                      
+                                      
+                                    </md-menu-content>
+                                </md-menu>
+                            </td>  
+                        </tr>
+                    </tbody>
+                </table>       
+            </md-content>
+        <!-- / CONTENT -->
+    </div>
+    <!-- / CONTENT CARD -->
+</div>
+<!-- / CENTER -->
+</div>
+
+
+
+

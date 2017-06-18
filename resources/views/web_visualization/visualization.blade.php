@@ -23,9 +23,11 @@ if(
 
 /*
 echo "<pre>";
+//print_r($javascript['chart_0']['chart_settings']);
 print_r($visualizations);
 echo "</pre>";
 */
+
 ?>
 
 <div id="theme_{{$visualization_theme}}" class="wrapper theme-{{$visualization_theme}}">
@@ -105,10 +107,33 @@ echo "</pre>";
 										$chart_type = $chart['chart_type'];
 										$chart_title = $chart['title'];
 										$chart_enabled = $chart['enableDisable'];
+										$chart_width = $chart['chart_width'];
+										$chart_settings = json_decode($chart['chart_settings'], true);
+										
+										if(empty($chart_settings['custom_map_theme'])){
+											$chart_settings['custom_map_theme'] = "PuBu";
+										}
+										if(empty($chart_settings['custom_map_classification_method'])){
+											$chart_settings['custom_map_classification_method'] = "quantile";
+										}
+										
+										//$chart_settings  = json_decode($chart_settings);
+										
+										// echo "<pre>";
+										// print_r($chart_settings);
+										// echo "</pre>"; 
+										 
+										
+										
+										
+										 
+										
+										
+										
 									?>
 
 									@if($chart_enabled == 1)
-										<div id="chart_wrapper_{{$chart_id}}" class="aione-chart aione-chart-{{$chart_type}}">
+										<div id="chart_wrapper_{{$chart_id}}" class="aione-chart aione-chart-{{$chart_type}} chart-theme-{{@$chart_settings['custom_map_theme']}} chart-width-{{$chart_width}}">
 											@if(isset($meta['show_chart_title']) && $meta['show_chart_title'] == 1)
 											<div class="aione-section-header aione-topbar-header">
 												<div class="aione-section-header-title">
@@ -129,12 +154,24 @@ echo "</pre>";
 												<div class="clear"></div>
 											</div>
 											@endif
-											<div id="" class="aione-chart-content">
-												
+											
+											<div id="" class="aione-chart-content" 
+											data-theme="{{@$chart_settings['custom_map_theme']}}"  
+											data-classification-method="{{@$chart_settings['custom_map_classification_method']}}"
+											data-show-tooltip="{{@$chart_settings['custom_map_show_tooltip']}}"
+											data-tooltip-event="{{@$chart_settings['custom_map_tooltip_event']}}"
+											data-show-popup="{{@$chart_settings['custom_map_show_popup']}}"
+											data-popup-event="{{@$chart_settings['custom_map_popup_event']}}"
+											data-click-callback="{{@$chart_settings['custom_map_click_callback']}}"
+											
+											>	
 
 												@if($chart_type == 'CustomMap')
+												
 													<div id="{{$chart_id}}" class="map-wrapper">
 													{!! $charts[$chart_key]['map'] !!}
+													</div>
+													<div id="map_legend_{{$chart_id}}" class="map-legend-wrapper">				
 													</div>
 													<div id="map_data_{{$chart_id}}" class="map-data-wrapper">
 														<div id="map_data_header_{{$chart_id}}" class="map-data-header">
@@ -155,10 +192,30 @@ echo "</pre>";
 													</div>
 												@elseif($chart_type == 'ListChart')
 													<div id="{{$chart_id}}" style="width: 98%; border: 1px solid #CCC; height: 200px; overflow: scroll; padding-left: 2%; overflow-x: hidden;">
-														@foreach($chart['list'] as $key => $values)
+														{{-- @foreach($chart['list'] as $key => $values)
 															@foreach($values as $k => $val)
 																<b>{{ucwords(str_replace('_',' ',$k))}}</b> : {{$val}} <br/>
 															@endforeach
+															<hr/>
+														@endforeach --}}
+														@php
+															$index=0;
+														@endphp
+														@foreach($chart['list'] as $key => $values)
+															<div class="data-row data-row-{{$index}}">
+																@php
+																	$indexField=0;
+																@endphp
+															@foreach($values as $k => $val)
+																<div class="aione-field field-{{$indexField}}" style="margin-bottom: 0px"><b>{{ucwords(str_replace('_',' ',$k))}}</b> : {{$val}} </div><br/>
+																@php
+																	$indexField++;
+																@endphp
+															@endforeach
+															</div>
+															@php
+																$index++;
+															@endphp
 															<hr/>
 														@endforeach
 													</div>
@@ -219,8 +276,31 @@ echo "</pre>";
 			</div> <!-- aione_loader -->
 		@endif
 
-
+	<div class="legends">
+		
 	</div>
+	</div>
+	
+	<style type="text/css">
+		.aione-lagend{
+			
+		}
+		.aione-lagend > div{
+			display: inline-block;
+			width: 45px;
+			height: 20px;
+		}
+		.aione-lagand > div:hover{
+		    transform: scale(1.2);
+			box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+		}
+		.my-tooltip{
+			display: none;position: absolute;margin-top: -24px;font-size: 10px
+		}
+		.aione-lagend > div:hover .my-tooltip{
+			display: block;
+		}
+	</style>
 	
 		
 	<div class="inf">
@@ -262,36 +342,53 @@ echo "</pre>";
 			$('.aione-chart-content').each(function(e){
 				
 				var elem = $(this);
+				var theme = elem.attr("data-theme");
+				var data_classification_method = elem.attr("data-classification-method");
+				//console.log("=="+theme);
+				//console.log("=="+data_classification_method);
 				var chart_view_data = $(this).find('.view_data').html();
 				if(chart_view_data != undefined){
 					var chart_data_array = $.map(JSON.parse(chart_view_data), function(value, index) {
 					    return [value];
 					});
+
 					var colors = cb.getColorCodes();
 					quantile.setSeries(chart_data_array);
-					quantile.classify('quantile', 5);
+					quantile.setColorCode(theme);
+					quantile.classify(data_classification_method,6);
+					
+					//console.log(quantile.getColorCodes());
+					
+					var legend = '<div class="aione-lagend">';
+					$.each(quantile.getColors(), function(k, v){
+						legend += '<div style="background-color:'+v+'"></div>';
+					});
+					legend += '</div>';
+					$(this).find('.map-legend-wrapper').append(legend);
 					var index = 0;
-					quantile.setColorCode(colors[3])
+					//quantile.setColorCode(colors[3])
 					$.each(JSON.parse(chart_view_data), function(key, value){
 						elem.find('#'+key).css({fill:quantile.getColorInRange(chart_data_array[index])}).attr('class','mapArea');
 						index++;
 					});
-				}
+				}				
 			});
 			$('.map-wrapper .mapArea').mouseover(function (e) {
-				var area_id = $(this).attr('id');
-				var tooltip_data = $(this).parents('.aione-chart-content').find('.tooltip_data').html();
-				if(tooltip_data != undefined){
-					tooltip_data = JSON.parse(tooltip_data);
-					var html = '<span class="title">'+area_id+'</span>';
-					$.each(tooltip_data[area_id], function(key, value){
-						$.each(value, function(k,v){
-							html += '<span class="data">'+k+':'+v+'</span>';
+				if($(this).parents('.aione-chart-content').attr('data-show-tooltip') == 'yes'){
+					var area_id = $(this).attr('id');
+					var tooltip_data = $(this).parents('.aione-chart-content').find('.tooltip_data').html();
+					if(tooltip_data != undefined){
+						tooltip_data = JSON.parse(tooltip_data);
+						var html = '<span class="title">'+area_id+'</span>';
+						$.each(tooltip_data[area_id], function(key, value){
+							$.each(value, function(k,v){
+								html += '<span class="data">'+k+':'+v+'</span>';
+							});
+							html += '<hr/>';
 						});
-						html += '<hr/>';
-					});
-					$('.inf').html(html);
-					
+						$('.inf').html(html);
+						
+					}
 				}
 			}).mousemove(function(e){
 				var mouseX = e.pageX, //X coordinates of mouse
@@ -384,7 +481,7 @@ echo "</pre>";
             });
 
 		      
-
+ 
 			function getColor(value){
 	            var hue=((1-value)*50).toString(10);
 	            return ["hsl(",hue,",100%,50%)"].join("");
@@ -429,7 +526,25 @@ echo "</pre>";
 }
 
 
+.aione-chart.chart-width-,
+.aione-chart.chart-width-100{
+	
+}
+.aione-chart.chart-width-25{
+	width:25%;
+}
+.aione-chart.chart-width-50{
+	width:50%;
+}
+.aione-chart.chart-width-75{
+	width:75%;
+}
 
+.aione-chart.chart-width-25,
+.aione-chart.chart-width-50,
+.aione-chart.chart-width-75{
+	float:left;
+}
 
 
 .aione-sidebar{

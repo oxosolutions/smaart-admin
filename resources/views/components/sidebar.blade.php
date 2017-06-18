@@ -21,7 +21,7 @@
         </li> 
 
         <!-- //orgaization -->
-         <li class="treeview {{in_array(Request::path(),array('organization/create','organization'))?'active':''}}">
+         <li class="treeview {{Request::path()}} {{in_array(Request::path(),array('emails','profile','activities','attandance','leaves','tasks','ToDo','notes','performance','projects','salary','chat','discussion'))?'active-state':''}}">
           <a href="#">
             <i class="fa fa-sitemap"></i> 
             <span>Organization</span>

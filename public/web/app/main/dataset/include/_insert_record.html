@@ -1,0 +1,65 @@
+<!-- DIALOG -->
+<style type="text/css">
+    .text-field-design{
+                border:1px solid hsla(0, 0%, 0%, 0.12) !important;
+                border-width: 1px !important;
+                padding :8px !important;
+                
+            }
+            .text-field-design:focus{
+                border:1px solid #a8a8a8 !important;
+                border-width: 1px !important;
+                padding :8px !important;
+                
+            }
+</style>
+<md-dialog class="" aria-label="New Task">
+    <md-toolbar class="md-accent " layout="column" style="width: 500px">
+        <div class="md-toolbar-tools md-toolbar-tools-top" layout="row" layout-align="space-between center">
+            <span class="title">Insert Record</span>
+            <md-button class="md-icon-button" ng-click="closeDialog()" aria-label="Close dialog" translate>
+                <md-icon md-font-icon="icon-close">
+                </md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="pt-20">
+        <div layput="row">
+            <div flex="100" layout="row" ng-repeat="(key, header) in headerColumns" ng-if="$index != 0">
+                <div flex="40">
+                    <span style="line-height: 35px">{{header}}</span>
+                </div>
+                <div flex="60" layout="row">
+                    <md-input-container flex="100" class="mt-0 mb-0">
+                        <input aria-label="name" ng-model="datasetRecords[key]" required name="visual_name" class="text-field-design" style="height: 35px;">
+                    </md-input-container >
+                </div>
+            </div>
+            <!-- <div flex="100" layout="row">
+                <div flex="40">
+                    <span style="line-height: 35px">field 1</span>
+                </div>
+                <div flex="60" layout="row">
+                    <md-input-container flex="100" class="mt-0 mb-0">
+                        <input aria-label="name" ng-model="survey.title" required name="visual_name" class="text-field-design" style="height: 35px;">
+                    </md-input-container >
+                </div>
+            </div>
+            <div flex="100" layout="row">
+                <div flex="40">
+                    <span style="line-height: 35px">field 1</span>
+                </div>
+                <div flex="60" layout="row">
+                    <md-input-container flex="100" class="mt-0 mb-0">
+                        <input aria-label="name" ng-model="survey.title" required name="visual_name" class="text-field-design" style="height: 35px;">
+                    </md-input-container >
+                </div>
+            </div> -->
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="insertRecordData()" style="margin-right:20px;" >
+            Insert
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

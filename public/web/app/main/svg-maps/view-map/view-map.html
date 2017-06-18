@@ -1,0 +1,72 @@
+<div class="page-layout carded fullwidth single-scroll pb-100" layout="row">
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg md-accent-bg"></div>
+    <!-- / TOP BACKGROUND -->
+    <!-- CENTER -->
+    <div class="center" flex>
+        <!-- CONTENT HEADER -->
+        <div class="goal-header" layout="column">
+            <div layout="row">
+                <span flex="80" class="h2 white-fg">Svg India</span>
+               
+            </div>
+            <!--
+                <div class="breadcrumb" flex>
+                		<md-icon md-font-icon="icon-dns" class="s16"></md-icon>
+                		<md-icon md-font-icon="icon-chevron-right" class="s16 separator"></md-icon>
+                		<span class="parent">LIST DATA</span>
+                </div>
+                -->
+        </div>
+        <!-- / CONTENT HEADER -->
+        <style type="text/css">
+            .goal-header{
+                height: 75px;
+                min-height: 75px;
+                max-height: 90px;
+                padding: 24px;
+            }
+            .page-layout .top-bg{
+                height: 139px;
+            }
+           
+
+        </style>
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar" layout="row" layout-xs="column" layout-align="start center">
+                <div flex="50">
+                    View Map
+                </div>
+                <div flex="50" layout="row" layout-align="end center">
+                    <md-button ui-sref="app.list_maps" class="md-accent md-raised ph-15">
+                        All Maps
+                    </md-button>
+                    <md-button ui-sref="app.edit_map({id:map.id})" class="md-accent md-raised ph-15">
+                        Edit map
+                    </md-button>
+                </div>
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+            <!-- CONTENT -->
+            <md-content class="ph-30 pb-30 appendMap" ms-scroll layout="row" layout-wrap>
+                    
+            </md-content>
+        <!-- / CONTENT -->
+    </div>
+    <!-- / CONTENT CARD -->
+</div>
+<!-- / CENTER -->
+</div>
+<style type="text/css">
+    svg{
+        height: 700px;
+        -webkit-min-height:700px !important;
+
+    }
+</style>
+
+
+
+

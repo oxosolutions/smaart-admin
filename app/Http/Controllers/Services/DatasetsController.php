@@ -608,7 +608,7 @@ class DatasetsController extends Controller
         $orgID = Auth::user()->organization_id;
         $newTableName = $orgID.'_data_table_'.time();
         DB::select('CREATE TABLE '.$newTableName.' as SELECT * FROM `'.$model->dataset_table.'`');
-        DB::select('ALTER TABLE '.$newTableName.' ADD PRIMARY KEY(id)');
+        DB::select('ALTER TABLE '.$newTableName.' MODIFY `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY');
 
         DB::select('CREATE TABLE cloning_dataset as SELECT * FROM `'.$orgID.'_datasets` WHERE id = '.$datasetId);
         DB::update('UPDATE cloning_dataset SET dataset_table = "'.$newTableName.'"');
@@ -619,6 +619,24 @@ class DatasetsController extends Controller
         DB::select('INSERT into `'.$orgID.'_datasets` SELECT * FROM cloning_dataset');
         DB::select('DROP TABLE cloning_dataset');
         return ['status'=>'success','message'=>'Successfully cloned dataset!'];
+    }
+
+    
+    /**
+     * will insert new record in dataset table
+     * @param  Request $request [form post data]
+     * @return [JSON]           [to respond the api, will return success or error]
+     * @Last Modified:   2017-06-14 Rahul Sharma
+     */
+    public function insertRecordToDataset(Request $request){
+        $model = DL::find($request->dataset_id);
+        if($model != null){
+            $datasetTable = $model->dataset_table;
+            DB::table($datasetTable)->insert(json_decode($request->records, true));
+            return ['status'=>'success','message'=>'Record inserted successfully!'];
+        }else{
+            return ['status'=>'error','message'=>'No dataset found!'];
+        }
     }
 
 }

@@ -166,7 +166,7 @@ Route::group(['prefix' => 'v1'], function () {
 	Route::post('/updateMap',['as'=>'update.map','uses'=>'Services\MapApiController@updateMap']);
 	Route::get('/create/clone/{surveyId}' ,['as'=>'create.clone','uses'=>'Services\SurrveyApiController@createClone']);
 	Route::get('/create/dataset/clone/{datasetId}',['as'=>'create.survey.clone','uses'=>'Services\DatasetsController@creaetClone']);
-	Route::get('/create/visualization/clone/{visualID}',['as'=>'create.viausl.clone','uses'=>'Services\VisualApiController@createClone']);
+	Route::get('/create/visualization/clone/{visualID}',['as'=>'create.viausl.clone','uses'=>'VisualisationController@createClone']);
 	Route::post('visualization/create', ['as'=>'visualization.create','uses'=>'VisualisationController@createVisualization']);
 	Route::post('visualization/update', ['as'=>'visualization.update','uses'=>'VisualisationController@updateVisualization']);
 	Route::get('visualization/details/{id}',['as'=>'visualization.details','uses'=>'VisualisationController@visualization_details']);
@@ -174,6 +174,7 @@ Route::group(['prefix' => 'v1'], function () {
 	Route::post('/generateEmbedToken',['as'=>'generate.embed','uses'=>'VisualisationController@generateEmbed']);
 	Route::get('/visualization/delete/{id}',['as'=>'delete.visualization','uses'=>'VisualisationController@delete_visualization']);
 	Route::get('/visualization/bydataset/{id}',['as'=>'getVisualization.byDataset','uses'=>'VisualisationController@get_visualization_by_dataset']);
+	Route::post('/insert/dataset/record',['as'=>'getVisualization.byDataset','uses'=>'Services\DatasetsController@insertRecordToDataset']);
 
 	});
 });

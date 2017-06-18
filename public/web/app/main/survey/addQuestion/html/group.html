@@ -1,0 +1,66 @@
+<style type="text/css">
+.addQuestion_right_section > div > div , .div-two{
+    display: none;
+}
+.questType , .pattern, .required{
+    border: none !important;
+    background:#fff  !important;
+    border-bottom: 1px solid #e8e8e8;
+}
+.text-field-design{
+    border:1px solid hsla(0, 0%, 0%, 0.12) !important;
+    border-width: 1px !important;
+    padding :8px !important;
+    
+}
+.text-field-design:focus{
+    border:1px solid !important;
+    border-width: 1px !important;
+    padding :8px !important;
+    
+}
+</style>
+<div md-whiteframe="2" class="repeat mt-10 group-frame groupFrameDiv" id="2" flex="100" data-number="1" style="background-color: #fff">
+    <div layout="row">
+        <div class="md-accent-bg ph-10 pv-5 md-headline chartCount mt-5 countNumber">1</div>
+        <div flex="70" class="md-subhead pl-10 group_title" layout="row" layout-align="start center">
+            <!-- {{group_title | htmlToPlaintext}} -->
+        </div>
+        <div flex="30" layout="row" layout-align="end center" class="pr-10 icon-arrow">
+                <span class="text-boxed teal-bg white-fg font-size-16"  style="font-family: serif;font-size: 14px"><i class="fields_count">0</i> Fields</span>
+                <md-button class="md-fab md-mini add_fields" aria-label="Eat cake">
+                    <md-tooltip md-direction="top" class="md-body-1">Add Fields</md-tooltip>
+                    <md-icon md-font-icon="icon-plus"></md-icon>
+                </md-button>
+                <md-button class="md-icon-button delete-group" aria-label="delete group"><md-tooltip md-direction="top" class="md-body-1">Delete Section</md-tooltip><md-icon md-font-icon="icon-trash"></md-icon></md-button>
+
+                <span><img src="assets/images/arrow-down.png" style="width: 18px;cursor: pointer;"><md-tooltip md-direction="top" class="md-body-1">Minimize / Maximize</md-tooltip></span>
+                <!-- <md-button class="md-icon-button accrodian" style="transform: rotate(0deg);" aria-label="delete group"><md-tooltip md-direction="top" class="md-body-1">Minimize / Maximize </md-tooltip><md-icon md-font-icon="icon-chevron-down"></md-icon></md-button> -->
+        </div>
+    </div>
+    <div flex="100" class="ph-20">
+         <script>    
+            $(document).ready(function(){
+               $(document).on('keyup','.groupName',function(){
+                var current_val = $(this).val();
+                var append_here = $(this).parents('.groupFrameDiv').find('.group_title');
+                    $(append_here).html(current_val);
+               });
+            });
+        </script>
+
+        <div layout="column" layout-align="center stretch" class="mv-20">  
+            <label class="font-size-14 font-weight-300 grey-600-fg mb-10">Section Name</label>
+            <input type="text" name="name" class="groupName text-field-design" area-label="name" />
+            <input type="hidden" name="sectionId" class="sectionId" value="" />
+        </div>
+        <label class="font-size-14 font-weight-300 grey-600-fg mb-10">Description</label>
+        <md-input-container class="md-block">
+           
+            <textarea class="groupDescription" aria-label="textarea" rows="3" md-select-on-focus></textarea>
+        </md-input-container>
+
+    </div>
+    
+    
+</div>

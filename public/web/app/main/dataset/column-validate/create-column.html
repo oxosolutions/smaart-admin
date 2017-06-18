@@ -1,0 +1,195 @@
+
+<md-dialog aria-label="Mango (Fruit)" layout="column" layout-align="center stretch" style="width:50%">
+  <form ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Insert New Column to Dataset</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="assets/images/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+      <div class="md-dialog-content" >
+        <form name="addColumn" novalidate>
+          
+              <div layout="column" layout-align="center stretch" >
+                  <md-input-container class="md-block" md-no-float style="width:500px">
+                        <label class="font-size-18 font-weight-300">Column Name</label>
+                        <input type="text" name="name" ng-model="colNm" required area-label="name">
+                        <div ng-messages="addColumn.name.$error" role="alert" multiple>
+                          <div ng-message="required">
+                            <span >Name field is required</span>
+                          </div>
+                          
+                        </div>
+                      
+                  </md-input-container>
+
+                  <md-input-container >
+                      <label>Insert Column After</label>
+                      <md-select name="type" ng-model="columnAfter" required><!-- // ng-model="vm.basicForm.state" -->
+                          <md-option value="{{key}}" ng-repeat="(key, column) in columns">{{column}}</md-option>
+                      </md-select>
+                      <div class="errors" ng-messages="dataset.state.$error">
+                      <div ng-message="required">Required</div>
+                      </div>
+                  </md-input-container>
+
+                  <md-input-container >
+                      <label>Select Data Type for the Column</label>
+                      <md-select name="type" ng-model="columnType" required><!-- // ng-model="vm.basicForm.state" -->
+                          <md-option value="string">Text</md-option>
+                          <md-option value="integer">Number</md-option>
+                          <md-option value="date">Date</md-option>
+                          <md-option value="areacode">Map Area Code(In ISO 3166-1 alpha-2 codes Format)</md-option>
+                      </md-select>
+                      <div class="errors" ng-messages="dataset.state.$error">
+                      <div ng-message="required">Required</div>
+                      </div>
+                  </md-input-container>
+                  <md-radio-group ng-model="applyOperation" ng-change="showDiv(applyOperation)">
+                    <div layout="row">
+                      <div>
+                        <md-radio-button  value="static" >Fill Static Value</md-radio-button>  
+                      </div>
+                      <div>
+                        <md-icon md-font-icon="icon-question-mark-circle" class="ml-20">
+                          <md-tooltip md-direction="right">
+                            Select to fill the same static value to all rows for the column to be inserted.
+                          </md-tooltip>
+                        </md-icon>
+                      </div>
+                        
+                    </div>
+                    <div layout="row">
+                      <div>
+                        <md-radio-button  value="value_ref" >Fill Value From Other Dataset</md-radio-button>
+                      </div>
+                      <div>
+                        <md-icon md-font-icon="icon-question-mark-circle" class="ml-20">
+                          <md-tooltip md-direction="right">
+                            Select to fill values in new column from other dataset
+                          </md-tooltip>
+                        </md-icon>
+                      </div>
+                        
+                    </div>
+                    <div layout="row">
+                      <div>
+                        <md-radio-button  value="formula">Calculate Value by Formula</md-radio-button>
+                      </div>
+                      <div>
+                        <md-icon md-font-icon="icon-question-mark-circle" class="ml-20">
+                          <md-tooltip md-direction="right">
+                            Select to fill the values calculating with excel formula in new column
+                          </md-tooltip>
+                        </md-icon>
+                      </div>
+                        
+                    </div>
+
+                  </md-radio-group>
+
+                  <div ng-show="showA">
+                    <md-input-container class="md-block" md-no-float style="width:500px">
+                        <label class="font-size-18 font-weight-300">Enter the text to be fillled in new column</label>
+                        <input type="text" name="name" ng-model="static" required area-label="name">
+                       <div><a href="http://smaartframework.com/docs/dataset/add-column/" target="_blank">Read Documentation</a></div>
+                    </md-input-container>
+                  </div>
+                  <div ng-show="showB" layout="row" layout-wrap>
+
+
+                    <md-input-container flex="100">
+                      <label>Select Mapping Column of Dataset</label>
+                      <md-select name="type" ng-model="currentDSColumn" required ng-change="showDatasetFunc()"><!-- // ng-model="vm.basicForm.state" -->
+                          <md-option value="{{key}}" ng-repeat="(key,column) in columns">{{column}}</md-option>
+                      </md-select>
+                    </md-input-container>
+
+
+                    <md-input-container flex="100" ng-show="showDataset">
+                      <label>Select Target Dataset</label>
+                      <md-select name="type" ng-model="withDataset" required ng-change="getDatasetColumn()"><!-- // ng-model="vm.basicForm.state" -->
+                          <md-option value="{{dataset.dataset_id}}" ng-repeat="dataset in datasets">{{dataset.dataset_name}}</md-option>
+                      </md-select>
+                    </md-input-container>
+                    
+                    <md-input-container flex="50" ng-show="showDatsetColumns">
+                      <label>Select Mapping Column in Target Dataset</label>
+                      <md-select name="type" ng-model="selecteddbColumn" required><!-- // ng-model="vm.basicForm.state" -->
+                          <md-option value="{{key}}" ng-repeat="(key,columns) in selectedDSColumns" ng-if="$index != 0">{{columns}}</md-option>
+                      </md-select>
+                    </md-input-container>
+                    <md-input-container flex="50" ng-show="showColumnReplaceWith">
+                      <label>Select Column Replace With</label>
+                      <md-select name="type" ng-model="replaceWithColumn" required><!-- // ng-model="vm.basicForm.state" -->
+                          <md-option value="{{key}}" ng-repeat="(key,columns) in selectedDSColumns" ng-if="$index != 0">{{columns}}</md-option>
+                      </md-select>
+                    </md-input-container>
+					<div><a href="http://smaartframework.com/docs/dataset/add-column/" target="_blank">Read Documentation</a></div>
+                  </div>
+                  <div ng-show="showC" layout="row">
+                     <md-input-container flex="100">
+                        <label class="font-size-18 font-weight-300">Write the formula for the to calculate the values for this column</label>
+                        <input type="text" name="col3" ng-model="operation" required area-label="col3_operation">
+                        <div class="errors" ng-messages="dataset.state.$error">
+                        <div ng-message="required">Required</div>
+                        </div>
+                        <div><a href="http://smaartframework.com/docs/dataset/add-column/formulas" target="_blank">Read Documentation</a></div>
+                    </md-input-container>
+                  </div>
+                 
+                 <!--  <md-checkbox ng-model="setFormula" ng-change="setFormulacheck()" >
+                       <label class="font-size-18 font-weight-300">Set Formula</label>
+                 </md-checkbox> -->
+                  <div layout="row" ng-show="formulaDiv" style="display:none">
+                    <md-input-container>
+                            <label>Column 1</label>
+                            <md-select name="col1" ng-model="colOne" required><!-- // ng-model="vm.basicForm.state" -->
+                                <md-option value="{{key}}" ng-repeat="(key, column) in columns">{{column}}</md-option>
+                            </md-select>
+                                <div class="errors" ng-messages="dataset.state.$error">
+                                <div ng-message="required">Required</div>
+                            </div>
+                    </md-input-container>
+                    <div flex class="p-25">with</div>
+                    <md-input-container >
+                            <label>Column 2</label>
+                            <md-select name="col2" ng-model="colTwo" required><!-- // ng-model="vm.basicForm.state" -->
+                                <md-option value="{{key}}" ng-repeat="(key, column) in columns">{{column}}</md-option>
+                            </md-select>
+                                <div class="errors" ng-messages="dataset.state.$error">
+                                <div ng-message="required">Required</div>
+                            </div>
+                    </md-input-container>
+                    
+                    
+                  </div>
+                 <!--  <md-input-container class="md-block">
+                        <md-checkbox name="tos" >
+                          Execute formula
+                        </md-checkbox>
+                       
+                  </md-input-container> -->
+
+              </div>
+        </form>
+      </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+      <span flex></span>
+      <md-button ng-click="answer('not useful')" class="md-raised md-primary">
+       Cancel
+      </md-button>
+      <md-button ng-click="createCol()" class="md-raised md-accent" ng-disabled="!colNm || !columnAfter">
+        Create
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>
+

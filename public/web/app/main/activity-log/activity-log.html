@@ -1,0 +1,87 @@
+
+<div class="page-layout carded fullwidth single-scroll pb-30" layout="row">
+
+    <div class="top-bg md-accent-bg "></div>
+
+    <div class="center " flex>
+
+        <div class=" goal-header" layout="column">
+            <div flex>
+                <span class="h2 white-fg">Activity Logs</span>
+            </div>
+
+        </div>
+
+        <style type="text/css">
+
+
+
+
+
+        
+            .truncate {
+                  width: 250px;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                }
+        </style>
+ 
+        <div class="content-card">
+
+            <div class="toolbar" layout="row" layout-xs="column" layout-align="start center">
+
+                <div flex layout="row" layout-align="start center" class="pv-30 h3" hide-xs>
+                    <h3 class=" ">List of all the activities</h3>
+                </div>
+                <div flex layout="row" layout-align="end center">
+
+                </div>
+            </div>
+
+            <md-content class="content" ms-scroll>
+
+                <table class="dataTable row-border hover " datatable="ng" dt-options="dtOptions" >
+
+                    <thead>
+                        
+                        <tr>
+                            
+                            <th class="secondary-text sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="File Name">
+                                <div class="table-header"><span class="column-title">Email</span></div>
+                            </th>
+                            <th class="secondary-text sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="File Name">
+                                <div class="table-header"><span class="column-title">Role</span></div>
+                            </th>
+                            <th class="secondary-text sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Created date">
+                                <div class="table-header"><span class="column-title">Activity</span></div>
+                            </th>
+                            <th class="secondary-text sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Validated">
+                                <div class="table-header"><span class="column-title">Elapsed Time</span></div>
+                            </th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="log in logs">
+                            
+                            <td>{{emailName(log.text,'email')}}</td>
+                            <td><span class="text-boxed m-0 green-bg white-fg">{{emailName(log.text,'name')}}</span></td>
+                            <td><span md-truncate>{{emailName(log.text,'name')}} {{log.route_name}} </span></td>
+                            <td><md-icon md-font-icon="icon-clock" class="s16 mr-5"></md-icon>{{log.created_at_for_humans}}</td>
+                            
+                        </tr>
+                    </tbody>
+                </table>
+
+            </md-content>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+

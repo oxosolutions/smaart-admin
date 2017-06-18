@@ -809,15 +809,4 @@ class VisualApiController extends Controller
         return ['status'=>'success','token'=>$model->embed_token];
     }
 
-    public function createClone($visualID){
-
-        $orgId = Auth::user()->organization_id;
-        DB::select('CREATE TABLE cloning_visual as SELECT * FROM `'.$orgId.'_generated_visuals` WHERE id = '.$visualID);
-        $newVisualID = DB::select('SELECT MAX(id) as maxId FROM `'.$orgId.'_generated_visuals`');
-        $newVisualID = $newVisualID[0]->maxId + 1;
-        DB::update('UPDATE cloning_visual SET id = '.$newVisualID);
-        DB::insert('INSERT into '.$orgId.'_generated_visuals SELECT * FROM cloning_visual');
-        DB::select('DROP TABLE cloning_visual');
-        return ['status'=>'success','message'=>'Visualization cloned successfully!'];
-    }
 }

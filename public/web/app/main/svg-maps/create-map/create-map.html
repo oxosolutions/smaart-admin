@@ -1,0 +1,109 @@
+<div class="page-layout carded fullwidth single-scroll pb-100" layout="row">
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg md-accent-bg"></div>
+    <!-- / TOP BACKGROUND -->
+    <!-- CENTER -->
+    <div class="center" flex>
+        <!-- CONTENT HEADER -->
+        <div class="goal-header" layout="column">
+            <div layout="row">
+                <span flex="80" class="h2 white-fg">Svg India</span>
+               
+            </div>
+            <!--
+                <div class="breadcrumb" flex>
+                		<md-icon md-font-icon="icon-dns" class="s16"></md-icon>
+                		<md-icon md-font-icon="icon-chevron-right" class="s16 separator"></md-icon>
+                		<span class="parent">LIST DATA</span>
+                </div>
+                -->
+        </div>
+        <!-- / CONTENT HEADER -->
+        <style type="text/css">
+            .goal-header{
+                height: 75px;
+                min-height: 75px;
+                max-height: 90px;
+                padding: 24px;
+            }
+            .page-layout .top-bg{
+                height: 139px;
+            }
+            md-select-menu{
+                width: 100% !important;
+            }   
+           
+
+        </style>
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar" layout="row" layout-xs="column" layout-align="start center">
+                Svg India
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+            <!-- CONTENT -->
+            <md-content class="ph-30 pb-30" ms-scroll layout="row" layout-wrap>
+                <md-input-container flex="100">
+                    <label>Parent</label>
+                    <md-select name="type" ng-model="parentMap" required>
+                        <md-option flex="100" value="{{map.id}}" ng-repeat="map in maps">{{map.title}}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container flex="100">
+                    <label>Title</label>
+                    <input required name="mapTitle" ng-model="mapTitle">
+                    <div ng-messages="mapTitle.$error">
+                        <div ng-message="required">This is required.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container flex="100">
+                    <label>Code</label>
+                    <input required name="code" ng-model="code">
+                    <div ng-messages="code.$error">
+                        <div ng-message="required">This is required.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container flex="100">
+                    <label>Code Albha 2</label>
+                    <input required name="codeAlpha2" ng-model="codeAlpha2">
+                    <div ng-messages="codeAlpha2.$error">
+                        <div ng-message="required">This is required.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container flex="100">
+                    <label>Code Albha 3</label>
+                    <input required name="codeAlpha3" ng-model="codeAlpha3">
+                    <div ng-messages="codeAlpha3.$error">
+                        <div ng-message="required">This is required.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container flex="100">
+                    <label>Code Numeric</label>
+                    <input required name="codeNumeric" ng-model="codeNumeric">
+                        <div ng-messages="codeNumeric.$error">
+                        <div ng-message="required">This is required.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block mt-5" md-no-float flex="100">
+                    <label>Map Data</label>
+                    <textarea ng-model="mapData" aria-label="desc" rows="8" md-select-on-focus></textarea>
+                </md-input-container>
+                <md-input-container class="md-block mt-5" md-no-float flex="100">
+                    <label>Map Description</label>
+                    <textarea ng-model="mapDescription" aria-label="desc" rows="8" md-select-on-focus></textarea>
+                </md-input-container>
+                <md-button class="md-primary md-raised ph-15" ng-click="saveMap()">
+                    Save
+                </md-button>
+            </md-content>
+        <!-- / CONTENT -->
+    </div>
+    <!-- / CONTENT CARD -->
+</div>
+<!-- / CENTER -->
+</div>
+
+
+
+

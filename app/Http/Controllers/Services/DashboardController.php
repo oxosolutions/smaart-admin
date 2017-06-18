@@ -6,7 +6,7 @@ use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\DatasetsList as DL;
-use App\GeneratedVisual as VIZ;
+use App\Visualisation as VIZ;
 use App\Surrvey as SR;
 use App\User as US;
 use App\UserMeta as UM;
@@ -23,17 +23,15 @@ use App\organization as ORG;
 				foreach ($pp as $key => $value) {
 					$profile_pic = asset('profile_pic/'.$value->value);
 				}
-				
-			if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
-			 {
+			
 				$data['dataset_count'] = count(DL::all());
 				$data['dataset_list'] = DL::select('id','dataset_name')->orderBy('id','DESC')->limit('5')->get();
 				$data['visual_count'] = count(VIZ::all());
-				$data['visual_list'] = VIZ::select('id','visual_name')->orderBy('id','DESC')->limit('5')->get();
+				$data['visual_list'] = VIZ::select('id','name')->orderBy('id','DESC')->limit('5')->get();
 				$data['survey_count'] = count(SR::all());
 				$data['survey_list'] = SR::select('id','name')->orderBy('id','DESC')->limit('5')->get();
 						
-			}
+			
 
 				$data['organization_detail'] = ORG::where('id',$org_id)->first();
 				$data['user_profile'] =  US::where('id', Auth::user()->id)->get();

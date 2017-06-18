@@ -402,7 +402,9 @@ class VisualisationController extends Controller
 			'meta'=>function($query) use ($visualization_id){
 				$query->where('visualization_id',$visualization_id)->delete();
 		}])->forceDelete();
-
+		$user = Auth::user();
+        $org_id = $user->organization_id;
+        Embed::where(['user_id'=>$user->id,'visual_id'=>$visualization_id,'org_id'=>$org_id])->delete();
 		return ['status'=>'success','message'=>'Visualization deleted successfully!'];
 	}
 
@@ -792,8 +794,9 @@ class VisualisationController extends Controller
 						$drawer_array['visualizations']['chart_'.$key]['map'] = $this->getSVGMaps($chart->meta); // get svg maps global or local
 						$header_with_column = $headers;
 						$headers = array_values($headers);
+						$chart_settings = $this->getMetaValue($chart->meta,'visual_settings');
 						$customMapDate = $this->create_map_array($dataset_records, $headers, $chart, $header_with_column);
-						$javascript['chart_'.$key] = ['type'=>$chart->chart_type,'id'=>'chart_'.$key,'data'=>$records_array,'headers'=>$headers, 'arranged_data'=>$customMapDate];
+						$javascript['chart_'.$key] = ['type'=>$chart->chart_type,'id'=>'chart_'.$key,'data'=>$records_array,'headers'=>$headers, 'arranged_data'=>$customMapDate,'chart_settings'=>$chart_settings];
 					}elseif($chart->chart_type == 'ListChart'){
 						$list_array = [];
 						foreach($records_array as $ky => $inner_array){
@@ -810,6 +813,8 @@ class VisualisationController extends Controller
 					$drawer_array['visualizations']['chart_'.$key]['chart_type'] = $chart->chart_type;
 					$drawer_array['visualizations']['chart_'.$key]['title'] = $chart->chart_title;
 					$drawer_array['visualizations']['chart_'.$key]['enableDisable'] = $this->getMetaValue($chart->meta,'enableDisable');
+					$drawer_array['visualizations']['chart_'.$key]['chart_width'] = $this->getMetaValue($chart->meta,'chartWidth');
+					$drawer_array['visualizations']['chart_'.$key]['chart_settings'] = $this->getMetaValue($chart->meta,'visual_settings');
 				}else{
 					$drawer_array['visualizations']['chart_'.$key]['error'] = 'No records found with selected filters';
 					//$this->put_in_errors_list('No records found with selected filters');
@@ -917,5 +922,57 @@ class VisualisationController extends Controller
 		dd($recordsArray);*/
 		return ['view_data'=>$viewData_array, 'tooltip_data'=>$tooltipData_array,'popup_data'=>$popupData_array];
 	}
+
+	public function createClone($visualID){
+		try{
+			DB::beginTransaction();
+	        $orgId = Auth::user()->organization_id;
+	        DB::select('CREATE TABLE cloning_visual as SELECT * FROM `'.$orgId.'_visualisations` WHERE id = '.$visualID);
+	        $newVisualID = DB::select('SELECT MAX(id) as maxId FROM `'.$orgId.'_visualisations`');
+	        $newVisualID = $newVisualID[0]->maxId + 1;
+	        DB::update('UPDATE cloning_visual SET id = '.$newVisualID);
+	        DB::insert('INSERT into '.$orgId.'_visualisations SELECT * FROM cloning_visual');
+	        DB::select('DROP TABLE cloning_visual');
+
+	        DB::select('CREATE TABLE cloning_chart as SELECT * FROM `'.$orgId.'_visualization_charts` WHERE visualization_id = '.$visualID);
+	        DB::update('UPDATE cloning_chart SET visualization_id = '.$newVisualID);
+	        $maximumChartId = DB::select('SELECT MAX(id) as maxId FROM `'.$orgId.'_visualization_charts`');
+	        DB::select('ALTER TABLE cloning_chart ADD new_ids VARCHAR(255)');
+	        $maximumChartId = $maximumChartId[0]->maxId + 1;
+	        DB::select('SET @a = '.$maximumChartId);
+			DB::select('UPDATE cloning_chart SET new_ids = @a:=@a+1');
+			
+
+	        DB::select('CREATE TABLE cloning_chart_meta as SELECT * FROM `'.$orgId.'_visualization_chart_metas` WHERE visualization_id = '.$visualID);
+	        DB::update('UPDATE cloning_chart_meta SET visualization_id = '.$newVisualID);
+	        DB::select('UPDATE cloning_chart_meta ccm JOIN cloning_chart cc ON cc.id = ccm.chart_id SET ccm.chart_id = cc.new_ids');
+	        DB::select('ALTER TABLE cloning_chart DROP COLUMN new_ids');
+	        DB::select('SET @a = '.$maximumChartId);
+			DB::select('UPDATE cloning_chart SET id = @a:=@a+1');
+			DB::insert('INSERT into '.$orgId.'_visualization_charts SELECT * FROM cloning_chart');
+	        DB::select('DROP TABLE cloning_chart');
+
+	        $maximumChartMetaId = DB::select('SELECT MAX(id) as maxId FROM `'.$orgId.'_visualization_chart_metas`');
+	        $maximumChartMetaId = $maximumChartMetaId[0]->maxId + 1;
+	        DB::select('SET @a = '.$maximumChartMetaId);
+			DB::select('UPDATE cloning_chart_meta SET id = @a:=@a+1');
+			DB::insert('INSERT into '.$orgId.'_visualization_chart_metas SELECT * FROM cloning_chart_meta');
+	        DB::select('DROP TABLE cloning_chart_meta');
+
+	        DB::select('CREATE TABLE cloning_visualization_meta as SELECT * FROM `'.$orgId.'_visualization_metas` WHERE visualization_id = '.$visualID);
+	        $maximumVisualMetaId = DB::select('SELECT MAX(id) as maxId FROM `'.$orgId.'_visualization_metas`');
+	        $maximumVisualMetaId = $maximumVisualMetaId[0]->maxId + 1;
+	        DB::select('SET @a = '.$maximumVisualMetaId);
+			DB::select('UPDATE cloning_visualization_meta SET id = @a:=@a+1');
+			DB::update('UPDATE cloning_visualization_meta SET visualization_id = '.$newVisualID);
+			DB::insert('INSERT into '.$orgId.'_visualization_metas SELECT * FROM cloning_visualization_meta');
+	        DB::select('DROP TABLE cloning_visualization_meta');
+	        DB::commit();
+        	return ['status'=>'success','message'=>'Visualization cloned successfully!'];
+    	}catch(\Exception $e){
+			DB::rollback();
+			throw $e;
+		}
+    }
 
 }
